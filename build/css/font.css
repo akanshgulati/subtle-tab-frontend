@@ -1,0 +1,12 @@
+body{
+    font-size: 16px;
+}
+.font-large{
+    font-size: 1.5rem;
+}
+.font-right{
+    text-align: right;
+}
+.font-center{
+    text-align: center;
+}

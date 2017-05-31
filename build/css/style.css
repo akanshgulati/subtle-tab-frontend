@@ -1,0 +1,194 @@
+/*@font-face {
+    font-family: Roboto;
+    src: url('../font/Montserrat.ttf');
+}*/
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+[type="radio"]:not(:checked)+label{
+    color: #b9b9b9
+}
+[type="radio"]:checked+label:after {
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f2f2f2;
+    background-color: #f2f2f2;
+    z-index: 0;
+}
+label{
+    color: #f2f2f2;
+}
+[type="radio"]+label {
+    padding-left:1rem !important;
+}
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: #f2f2f2;
+}
+.switch label .lever:after{
+    background-color: #818181;
+}
+.switch label input[type=checkbox]:checked+.lever:after{
+    background-color: #f2f2f2;
+}
+#app{
+    height: 100%;
+    width:100%;
+    padding: 1rem;
+}
+#background {
+    margin: 0;
+    padding: 0;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+#background-hidden{
+    visibility: 0;
+    opacity: 0;
+}
+#utilities{
+    position: relative;
+    z-index:2;
+    height: 100%;
+    width: 100%;
+}
+/*placement css*/
+#position--bottom-left {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+}
+#position--top-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#position--middle-center{
+    height: 50vh;
+    width: 100%;
+    position: absolute;
+    top: 25vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.pointer{
+    cursor: pointer;
+}
+.nav-bar-opener{
+    position: relative;
+    right: 1rem;
+    top: 10px;
+    z-index: 4;
+    transition: transform 0.5s ease-in-out;
+}
+.nav-bar-opener svg{
+    fill: #9e9e9e;
+}
+svg #customize_btn, svg #close_btn{
+    transition: all 0.3s ease;
+}
+
+svg:hover #customize_btn {
+    fill: #bfbfbf;
+    transform: scale(1.02);
+}
+
+#navbar{
+    position: fixed;
+    right:0;
+    top:0;
+    width: 300px;
+    height: 100%;
+    background: #2f2f2f;
+    color: #fff;
+    z-index: 3;
+}
+#navbar header{
+    height: 50px;
+    line-height: 50px;
+    background: #252525;
+    font-size: 1.25rem;
+    text-indent: 1.25rem;
+    text-transform: uppercase;
+}
+#navbar > ul{
+    list-style: none;
+    padding: 0;
+    margin: 1vh;
+}
+#navbar > ul > li{
+    text-indent: 1.5rem;
+    min-height: 50px;
+    line-height: 50px;
+    border-bottom: 2px solid rgba(255,255,255,.2);
+}
+#navbar > ul > li > ul > li{
+    min-height: 30px;
+    line-height: 30px;
+}
+#navbar > ul > li > ul > li:last-child{
+    margin-bottom: 0.5rem;
+}
+#navbar .switch{
+    margin-right: 1.5rem;
+    display: inline-block;
+    float: right;
+}
+.slide-fade-enter-active {
+    transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+    transition: all 0.2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+    opacity: 0;
+}
+.button-fade-enter-active{
+    transition: all 0.3s ease;
+}
+.button-fade-leave-to{
+    transition: all 0.2s ease;
+}
+.button-fade-enter, .button-fade-leave-to {
+    opacity: 0;
+}
+.background-fade-enter-active{
+    transition: all 5s ease;
+    opacity: 0;
+}
+
+@keyframes fade_in {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+.fade_in {
+    animation-name: fade_in;
+    animation-duration: 0.5s;
+    animation-fill-mode: both
+}
