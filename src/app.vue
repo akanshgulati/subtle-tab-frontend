@@ -1,8 +1,11 @@
 <template>
     <div>
-        <background :settings="sharedData.background"></background>
-        <div id="utilities">
-            <div id="position--middle-center">
+        <background :settings="sharedData.background" v-on:loadUtils='loadUtils'></background>
+        <div id="utilities" :class="{'fade_in': !isLoading}">
+            <!--<div id="position&#45;&#45;middle-center">
+                <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
+            </div>-->
+            <div id="position--bottom-left">
                 <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
             </div>
             <div id="position--top-right">
@@ -37,10 +40,14 @@
             let localData = localStorage.getItem('sharedData');
             this.localSharedData = localData && JSON.parse(localData);
         },
+        beforeMount(){
+
+        },
         data () {
             return {
                 sharedData: this.localSharedData || config.defaultCustomization,
-                showCustomizeMenu: false
+                showCustomizeMenu: false,
+                isLoading: true
             }
         },
         watch:{
@@ -51,9 +58,15 @@
               deep: true
           }
         },
+        computed:{
+        },
         methods:{
             toggleCustomizeMenu(){
                 this.showCustomizeMenu = !this.showCustomizeMenu;
+            },
+            loadUtils(){
+                console.log('utils');
+                this.isLoading = false;
             }
         },
         components: {

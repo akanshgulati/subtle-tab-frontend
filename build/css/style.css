@@ -2,17 +2,64 @@
     font-family: Roboto;
     src: url('../font/Montserrat.ttf');
 }*/
+@font-face {
+    font-family: helvetica neue;
+    font-weight: 200;
+    src: url('../fonts/HelveticaNeue-Thin.otf') format('opentype');
+}
+@font-face {
+    font-family: helvetica neue;
+    font-weight: 400;
+    src: url('../fonts/HelveticaNeue.otf') format('opentype');
+}
+
+@font-face {
+    font-family: helvetica neue;
+    font-weight: 500;
+    src: url('../fonts/HelveticaNeue-Medium.otf') format('opentype');
+}
+
+@font-face {
+    font-family: helvetica neue;
+    font-weight: bold;
+    src: url('../fonts/HelveticaNeue-Bold.otf') format('opentype');
+}
+@font-face {
+    font-family: Roboto;
+    font-weight: 300;
+    src: url('../fonts/Roboto-Thin.ttf');
+}
+@font-face {
+    font-family: Roboto;
+    font-weight: 400;
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: Roboto;
+    font-weight: 500;
+    src: url('../fonts/Roboto-Medium.ttf');
+}
+
+@font-face {
+    font-family: Roboto;
+    font-weight: bold;
+    src: url('../fonts/Roboto-Bold.ttf');
+}
 html {
     box-sizing: border-box;
 }
 *, *:before, *:after {
     box-sizing: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+
 }
 [type="radio"]:not(:checked)+label{
     color: #b9b9b9
@@ -45,6 +92,35 @@ label{
     width:100%;
     padding: 1rem;
 }
+.show-loading{
+    animation-name: fade_in;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+    visibility: visible !important;
+}
+.loading{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    z-index: 1000;
+    top: 0;
+    visibility: hidden;
+    opacity: 0;
+    background-size: cover;
+    background: rgb(255, 255, 255) url("../images/logo-loading.png") no-repeat center;
+}
+.dim-overlay{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    z-index: 999;
+    display: none;
+    top: 0;
+    background-size: cover;
+    background: rgba(0,0,0,0.5);
+}
 #background {
     margin: 0;
     padding: 0;
@@ -62,14 +138,15 @@ label{
     opacity: 1;
 }
 #background-hidden{
-    visibility: 0;
+    visibility: hidden;
     opacity: 0;
 }
 #utilities{
     position: relative;
-    z-index:2;
-    height: 100%;
-    width: 100%;
+    z-index: 3;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
 }
 /*placement css*/
 #position--bottom-left {
@@ -103,14 +180,13 @@ label{
     transition: transform 0.5s ease-in-out;
 }
 .nav-bar-opener svg{
-    fill: #9e9e9e;
+    fill: #ffffff;
 }
 svg #customize_btn, svg #close_btn{
     transition: all 0.3s ease;
 }
 
 svg:hover #customize_btn {
-    fill: #bfbfbf;
     transform: scale(1.02);
 }
 
@@ -120,7 +196,7 @@ svg:hover #customize_btn {
     top:0;
     width: 300px;
     height: 100%;
-    background: #2f2f2f;
+    background: rgba(47, 47, 47, 0.91);
     color: #fff;
     z-index: 3;
 }
@@ -189,6 +265,36 @@ svg:hover #customize_btn {
 
 .fade_in {
     animation-name: fade_in;
-    animation-duration: 0.5s;
+    animation-duration: 0.75s;
     animation-fill-mode: both
+}
+
+/*CLOCK STYLE*/
+.time, .date{
+    color: rgb(255, 255, 255);
+    font-family: 'Roboto', sans-serif;
+    text-shadow:  0 0 20px rgba(0,0,0,0.70);
+    /*text-align: center;*/
+}
+.time{
+    font-size: 5rem;
+    font-weight: 400;
+    line-height: 5rem;
+}
+.date{
+    opacity: 0;
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 3rem;
+    text-align: center;
+}
+
+.util-overlay{
+    background: url("../images/utils-shadow.png") no-repeat center;
+    background-size: cover;
+    position: absolute;
+    height:100vh;
+    width:100vw;
+    z-index: 2;
+    left: 0;
 }

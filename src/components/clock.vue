@@ -49,20 +49,3 @@
         }
     }
 </script>
-<style>
-    .time, .date{
-        color: rgba(242, 242, 242, 0.9);
-    }
-    .time{
-        font-size: 12rem;
-        font-weight: 500;
-        line-height: 12rem;
-    }
-    .date{
-        opacity: 0;
-        font-size: 3.5rem;
-        font-weight: 900;
-        line-height: 4rem;
-        text-align: center;
-    }
-</style>

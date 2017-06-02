@@ -42,7 +42,6 @@
                 </div>
             </li>
         </ul>
-        {{settings.showUtilities}}
     </div>
 </template>
 

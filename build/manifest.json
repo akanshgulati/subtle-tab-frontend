@@ -1,7 +1,7 @@
 {
-  "name": "Blank new tab page",
-  "description": "Override the new tab page with a blank one",
-  "version": "0.2",
+  "name": "Subtle New Tab",
+  "description": "Override the new tab page with awesomeness",
+  "version": "1.0",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -16,6 +16,11 @@
     "webRequestBlocking",
     "<all_urls>"
   ],
+  "icons": {
+    "128": "images/icons/icon128.png",
+    "16": "images/icons/icon16.png",
+    "48": "images/icons/icon48.png"
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "manifest_version": 2
 }

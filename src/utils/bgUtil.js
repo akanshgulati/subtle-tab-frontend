@@ -18,7 +18,9 @@ let bgUtil = {
         //let url = 'https://pixabay.com/api/?key=2363059-65b4954bde19ecbe197d0f47e&response_group=high_resolution&image_type=photo&orientation=horizontal&per_page=10&editor_choice=true';
         let url = 'https://pixabay.com/api/?key=2363059-65b4954bde19ecbe197d0f47e&response_group=high_resolution&image_type=photo&orientation=horizontal&per_page=10&order=ec&colors=black';
         url += '&min_width=' + requestWidth + '&min_height=' + requestHeight;
-        url += '&q=' + theme;
+        if(theme !=='random') {
+            url += '&q=' + theme;
+        }
 
         xmlhttp.open('GET', url);
 

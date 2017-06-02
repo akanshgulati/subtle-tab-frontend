@@ -1,29 +1,32 @@
 <template>
     <div>
-        <transition name="background-fade">
-            <div id="background" :style=" { 'background-image': 'url(' + url + ')'}" v-if="showBackground" class="fade_in"></div>
-        </transition>
+        <div class="loading" :class="{ 'show-loading': isLoading}"></div>
+        <div class="util-overlay"></div>
+        <bgimage :url="url" :isLoading="isLoading" v-on:bgLoaded="isBgLoaded"></bgimage>
         <div id="background-hidden" :style=" { 'background-image': 'url(' + nextUrl + ')'}"></div>
     </div>
 </template>
 
 <script>
+    import Bgimage from './bgimage.vue'
     import bgUtil from '../utils/bgUtil'
     import backgroundData from '../utils/backgroundData'
+    import storage from '../utils/storage'
 
     let backgroundVue = {
         beforeCreate(){
             this.backgroundJS = chrome.extension.getBackgroundPage();
-            debugger;
             this.bgTabsCount = this.backgroundJS.getTabsCount() || 0;
+            this.bgTabsCount = 0;
         },
         data () {
             return {
-                url: 'images/backgrounds/1.jpg',
-                nextUrl: 'images/backgrounds/2.jpg',
+                url:'',
+                nextUrl:'',
                 showBackground: false,
                 tabsCount: this.bgTabsCount,
-                backgroundJS : this.backgroundJS
+                backgroundJS : this.backgroundJS,
+                isLoading: true
             }
         },
         props: ['settings'],
@@ -34,54 +37,67 @@
             getBackgroundURL: function (reset) {
                 const self = this;
                 const tabSwitchCount = 3;
-                const localBgData = localStorage.getItem('bgData') && JSON.parse(localStorage.getItem('bgData'));
+                const bgCount = 10;
+                const localBgData = storage.get('bgData');
                 const theme = backgroundData.getCurrentTheme(this.settings.themeId);
+                const maxBgCountAllowed = tabSwitchCount * (bgCount - 1);
+
+                this.showBackground = false;
 
                 if (navigator.onLine) {
                     let currentUrlCount;
-                    currentUrlCount = parseInt(self.tabsCount / tabSwitchCount, 10);
+                    currentUrlCount = parseInt(this.tabsCount / tabSwitchCount, 10);
+
                     //TODO: Check for more backgrounds
-                    if ((!localBgData && self.tabsCount < 25) || reset) {
+                    self.isLoading = true;
+                    if ((!localBgData || reset ) && self.tabsCount < maxBgCountAllowed) {
+                        debugger;
                         bgUtil.getWallpaper(theme.value, function (bgData) {
                             bgData = bgUtil.getFormattedJSON(bgData);
+                            self.showBackground = true;
                             self.url = bgData[currentUrlCount];
                             self.nextUrl = bgData[currentUrlCount + 1];
-                            self.showBackground = true;
-                            localStorage.setItem('bgData', JSON.stringify(bgData));
+                            storage.set('bgData', bgData);
                         });
-                    } else if (self.tabsCount >= 25) {
-                        localStorage.removeItem('bgData');
+                    } else if (self.tabsCount >= maxBgCountAllowed) {
                         this.backgroundJS.setTabsCount(0);
-                        self.tabsCount = 0;
-                        currentUrlCount = parseInt(self.tabsCount / tabSwitchCount, 10);
+                        this.tabsCount = 0;
+                        currentUrlCount = parseInt(this.tabsCount / tabSwitchCount, 10);
                         bgUtil.getWallpaper(theme.value, function (bgData) {
                             bgData = bgUtil.getFormattedJSON(bgData);
+                            self.showBackground = true;
                             self.url = bgData[currentUrlCount];
                             self.nextUrl = bgData[currentUrlCount + 1];
-                            self.showBackground = true;
                             localStorage.setItem('bgData', JSON.stringify(bgData));
                         });
                     } else {
+                        self.showBackground = true;
                         self.url = localBgData[currentUrlCount];
                         self.nextUrl = localBgData[currentUrlCount + 1];
-                        self.showBackground = true;
                     }
                 } else {
                     self.showBackground = true;
+                    self.url = 'images/backgrounds/1.jpg';
+                    self.nextUrl= 'images/backgrounds/2.jpg';
                 }
+            },
+            isBgLoaded : function(){
+                this.isLoading = false;
+                console.log('bg');
+                this.$emit('loadUtils');
             }
         },
         watch: {
             settings: {
                 handler: function(newValue){
-                    debugger;
                     this.showBackground = false;
-                    this.backgroundJS.setTabsCount(0);
-                    this.tabsCount = 0;
                     this.getBackgroundURL(true);
                 },
                 deep: true
             }
+        },
+        components: {
+            Bgimage
         }
     };
     export default backgroundVue;
