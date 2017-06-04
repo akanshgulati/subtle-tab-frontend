@@ -14,6 +14,12 @@ const config = {
         background: {
             themeId: 2
         }
+    },
+    background:{
+        minDate: 1333218600,
+        minViews: 1000,
+        lStoreLimit: 100,
+        durationMonths: 6
     }
 };
 export default config;

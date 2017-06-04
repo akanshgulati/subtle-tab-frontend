@@ -6137,6 +6137,9 @@ module.exports = Vue$2;
 //
 //
 //
+//
+//
+//
 
 
 
@@ -6170,9 +6173,13 @@ module.exports = Vue$2;
         toggleCustomizeMenu: function toggleCustomizeMenu() {
             this.showCustomizeMenu = !this.showCustomizeMenu;
         },
-        loadUtils: function loadUtils() {
-            console.log('utils');
+        stopLoad: function stopLoad() {
+            debugger;
             this.isLoading = false;
+        },
+        startLoad: function startLoad() {
+            debugger;
+            this.isLoading = true;
         }
     },
     components: {
@@ -6201,6 +6208,7 @@ module.exports = Vue$2;
 //
 //
 //
+//
 
 
 
@@ -6211,7 +6219,7 @@ var backgroundVue = {
     beforeCreate: function beforeCreate() {
         this.backgroundJS = chrome.extension.getBackgroundPage();
         this.bgTabsCount = this.backgroundJS.getTabsCount() || 0;
-        this.bgTabsCount = 0;
+        /*this.bgTabsCount = 0;*/
     },
     data: function data() {
         return {
@@ -6219,8 +6227,7 @@ var backgroundVue = {
             nextUrl: '',
             showBackground: false,
             tabsCount: this.bgTabsCount,
-            backgroundJS: this.backgroundJS,
-            isLoading: true
+            backgroundJS: this.backgroundJS
         };
     },
 
@@ -6233,6 +6240,7 @@ var backgroundVue = {
         getBackgroundURL: function getBackgroundURL(reset) {
             var _this = this;
 
+            debugger;
             var self = this;
             var tabSwitchCount = 3;
             var bgCount = 10;
@@ -6241,14 +6249,13 @@ var backgroundVue = {
             var maxBgCountAllowed = tabSwitchCount * (bgCount - 1);
 
             this.showBackground = false;
-
+            this.isLoading();
             if (navigator.onLine) {
                 (function () {
                     var currentUrlCount = void 0;
                     currentUrlCount = parseInt(_this.tabsCount / tabSwitchCount, 10);
 
                     //TODO: Check for more backgrounds
-                    self.isLoading = true;
                     if ((!localBgData || reset) && self.tabsCount < maxBgCountAllowed) {
                         debugger;
                         __WEBPACK_IMPORTED_MODULE_1__utils_bgUtil__["a" /* default */].getWallpaper(theme.value, function (bgData) {
@@ -6281,24 +6288,34 @@ var backgroundVue = {
                 self.nextUrl = 'images/backgrounds/2.jpg';
             }
         },
-        isBgLoaded: function isBgLoaded() {
-            this.isLoading = false;
-            console.log('bg');
-            this.$emit('loadUtils');
+        isLoading: function isLoading() {
+            this.$emit('startLoading');
         }
     },
     watch: {
         settings: {
-            handler: function handler(newValue) {
+            handler: function handler() {
                 this.showBackground = false;
                 this.getBackgroundURL(true);
             },
             deep: true
+        },
+        url: {
+            handler: function handler(newValue) {
+                if (!newValue) {
+                    return;
+                }
+                var bgElement = document.getElementById('background');
+                var img = new Image();
+                img.src = newValue;
+                img.onload = function () {
+                    bgElement.style.backgroundImage = 'url(' + newValue + ')';
+                    this.$emit('stopLoading');
+                }.bind(this);
+            }
         }
     },
-    components: {
-        Bgimage: __WEBPACK_IMPORTED_MODULE_0__bgimage_vue___default.a
-    }
+    components: {}
 };
 /* harmony default export */ exports["default"] = backgroundVue;
 
@@ -6790,7 +6807,7 @@ exports = module.exports = __webpack_require__(12)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -7241,21 +7258,12 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', [_h('div', {
-    staticClass: "loading",
-    class: {
-      'show-loading': _vm.isLoading
-    }
-  }), " ", _h('div', {
     staticClass: "util-overlay"
-  }), " ", _h('bgimage', {
-    attrs: {
-      "url": _vm.url,
-      "isLoading": _vm.isLoading
-    },
-    on: {
-      "bgLoaded": _vm.isBgLoaded
-    }
   }), " ", _h('div', {
+    attrs: {
+      "id": "background"
+    }
+  }), " ", " ", _h('div', {
     style: ({
       'background-image': 'url(' + _vm.nextUrl + ')'
     }),
@@ -7495,17 +7503,27 @@ if (false) {
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [_h('background', {
-    attrs: {
-      "settings": _vm.sharedData.background
-    },
-    on: {
-      "loadUtils": _vm.loadUtils
+  return _h('div', [_h('div', {
+    staticClass: "loading",
+    class: {
+      'show-loading': _vm.isLoading
     }
   }), " ", _h('div', {
     class: {
       'fade_in': !_vm.isLoading
     },
+    attrs: {
+      "id": "viewport"
+    }
+  }, [_h('background', {
+    attrs: {
+      "settings": _vm.sharedData.background
+    },
+    on: {
+      "stopLoading": _vm.stopLoad,
+      "startLoading": _vm.startLoad
+    }
+  }), " ", _h('div', {
     attrs: {
       "id": "utilities"
     }
@@ -7588,7 +7606,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "d": "M437.5,386.6L306.9,256l130.6-130.6c14.1-14.1,14.1-36.8,0-50.9c-14.1-14.1-36.8-14.1-50.9,0L256,205.1L125.4,74.5  c-14.1-14.1-36.8-14.1-50.9,0c-14.1,14.1-14.1,36.8,0,50.9L205.1,256L74.5,386.6c-14.1,14.1-14.1,36.8,0,50.9  c14.1,14.1,36.8,14.1,50.9,0L256,306.9l130.6,130.6c14.1,14.1,36.8,14.1,50.9,0C451.5,423.4,451.5,400.6,437.5,386.6z"
     }
-  })])])]) : _vm._e()])])])])
+  })])])]) : _vm._e()])])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

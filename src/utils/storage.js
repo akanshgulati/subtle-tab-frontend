@@ -14,6 +14,19 @@ let storage = {
         if (typeof item === 'number') {
             this.set(key, item + 1)
         }
-    }
+    },
+    append(key, value){
+      let initialValue = this.get(key) || [];
+      initialValue.push(value);
+      this.set(key, initialValue);
+    },
+    getMap(key){
+        let value = localStorage.getItem(key);
+        return isNaN(value) ? JSON.parse(value) : value;
+    },
+    setMap(key, data){
+        return localStorage.setItem(key, JSON.stringify(data));
+    },
+
 };
 export default storage;

@@ -1,42 +1,22 @@
 export default {
     themes: [
         {
-            id: 0,
-            lValue: 'Random',
-            value: 'random'
-        },
-        {
             id: 1,
-            lValue: 'Travel',
-            value: 'travel'
+            lValue: 'Landscape',
+            tags: 'nature, landscape, sunset, lake, beach',
+            value: 'landscape'
         },
         {
             id: 2,
-            lValue: 'Nature',
-            value: 'nature'
-        },
-        {
-            id: 3,
-            lValue: 'Architecture',
-            value: 'architecture'
-        },
-        {
-            id: 4,
-            lValue: 'Food',
-            value: 'food'
-        },
-        {
-            id: 5,
-            lValue: 'Abstract',
-            value: 'abstract'
+            lValue: 'Structure',
+            tags: 'buildings, architecture, brides, house',
+            value: 'structure'
         }
     ],
-    getCurrentTheme(id){
-        let themes = this.themes;
-        for (let i = 0; i < themes.length; i++) {
-            if (themes[i].id === id) {
-                return themes[i];
-            }
-        }
-    }
+    stored: [
+        './images/backgrounds/1.jpg',
+        './images/backgrounds/2.jpg',
+        './images/backgrounds/3.jpg',
+        './images/backgrounds/3.jpg',
+    ]
 }

@@ -87,6 +87,10 @@ label{
 .switch label input[type=checkbox]:checked+.lever:after{
     background-color: #f2f2f2;
 }
+[type="checkbox"].filled-in:checked+label:after{
+    border: 2px solid #f2f2f2;
+    background-color: transparent;
+}
 #app{
     height: 100%;
     width:100%;
@@ -141,12 +145,14 @@ label{
     visibility: hidden;
     opacity: 0;
 }
+#viewport{
+    opacity: 0;
+}
 #utilities{
     position: relative;
     z-index: 3;
     height: 100vh;
     width: 100vw;
-    opacity: 0;
 }
 /*placement css*/
 #position--bottom-left {
@@ -265,7 +271,7 @@ svg:hover #customize_btn {
 
 .fade_in {
     animation-name: fade_in;
-    animation-duration: 0.75s;
+    animation-duration: 0.30s;
     animation-fill-mode: both
 }
 
