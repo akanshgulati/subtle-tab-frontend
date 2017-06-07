@@ -4,9 +4,6 @@
         <div id="viewport" :class="{'fade_in': !isLoading}" >
             <background :settings="sharedData.background" v-on:stopLoading="stopLoad"  v-on:startLoading="startLoad"></background>
             <div id="utilities">
-                <!--<div id="position&#45;&#45;middle-center">
-                    <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
-                </div>-->
                 <div id="position--bottom-left">
                     <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
                 </div>
@@ -49,7 +46,7 @@
         data () {
             return {
                 sharedData: this.localSharedData || config.defaultCustomization,
-                showCustomizeMenu: false,
+                showCustomizeMenu: true,
                 isLoading: true
             }
         },
@@ -68,11 +65,9 @@
                 this.showCustomizeMenu = !this.showCustomizeMenu;
             },
             stopLoad(){
-                debugger;
                 this.isLoading = false;
             },
             startLoad(){
-                debugger;
                 this.isLoading = true;
             }
         },

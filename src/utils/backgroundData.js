@@ -2,21 +2,35 @@ export default {
     themes: [
         {
             id: 1,
-            lValue: 'Landscape',
-            tags: 'nature, landscape, sunset, lake, beach',
+            lValue: 'Nature',
+            tags: 'nature',
             value: 'landscape'
         },
         {
             id: 2,
             lValue: 'Structure',
-            tags: 'buildings, architecture, brides, house',
+            tags: 'building',
             value: 'structure'
-        }
+        },
+        {
+            id: 3,
+            lValue: 'Monuments',
+            tags: 'monument',
+            value: 'monument'
+        },
+        {
+            id: 4,
+            lValue: 'Night Life',
+            tags: 'night',
+            value: 'night'
+        },
+
     ],
-    stored: [
-        './images/backgrounds/1.jpg',
-        './images/backgrounds/2.jpg',
-        './images/backgrounds/3.jpg',
-        './images/backgrounds/3.jpg',
-    ]
+    stored: {
+        'landscape': {
+            1: './images/backgrounds/1.jpg',
+            2: './images/backgrounds/2.jpg',
+            3: './images/backgrounds/2.jpg'
+        }
+    }
 }

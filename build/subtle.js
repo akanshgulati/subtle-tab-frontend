@@ -17,60 +17,91 @@ chrome.webRequest.onHeadersReceived.addListener(
     {urls: ['<all_urls>']},
     [ 'blocking', 'responseHeaders']
 );*/
-let tabsCount = 0;
+let tabsCount = 1;
+let storage = {
+    get(key){
+        let value = localStorage.getItem(key);
+        return isNaN(value) ? JSON.parse(value) : value;
+    },
+    set(key, data){
+        return localStorage.setItem(key, JSON.stringify(data));
+    },
+    remove(key){
+        return localStorage.removeItem(key);
+    },
+    increment(key){
+        let item = this.get(key);
+        if (typeof item === 'number') {
+            this.set(key, item + 1)
+        }
+    },
+    append(key, value){
+        let initialValue = this.get(key) || [];
+        initialValue.push(value);
+        this.set(key, initialValue);
+    }
+};
+const _config = {
+    minDate: 1459449000,
+    minViews: 1000,
+    lStoreLimit: 100,
+    durationMonths: 6
+};
 function init() {
     chrome.tabs.onCreated.addListener(function () {
         tabsCount++;
     });
 }
+
 function getTabsCount() {
     return tabsCount;
 }
+
 function setTabsCount(num) {
     tabsCount = num;
 }
-import config
+
 function filterResponse(response){
-    return response.id +','+ response.secret +','+  response.farm +','+  response.server;
+    let regex = new RegExp(response.id + "_(.*)_", "g");
+    return response.secret +','+  response.farm +','+  response.server + ','
+        + response['url_h'].match(regex.source)[1] + ',' + response['url_k'].match(regex.source)[1];
 }
+
 function filterResponses(response){
     if(response && response.photos && response.photos.photo.length){
         let photos = response.photos.photo;
         let storedSeenIds = storage.get('bg-seen') || [];
         let result = {};
-        for(let i = 0; i < config.background.lStoreLimit; i++){
+        for(let i = 0; i < _config.lStoreLimit; i++){
             let photo = photos[i];
-            if(storedSeenIds.indexOf(photo.id) > -1) {
-                if (photo.url_l && photo.url_h && photo.url_k && photo.views > config.background.minViews) {
+            if(storedSeenIds.indexOf(photo.id) === -1) {
+                if (photo.url_l && photo.url_h && photo.url_k && photo.views > _config.minViews) {
                     result[photo.id] = filterResponse(photo);
                 }
             }
         }
+        return result;
     }
 }
-function getBackground(theme){
-    let xmlhttp = new XMLHttpRequest();
-    let _config = config.background;
-    //let url = 'https://pixabay.com/api/?key=2363059-65b4954bde19ecbe197d0f47e&response_group=high_resolution&image_type=photo&orientation=horizontal&per_page=10&editor_choice=true';
-    /*let url = 'https://pixabay.com/api/?key=2363059-65b4954bde19ecbe197d0f47e&response_group=high_resolution&image_type=photo&orientation=horizontal&per_page=10&order=ec&colors=black';
-     url += '&min_width=' + requestWidth + '&min_height=' + requestHeight;
-     if(theme !=='random') {
-     url += '&q=' + theme;
-     }*/
-    let url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search';
-    url += '&api_key=004a2a979699ede40ed45e56a70b7d11';
-    url += "&min_upload_date='"+_config.minDate+ "'";
-    url += '&tag_mode=any&sort=interestingness-desc&safe_search=1&media=photos&per_page=200&format=json&nojsoncallback=1';
-    url += "&tags='" + theme.tags + "'" ;
-    url = +'&extras=url_k,url_h,url_l, views';
-    xmlhttp.open('GET', url);
 
+function getBackground(theme, callback){
+    let xmlhttp = new XMLHttpRequest();
+    let url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search';
+    url += '&api_key=d42bcbb7a689163cfa7fcdc02f7e9110';
+    url += "&min_upload_date=" + _config.minDate;
+    url += '&tag_mode=any&sort=interestingness-desc&safe_search=1&media=photos&per_page=500&format=json&nojsoncallback=1';
+    url += "&text=" + theme.tags;
+    url += '&extras=url_k,url_h,url_l,views';
+
+    xmlhttp.open('GET', url);
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             //responses will be other than seen, having good views and sizes
-            let bgData = filterResponses(xmlhttp.responseText);
-            storage.set('bg-'+ theme.key, bgData);
-            callback(bgData);
+            let bgData = filterResponses(JSON.parse(xmlhttp.responseText));
+            storage.set(theme.value, bgData);
+            if(typeof callback === 'function'){
+                callback(bgData);
+            }
         }
         //TODO: Cover failed condition
     };

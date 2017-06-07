@@ -37,80 +37,66 @@
         },
         methods: {
             getBackgroundURL: function (reset) {
-                debugger;
                 const self = this;
-                const bgCount = 10;
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
-                const localBgData = storage.get('bg-' + theme.value);
-                const maxBgCountAllowed = tabSwitchCount * (bgCount - 1);
+                const localBgData = storage.get(theme.value);
 
                 this.isLoading();
                 if (navigator.onLine) {
-                    let currentUrlCount;
-                    currentUrlCount = parseInt(this.tabsCount / tabSwitchCount, 10);
 
-                    //TODO: Check for more backgrounds
-                    if(!localBgData && settings.theme.id === 1){
-                        let i;
-                        for (i = 0; i < bgData.stored.length - 2; i++) {
-                            if(this.bgSeen.indexOf(bgData.stored[i]) === -1) {
-                                self.url = bgData.stored[i];
-                                self.nextUrl = bgData.stored[i+1];
+                    let storedBg = bgData.stored[theme.value];
+                    let localBg = storage.get(theme.value);
+                    const allBackgrounds = Object.assign({}, storedBg, localBg);
+                    const bgKeys = Object.keys(allBackgrounds);
+
+                    let i;
+
+                    if(bgKeys.length > 0) {
+                        for (i = 0; i < (bgKeys.length - 1); i++) {
+                            if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
+                                self.url = bgUtil.formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
+                                self.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1]);
+                                this.markBgSeen(bgKeys[i]);
                                 break;
                             }
                         }
-                        self.url = bgData.stored[i];
-                        self.nextUrl = bgData.stored[i+1];
-                        this.markBgSeen(i);
-                    }else if(localBgData && !reset){
-                        // {id: {'string'}}
-                        let bgKeys = Object.keys(localBgData);
-                        for(let i = 0; i < bgKeys.length -1; i++){
-                            if(this.bgSeen.indexOf(bgKeys[i]) === -1){
-                                self.url = localBgData[bgKeys[i]];
-                                self.nextUrl = localBgData[bgKeys[i + 1]];
-                            }
-                        }
                     }
-                    if ((!localBgData || reset ) && self.tabsCount < maxBgCountAllowed) {
-                        debugger;
-                        bgUtil.getWallpaper(theme.value, function (bgData) {
-                            bgData = bgUtil.getFormattedJSON(bgData);
-                            self.url = bgData[currentUrlCount];
-                            self.nextUrl = bgData[currentUrlCount + 1];
-                            storage.set('bgData', bgData);
-                        });
-                    } else if (self.tabsCount >= maxBgCountAllowed) {
-                        this.backgroundJS.setTabsCount(0);
-                        this.tabsCount = 0;
-                        currentUrlCount = parseInt(this.tabsCount / tabSwitchCount, 10);
-                        bgUtil.getWallpaper(theme.value, function (bgData) {
-                            bgData = bgUtil.getFormattedJSON(bgData);
-                            self.url = bgData[currentUrlCount];
-                            self.nextUrl = bgData[currentUrlCount + 1];
-                            localStorage.setItem('bgData', JSON.stringify(bgData));
-                        });
-                    } else {
-                        self.url = localBgData[currentUrlCount];
-                        self.nextUrl = localBgData[currentUrlCount + 1];
+                    //TODO: Check for more backgrounds
+                    if(!localBgData || i >= (bgKeys.length - 1)) {
+                        this.backgroundJS.getBackground(theme);
                     }
                 } else {
                     self.url = 'images/backgrounds/1.jpg';
                     self.nextUrl= 'images/backgrounds/2.jpg';
                 }
             },
+            resetBackgroundTheme(){
+                const theme = bgUtil.getCurrentTheme(this.settings.themeId);
+                const localBgData = storage.get(theme.value);
+                let self = this;
+                this.isLoading();
+                debugger;
+                if (!localBgData) {
+                    this.backgroundJS.getBackground(theme, self.getBackgroundURL);
+                } else {
+                    self.getBackgroundURL();
+                }
+            },
             isLoading(){
                 this.$emit('startLoading');
             },
             markBgSeen(id){
-                this.bgSeen.push(id);
-                storage.append('bg-seen', id);
+                if(this.bgTabsCount % 3 === 0) {
+                    this.bgSeen.push(id);
+                    storage.set('bg-seen', this.bgSeen);
+                }
+
             }
         },
         watch: {
             settings: {
                 handler: function(){
-                    this.getBackgroundURL(true);
+                    this.resetBackgroundTheme();
                 },
                 deep: true
             },

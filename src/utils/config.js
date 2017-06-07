@@ -12,14 +12,8 @@ const config = {
             showCelsius: true,
         },
         background: {
-            themeId: 2
+            themeId: 1
         }
-    },
-    background:{
-        minDate: 1333218600,
-        minViews: 1000,
-        lStoreLimit: 100,
-        durationMonths: 6
     }
 };
 export default config;

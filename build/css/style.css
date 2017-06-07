@@ -58,7 +58,7 @@ body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 
 }
 [type="radio"]:not(:checked)+label{
@@ -140,6 +140,7 @@ label{
     background-repeat: no-repeat;
     transition: all 0.3s ease;
     opacity: 1;
+    background-position: center;
 }
 #background-hidden{
     visibility: hidden;
