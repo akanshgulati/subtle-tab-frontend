@@ -6,7 +6,8 @@
     "license": "MIT",
     "scripts": {
         "dev": "webpack-dev-server --open --inline --hot --quiet --port 8080",
-        "build": "cross-env NODE_ENV=dev webpack --progress --hide-modules"
+        "build": "cross-env NODE_ENV=dev webpack --progress --hide-modules",
+        "watch": "cross-env NODE_ENV=dev webpack --progress --colors --hide-modules --watch"
     },
     "dependencies": {
         "vue": "^2.1.4"

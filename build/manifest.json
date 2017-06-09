@@ -12,9 +12,7 @@
     ]
   },
   "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "geolocation"
   ],
   "icons": {
     "128": "images/icons/icon128.png",

@@ -28,7 +28,8 @@
                 tabsCount: this.bgTabsCount,
                 backgroundJS : this.backgroundJS,
                 bgSeen : this.bgSeen,
-                tabSwitchCount: 3
+                tabSwitchCount: this.settings.changeInterval,
+                themeId: this.settings.themeId
             }
         },
         props: ['settings'],
@@ -41,7 +42,6 @@
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 const localBgData = storage.get(theme.value);
 
-                this.isLoading();
                 if (navigator.onLine) {
 
                     let storedBg = bgData.stored[theme.value];
@@ -60,10 +60,18 @@
                                 break;
                             }
                         }
+                    }else{
+                        this.isLoading();
+                        this.backgroundJS.getBackground(theme, self.getBackgroundURL);
+                        return;
                     }
-                    //TODO: Check for more backgrounds
-                    if(!localBgData || i >= (bgKeys.length - 1)) {
+                    // Case when installing extension initially or bg data gets empty in localstorage.
+                    if(!localBgData || (i && i >= (bgKeys.length - 1))){
                         this.backgroundJS.getBackground(theme);
+                    }
+                    // Case when no unique background is found.
+                    else if((typeof localBgData === 'object' && Object.keys(localBgData).length === 0)) {
+                        this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                     }
                 } else {
                     self.url = 'images/backgrounds/1.jpg';
@@ -73,25 +81,26 @@
             resetBackgroundTheme(){
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 const localBgData = storage.get(theme.value);
-                let self = this;
-                this.isLoading();
-                debugger;
-                if (!localBgData) {
-                    this.backgroundJS.getBackground(theme, self.getBackgroundURL);
+
+                if (localBgData && typeof localBgData === 'object' && Object.keys(localBgData).length === 0) {
+                    this.backgroundJS.getBackground(theme, this.getBackgroundURL);
                 } else {
-                    self.getBackgroundURL();
+                    this.getBackgroundURL();
                 }
             },
             isLoading(){
                 this.$emit('startLoading');
             },
             markBgSeen(id){
-                if(this.bgTabsCount % 3 === 0) {
+                if(this.bgTabsCount % this.settings.changeInterval === 0) {
                     this.bgSeen.push(id);
                     storage.set('bg-seen', this.bgSeen);
                 }
 
             }
+        },
+        beforeUpdated(){
+            debugger;
         },
         watch: {
             settings: {
@@ -101,10 +110,11 @@
                 deep: true
             },
             url: {
-                handler: function (newValue) {
-                    if (!newValue) {
+                handler: function (newValue, oldValue) {
+                    if (newValue === oldValue) {
                         return;
                     }
+                    this.isLoading();
                     let bgElement = document.getElementById('background');
                     let img = new Image();
                     img.src = newValue;

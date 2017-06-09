@@ -83,24 +83,32 @@ function filterResponses(response){
         return result;
     }
 }
-
-function getBackground(theme, callback){
+let bgData;
+function getBackground(theme, callback, page){
     let xmlhttp = new XMLHttpRequest();
+    let self = this;
+    page = page || 1;
     let url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search';
     url += '&api_key=d42bcbb7a689163cfa7fcdc02f7e9110';
     url += "&min_upload_date=" + _config.minDate;
     url += '&tag_mode=any&sort=interestingness-desc&safe_search=1&media=photos&per_page=500&format=json&nojsoncallback=1';
     url += "&text=" + theme.tags;
     url += '&extras=url_k,url_h,url_l,views';
+    url += '&page=' + page;
 
     xmlhttp.open('GET', url);
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            let response = JSON.parse(xmlhttp.responseText);
             //responses will be other than seen, having good views and sizes
-            let bgData = filterResponses(JSON.parse(xmlhttp.responseText));
-            storage.set(theme.value, bgData);
-            if(typeof callback === 'function'){
-                callback(bgData);
+            bgData = filterResponses(response);
+            if (Object.keys(bgData).length < 10 && response.pages > page) {
+                self.getBackground(theme, callback, page + 1);
+            }else {
+                storage.set(theme.value, bgData);
+                if (typeof callback === 'function') {
+                    callback(bgData);
+                }
             }
         }
         //TODO: Cover failed condition

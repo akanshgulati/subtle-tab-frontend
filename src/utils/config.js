@@ -9,10 +9,11 @@ const config = {
             showDay: false
         },
         weather: {
-            showCelsius: true,
+            unit: 'c'
         },
         background: {
-            themeId: 1
+            themeId: 1,
+            changeInterval: 5
         }
     }
 };
