@@ -400,8 +400,7 @@ svg:hover #close_btn {
 }
 
 .fade_in {
-    animation-name: fade_in;
-    animation-duration: 0.25s;
+    animation: fade_in .4s ease-out 0s forwards;
     animation-fill-mode: both;
     visibility: visible !important;
 }
@@ -415,8 +414,8 @@ svg:hover #close_btn {
 }
 
 .time {
-    font-size: 5rem;
-    line-height: 5rem;
+    font-size: 7rem;
+    line-height: 8rem;
 }
 
 .date {

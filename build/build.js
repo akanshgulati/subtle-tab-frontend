@@ -403,17 +403,27 @@ var backgroundVue = {
         },
         url: {
             handler: function handler(newValue, oldValue) {
+                var _this = this;
+
                 if (newValue === oldValue) {
                     return;
                 }
+                var imageLoaded = false;
                 this.isLoading();
                 var bgElement = document.getElementById('background');
                 var img = new Image();
                 img.src = newValue;
                 img.onload = function () {
                     bgElement.style.backgroundImage = 'url(' + newValue + ')';
+                    imageLoaded = true;
                     this.$emit('stopLoading');
                 }.bind(this);
+                setTimeout(function () {
+                    if (!imageLoaded) {
+                        bgElement.style.backgroundImage = 'url(./images/backgrounds/2.jpg)';
+                        _this.$emit('stopLoading');
+                    }
+                }, 3000);
             }
         }
     },
@@ -780,7 +790,7 @@ var bgUtil = {
     formImgURL: function formImgURL(string, id) {
         var arr = string.split(',');
         if (arr.length > 1) {
-            return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr) + '_' + this.getWallpaperSize() + '.jpg';
+            return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr) + this.getWallpaperSize() + '.jpg';
         } else {
             return string;
         }
@@ -798,11 +808,11 @@ var bgUtil = {
     getWallpaperSize: function getWallpaperSize() {
         var screenWidth = window.screen.width;
         if (screenWidth <= 1024) {
-            return 'b';
+            return '_b';
         } else if (screenWidth > 1024 && screenWidth < 1920) {
-            return 'h';
+            return '_h';
         } else {
-            return 'k';
+            return '';
         }
     },
     getCurrentTheme: function getCurrentTheme(id) {
@@ -826,7 +836,7 @@ exports = module.exports = __webpack_require__(12)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
 
 // exports
 

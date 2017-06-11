@@ -114,14 +114,22 @@
                     if (newValue === oldValue) {
                         return;
                     }
+                    let imageLoaded = false;
                     this.isLoading();
                     let bgElement = document.getElementById('background');
                     let img = new Image();
                     img.src = newValue;
                     img.onload = function () {
                         bgElement.style.backgroundImage = 'url(' + newValue + ')';
+                        imageLoaded = true;
                         this.$emit('stopLoading');
                     }.bind(this);
+                    setTimeout(()=>{
+                        if(!imageLoaded) {
+                            bgElement.style.backgroundImage = 'url(./images/backgrounds/2.jpg)';
+                            this.$emit('stopLoading');
+                        }
+                    }, 3000);
 
                 }
             }
