@@ -12,8 +12,13 @@
     ]
   },
   "permissions": [
-    "geolocation"
+    "geolocation",
+    "http://*.amazonaws.com/",
+    "unlimitedStorage"
   ],
+  "browser_action": {
+    "default_title": "Subtle"
+  },
   "icons": {
     "128": "images/icons/icon128.png",
     "16": "images/icons/icon16.png",

@@ -4,21 +4,21 @@ export default {
             id: 1,
             lValue: 'Nature',
             tags: 'nature',
-            value: 'landscape',
+            value: 'nature',
             imgUrl: 'images/nature_thumbnail.png'
         },
         {
             id: 2,
-            lValue: 'Structure',
+            lValue: 'Architecture',
             tags: 'building',
-            value: 'structure',
+            value: 'building',
             imgUrl: 'images/architecture_thumbnail.png'
         },
         {
             id: 3,
-            lValue: 'Monuments',
-            tags: 'monument',
-            value: 'monument',
+            lValue: 'Travel',
+            tags: 'travel',
+            value: 'travel',
             imgUrl: 'images/travel_thumbnail.png'
         },
         {
@@ -26,15 +26,26 @@ export default {
             lValue: 'Night Life',
             tags: 'night',
             value: 'night',
-            imgUrl: 'images/food_thumbnail.png'
+            imgUrl: 'images/night_thumbnail.jpg'
         },
 
     ],
     stored: {
-        'landscape': {
-            1: './images/backgrounds/1.jpg',
-            2: './images/backgrounds/2.jpg',
-            3: './images/backgrounds/2.jpg',
+        1: {
+            1: './images/backgrounds/nature-1.jpg',
+            2: './images/backgrounds/nature-2.jpeg'
+        },
+        2: {
+            1: './images/backgrounds/night-1.jpeg',
+            2: './images/backgrounds/night-2.jpeg'
+        },
+        3:{
+            1: './images/backgrounds/travel-1.jpeg',
+            2: './images/backgrounds/travel-2.jpeg'
+        },
+        4:{
+            1: './images/backgrounds/building-1.jpg',
+            2: './images/backgrounds/building-2.jpeg'
         }
     }
 }

@@ -1,12 +1,12 @@
 const config = {
     defaultCustomization: {
         showUtilities: {
-            showWeather: false,
+            showWeather: true,
             showClock: true,
         },
         clock: {
             showTwelveHour: true,
-            showDay: false
+            showDay: true
         },
         weather: {
             unit: 'c'

@@ -38,20 +38,21 @@
         },
         methods: {
             getBackgroundURL: function (reset) {
+                debugger;
                 const self = this;
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 const localBgData = storage.get(theme.value);
 
                 if (navigator.onLine) {
 
-                    let storedBg = bgData.stored[theme.value];
+                    let storedBg = bgData.stored[this.settings.themeId];
                     let localBg = storage.get(theme.value);
                     const allBackgrounds = Object.assign({}, storedBg, localBg);
                     const bgKeys = Object.keys(allBackgrounds);
 
                     let i;
 
-                    if(bgKeys.length > 0) {
+                    if(bgKeys.length > 1) {
                         for (i = 0; i < (bgKeys.length - 1); i++) {
                             if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
                                 self.url = bgUtil.formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
@@ -74,8 +75,8 @@
                         this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                     }
                 } else {
-                    self.url = 'images/backgrounds/1.jpg';
-                    self.nextUrl= 'images/backgrounds/2.jpg';
+                    self.url = bgData.stored[1][1];
+                    self.nextUrl= bgData.stored[1][2];
                 }
             },
             resetBackgroundTheme(){
@@ -97,10 +98,10 @@
                     storage.set('bg-seen', this.bgSeen);
                 }
 
+            },
+            getDefaultBg(){
+                 return 'url(' + bgData.stored[this.settings.themeId][2] + ')';
             }
-        },
-        beforeUpdated(){
-            debugger;
         },
         watch: {
             settings: {
@@ -114,6 +115,7 @@
                     if (newValue === oldValue) {
                         return;
                     }
+                    let self = this;
                     let imageLoaded = false;
                     this.isLoading();
                     let bgElement = document.getElementById('background');
@@ -126,10 +128,11 @@
                     }.bind(this);
                     setTimeout(()=>{
                         if(!imageLoaded) {
-                            bgElement.style.backgroundImage = 'url(./images/backgrounds/2.jpg)';
+                            debugger;
+                            bgElement.style.backgroundImage = self.getDefaultBg();
                             this.$emit('stopLoading');
                         }
-                    }, 3000);
+                    }, 2000);
 
                 }
             }

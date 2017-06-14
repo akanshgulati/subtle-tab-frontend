@@ -111,32 +111,43 @@ var storage = {
         id: 1,
         lValue: 'Nature',
         tags: 'nature',
-        value: 'landscape',
+        value: 'nature',
         imgUrl: 'images/nature_thumbnail.png'
     }, {
         id: 2,
-        lValue: 'Structure',
+        lValue: 'Architecture',
         tags: 'building',
-        value: 'structure',
+        value: 'building',
         imgUrl: 'images/architecture_thumbnail.png'
     }, {
         id: 3,
-        lValue: 'Monuments',
-        tags: 'monument',
-        value: 'monument',
+        lValue: 'Travel',
+        tags: 'travel',
+        value: 'travel',
         imgUrl: 'images/travel_thumbnail.png'
     }, {
         id: 4,
         lValue: 'Night Life',
         tags: 'night',
         value: 'night',
-        imgUrl: 'images/food_thumbnail.png'
+        imgUrl: 'images/night_thumbnail.jpg'
     }],
     stored: {
-        'landscape': {
-            1: './images/backgrounds/1.jpg',
-            2: './images/backgrounds/2.jpg',
-            3: './images/backgrounds/2.jpg'
+        1: {
+            1: './images/backgrounds/nature-1.jpg',
+            2: './images/backgrounds/nature-2.jpeg'
+        },
+        2: {
+            1: './images/backgrounds/night-1.jpeg',
+            2: './images/backgrounds/night-2.jpeg'
+        },
+        3: {
+            1: './images/backgrounds/travel-1.jpeg',
+            2: './images/backgrounds/travel-2.jpeg'
+        },
+        4: {
+            1: './images/backgrounds/building-1.jpg',
+            2: './images/backgrounds/building-2.jpeg'
         }
     }
 };
@@ -149,12 +160,12 @@ var storage = {
 var config = {
     defaultCustomization: {
         showUtilities: {
-            showWeather: false,
+            showWeather: true,
             showClock: true
         },
         clock: {
             showTwelveHour: true,
-            showDay: false
+            showDay: true
         },
         weather: {
             unit: 'c'
@@ -201,6 +212,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_customize_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_weather_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_weather_vue__);
+//
 //
 //
 //
@@ -330,20 +342,21 @@ var backgroundVue = {
 
     methods: {
         getBackgroundURL: function getBackgroundURL(reset) {
+            debugger;
             var self = this;
             var theme = __WEBPACK_IMPORTED_MODULE_1__utils_bgUtil__["a" /* default */].getCurrentTheme(this.settings.themeId);
             var localBgData = __WEBPACK_IMPORTED_MODULE_3__utils_storage__["a" /* default */].get(theme.value);
 
             if (navigator.onLine) {
 
-                var storedBg = __WEBPACK_IMPORTED_MODULE_2__utils_backgroundData__["a" /* default */].stored[theme.value];
+                var storedBg = __WEBPACK_IMPORTED_MODULE_2__utils_backgroundData__["a" /* default */].stored[this.settings.themeId];
                 var localBg = __WEBPACK_IMPORTED_MODULE_3__utils_storage__["a" /* default */].get(theme.value);
                 var allBackgrounds = Object.assign({}, storedBg, localBg);
                 var bgKeys = Object.keys(allBackgrounds);
 
                 var i = void 0;
 
-                if (bgKeys.length > 0) {
+                if (bgKeys.length > 1) {
                     for (i = 0; i < bgKeys.length - 1; i++) {
                         if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
                             self.url = __WEBPACK_IMPORTED_MODULE_1__utils_bgUtil__["a" /* default */].formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
@@ -366,8 +379,8 @@ var backgroundVue = {
                         this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                     }
             } else {
-                self.url = 'images/backgrounds/1.jpg';
-                self.nextUrl = 'images/backgrounds/2.jpg';
+                self.url = __WEBPACK_IMPORTED_MODULE_2__utils_backgroundData__["a" /* default */].stored[1][1];
+                self.nextUrl = __WEBPACK_IMPORTED_MODULE_2__utils_backgroundData__["a" /* default */].stored[1][2];
             }
         },
         resetBackgroundTheme: function resetBackgroundTheme() {
@@ -388,12 +401,11 @@ var backgroundVue = {
                 this.bgSeen.push(id);
                 __WEBPACK_IMPORTED_MODULE_3__utils_storage__["a" /* default */].set('bg-seen', this.bgSeen);
             }
+        },
+        getDefaultBg: function getDefaultBg() {
+            return 'url(' + __WEBPACK_IMPORTED_MODULE_2__utils_backgroundData__["a" /* default */].stored[this.settings.themeId][2] + ')';
         }
     },
-    beforeUpdated: function beforeUpdated() {
-        debugger;
-    },
-
     watch: {
         settings: {
             handler: function handler() {
@@ -408,6 +420,7 @@ var backgroundVue = {
                 if (newValue === oldValue) {
                     return;
                 }
+                var self = this;
                 var imageLoaded = false;
                 this.isLoading();
                 var bgElement = document.getElementById('background');
@@ -420,10 +433,11 @@ var backgroundVue = {
                 }.bind(this);
                 setTimeout(function () {
                     if (!imageLoaded) {
-                        bgElement.style.backgroundImage = 'url(./images/backgrounds/2.jpg)';
+                        debugger;
+                        bgElement.style.backgroundImage = self.getDefaultBg();
                         _this.$emit('stopLoading');
                     }
-                }, 3000);
+                }, 2000);
             }
         }
     },
@@ -680,6 +694,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
+//
 
 
 
@@ -695,6 +710,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
     data: function data() {
         return {
             weatherCode: null,
+            weatherCity: null,
             temp: null,
             localWeather: this.localWeather,
             error: null,
@@ -715,6 +731,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
                 } else {
                     this.temp = this.settings.unit === 'f' ? this.localWeather[1] : this.localWeather[2];
                     this.weatherCode = this.localWeather[3];
+                    this.weatherCity = this.localWeather[4];
                 }
             } else {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -737,7 +754,8 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
                     var now = +new Date();
                     self.temp = weather.temp;
                     self.weatherCode = weather.code;
-                    _this.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode];
+                    self.weatherCity = weather.city;
+                    _this.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
                     __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('weather', _this.localWeather);
                 },
                 error: function error(_error) {
@@ -836,7 +854,7 @@ exports = module.exports = __webpack_require__(12)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -1355,7 +1373,9 @@ module.exports = __vue_exports__
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [_h('div', {
+  return _h('div', [(_vm.isLoading) ? _h('div', {
+    staticClass: "weather-loading"
+  }, ["Loading.."]) : _vm._e(), " ", _h('div', {
     class: {
       'fade_in': !_vm.isLoading
     },
@@ -1371,13 +1391,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, ["℉"]) : _vm._e(), " ", (this.settings.unit === 'c') ? _h('sup', {
     staticClass: "temperature-unit"
   }, ["℃"]) : _vm._e()]) : _vm._e(), " ", _h('div', {
-    staticClass: "weather-icon"
+    staticClass: "weather-icon flex"
   }, [_h('i', {
     staticClass: "w-icon",
     class: 'icon-' + _vm.weatherCode
-  })])]), " ", (_vm.isLoading) ? _h('div', {
-    staticClass: "weather-loading"
-  }, ["Loading.."]) : _vm._e()])
+  }), " ", _h('span', {
+    staticClass: "weather-city"
+  }, [_vm._s(_vm.weatherCity)])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -1840,10 +1860,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('svg', {
     attrs: {
       "enable-background": "new 0 0 20 20",
-      "height": "30px",
+      "height": "1.6rem",
       "version": "1.1",
       "viewBox": "0 0 100 100",
-      "width": "30px",
+      "width": "1.6rem",
       "xml:space": "preserve",
       "xmlns": "http://www.w3.org/2000/svg",
       "xmlns:xlink": "http://www.w3.org/1999/xlink"
@@ -1868,7 +1888,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "settings": _vm.componentsData.weather
     }
-  }) : _vm._e()])])]), " ", _h('customize', {
+  }) : _vm._e()])])]), " ", (_vm.showCustomizeMenu) ? _h('div', {
+    staticClass: "customization-overlay"
+  }) : _vm._e(), " ", _h('customize', {
     class: {
       'fade_in': _vm.showCustomizeMenu
     },
