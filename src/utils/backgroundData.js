@@ -26,7 +26,7 @@ export default {
             lValue: 'Night Life',
             tags: 'night',
             value: 'night',
-            imgUrl: 'images/night_thumbnail.jpg'
+            imgUrl: 'images/night_thumbnail.png'
         },
 
     ],

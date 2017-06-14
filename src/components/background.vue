@@ -1,23 +1,20 @@
 <template>
     <div>
-        <!--<div class="loading" :class="{ 'show-loading': isLoading}"></div>-->
         <div class="util-overlay"></div>
         <div id="background"></div>
-        <!--<bgimage :url="url" :isLoading="isLoading" v-on:bgLoaded="isBgLoaded"></bgimage>-->
         <div id="background-hidden" :style=" { 'background-image': 'url(' + nextUrl + ')'}"></div>
     </div>
 </template>
 
 <script>
-    import Bgimage from './bgimage.vue'
     import bgUtil from '../utils/bgUtil'
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
 
     let backgroundVue = {
         beforeCreate(){
-            this.backgroundJS = chrome.extension.getBackgroundPage();
-            this.bgTabsCount = this.backgroundJS.getTabsCount() || 0;
+            //this.backgroundJS = chrome.extension.getBackgroundPage();
+            //this.bgTabsCount = this.backgroundJS.getTabsCount() || 0;
             this.bgSeen = storage.get('bg-seen') || [];
         },
         data () {
@@ -25,8 +22,6 @@
                 url:'',
                 nextUrl:'',
                 showBackground: false,
-                tabsCount: this.bgTabsCount,
-                backgroundJS : this.backgroundJS,
                 bgSeen : this.bgSeen,
                 tabSwitchCount: this.settings.changeInterval,
                 themeId: this.settings.themeId
@@ -51,7 +46,6 @@
                     const bgKeys = Object.keys(allBackgrounds);
 
                     let i;
-
                     if(bgKeys.length > 1) {
                         for (i = 0; i < (bgKeys.length - 1); i++) {
                             if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
@@ -62,17 +56,25 @@
                             }
                         }
                     }else{
+                        //rarest case
                         this.isLoading();
-                        this.backgroundJS.getBackground(theme, self.getBackgroundURL);
+                        chrome.runtime.sendMessage({query:'getBackground', theme}, ()=>{
+                            this.getBackgroundURL();
+                        });
+                        //this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                         return;
                     }
                     // Case when installing extension initially or bg data gets empty in localstorage.
                     if(!localBgData || (i && i >= (bgKeys.length - 1))){
-                        this.backgroundJS.getBackground(theme);
+                        chrome.runtime.sendMessage({query:'getBackground', theme});
+                        //this.backgroundJS.getBackground(theme);
                     }
                     // Case when no unique background is found.
                     else if((typeof localBgData === 'object' && Object.keys(localBgData).length === 0)) {
-                        this.backgroundJS.getBackground(theme, self.getBackgroundURL);
+                        chrome.runtime.sendMessage({query:'getBackground', theme}, ()=>{
+                            this.getBackgroundURL();
+                        });
+                        //this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                     }
                 } else {
                     self.url = bgData.stored[1][1];
@@ -93,10 +95,13 @@
                 this.$emit('startLoading');
             },
             markBgSeen(id){
-                if(this.bgTabsCount % this.settings.changeInterval === 0) {
-                    this.bgSeen.push(id);
-                    storage.set('bg-seen', this.bgSeen);
-                }
+                chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs)=>{
+                    if(tabs % this.settings.changeInterval === 0) {
+                        this.bgSeen.push(id);
+                        storage.set('bg-seen', this.bgSeen);
+                    }
+
+                });
 
             },
             getDefaultBg(){

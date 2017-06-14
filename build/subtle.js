@@ -1,23 +1,5 @@
-/*
-chrome.webRequest.onHeadersReceived.addListener(
-    function(details) {
-        details.responseHeaders.push({
-            "name":"Cache-Control",
-            "value": "max-age=86400"
-        });
-        /!*for (var i = 0; i < details.requestHeaders.length; ++i) {
-            if (details.requestHeaders[i].name === 'User-Agent') {
-                details.requestHeaders.splice(i, 1);
-                break;
-            }
-        }*!/
-        debugger;
-        return { responseHeaders: details.responseHeaders };
-    },
-    {urls: ['<all_urls>']},
-    [ 'blocking', 'responseHeaders']
-);*/
 let tabsCount = 1;
+let bgData;
 let storage = {
     get(key){
         let value = localStorage.getItem(key);
@@ -41,9 +23,7 @@ let storage = {
         this.set(key, initialValue);
     }
 };
-const _config = {
 
-};
 function init() {
     chrome.tabs.onCreated.addListener(function () {
         tabsCount++;
@@ -72,31 +52,34 @@ function filterResponses(response) {
         return result;
     }
 }
-let bgData;
-function getBackground(theme, callback, page){
-    let xmlhttp = new XMLHttpRequest();
-    let self = this;
-    page = page || 1;
-    //https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=d3f3d8de69b56fb180270e35cdc2c2f8&photoset_id=72157681909415503&user_id=150112244%40N08&extras=url_h&per_page=100&format=json&nojsoncallback=1
-  /*  let url = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos';
-    url += '&api_key=d42bcbb7a689163cfa7fcdc02f7e9110';
-    url += "&min_upload_date=" + _config.minDate;
-    url += "&photoset_id=" + _config.photoSets[theme.tags];
-    url += '&extras=url_k,url_h,url_l,url_o';
-    url += '&page=' + page;
-    url += '&per_page=500&format=json&nojsoncallback=1';*/
+chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => {
+        debugger;
+        if (request.query === 'getBackground') {
+            getBackground(request.theme, sendResponse);
+        }
+        else if (request.query === 'getTabsCount') {
+            sendResponse(tabsCount);
+        }
+        return true;
+    });
 
+
+let getBackground = (theme, callback, page) => {
+    let xmlhttp = new XMLHttpRequest();
+    page = page || 1;
     let url = 'http://ec2-52-74-214-57.ap-southeast-1.compute.amazonaws.com/';
     url += theme.tags + '/' + page;
     xmlhttp.open('GET', url);
+    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let response = JSON.parse(xmlhttp.responseText);
             //responses will be other than seen, having good views and sizes
             bgData = filterResponses(response);
             if (Object.keys(bgData).length < 10 && response.pages > page) {
-                self.getBackground(theme, callback, page + 1);
-            }else {
+                getBackground(theme, callback, page + 1);
+            } else {
                 storage.set(theme.value, bgData);
                 if (typeof callback === 'function') {
                     callback(bgData);
