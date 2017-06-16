@@ -32,8 +32,7 @@
             this.getBackgroundURL();
         },
         methods: {
-            getBackgroundURL: function (reset) {
-                debugger;
+            getBackgroundURL: function () {
                 const self = this;
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 const localBgData = storage.get(theme.value);

@@ -17,3 +17,14 @@
 .font-center{
     text-align: center;
 }
+.logo-onboarding{
+    height:128px;
+    width: 128px;
+    background: url('../images/')
+}
+.italics{
+    font-style: italic;
+}
+.bold{
+    font-weight: bold;
+}

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --open --inline --hot --quiet --port 8080",
     "build": "cross-env NODE_ENV=dev webpack --progress --hide-modules",
+    "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "watch": "cross-env NODE_ENV=dev webpack --progress --colors --hide-modules --watch"
   },
   "dependencies": {

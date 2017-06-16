@@ -1,7 +1,7 @@
 {
-  "name": "Subtle New Tab",
-  "description": "Override the new tab page with awesomeness",
-  "version": "1.0",
+  "name": "Subtle : Personalized New Tab",
+  "description": "Transform the new tab page into awesomeness",
+  "version": "0.0.0.1",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -14,9 +14,7 @@
   "permissions": [
     "geolocation",
     "http://*.amazonaws.com/",
-    "unlimitedStorage",
-    "https://query.yahooapis.com/*",
-    "unlimitedStorage"
+    "https://query.yahooapis.com/*"
   ],
   "browser_action": {
     "default_title": "Subtle"

@@ -3,7 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        build: ['./src/main.js']
+        build: ['./src/main.js'],
+        subtle: ['./src/subtle.js']
     },
     output: {
         path: path.resolve(__dirname, './build'),

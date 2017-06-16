@@ -14,6 +14,9 @@ const config = {
         background: {
             themeId: 1,
             changeInterval: 5
+        },
+        onboarding: {
+            showOnboarding: true
         }
     }
 };
