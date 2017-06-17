@@ -24,7 +24,8 @@
                 showBackground: false,
                 bgSeen : this.bgSeen,
                 tabSwitchCount: this.settings.changeInterval,
-                themeId: this.settings.themeId
+                themeId: this.settings.themeId,
+                defaultImageLoaded: false
             }
         },
         props: ['settings'],
@@ -32,7 +33,7 @@
             this.getBackgroundURL();
         },
         methods: {
-            getBackgroundURL: function () {
+            getBackgroundURL: function (updateNextURLOnly) {
                 const self = this;
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 const localBgData = storage.get(theme.value);
@@ -44,37 +45,35 @@
                     const allBackgrounds = Object.assign({}, storedBg, localBg);
                     const bgKeys = Object.keys(allBackgrounds);
 
-                    let i;
-                    if(bgKeys.length > 1) {
-                        for (i = 0; i < (bgKeys.length - 1); i++) {
+                    let i = 0;
+                    if(!updateNextURLOnly) {
+                        for (; i < (bgKeys.length - 1); i++) {
                             if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
-                                self.url = bgUtil.formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
-                                self.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1]);
+                                this.url = bgUtil.formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
+                                chrome.runtime.sendMessage({query: 'loadBackground', url: bgUtil.formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1])});
+                                //this.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1]);
                                 this.markBgSeen(bgKeys[i]);
                                 break;
                             }
                         }
-                    }else{
-                        //rarest case
-                        this.isLoading();
-                        chrome.runtime.sendMessage({query:'getBackground', theme}, ()=>{
-                            this.getBackgroundURL();
-                        });
-                        //this.backgroundJS.getBackground(theme, self.getBackgroundURL);
-                        return;
                     }
+                    // This is just when we have to load a new background on localbackground update.
+                    else{
+                        chrome.runtime.sendMessage({query: 'loadBackground', url: bgUtil.formImgURL(allBackgrounds[bgKeys[2]], bgKeys[2])});
+                        //this.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[2]], bgKeys[2]);
+                    }
+
                     // Case when installing extension initially or bg data gets empty in localstorage.
-                    if(!localBgData || (i && i >= (bgKeys.length - 1))){
+                    if(!localBgData){
                         chrome.runtime.sendMessage({query:'getBackground', theme});
                         //this.backgroundJS.getBackground(theme);
-                    }
-                    // Case when no unique background is found.
-                    else if((typeof localBgData === 'object' && Object.keys(localBgData).length === 0)) {
+                    }else if(i && i >= (bgKeys.length - 1)){
+                        this.url = bgUtil.formImgURL(allBackgrounds[bgKeys[bgKeys.length - 1]], bgKeys[bgKeys.length - 1]);
                         chrome.runtime.sendMessage({query:'getBackground', theme}, ()=>{
-                            this.getBackgroundURL();
+                            this.getBackgroundURL(true);
                         });
-                        //this.backgroundJS.getBackground(theme, self.getBackgroundURL);
                     }
+
                 } else {
                     self.url = bgData.stored[1][1];
                     self.nextUrl= bgData.stored[1][2];
@@ -94,17 +93,18 @@
                 this.$emit('startLoading');
             },
             markBgSeen(id){
-                chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs)=>{
-                    if(tabs % this.settings.changeInterval === 0) {
+                chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
+                    if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
                         this.bgSeen.push(id);
                         storage.set('bg-seen', this.bgSeen);
+                    } else if (this.defaultImageLoaded) {
+                        chrome.runtime.sendMessage({query: 'setTabsCount', value: parseInt(tabs) - 1});
                     }
 
                 });
-
             },
             getDefaultBg(){
-                 return 'url(' + bgData.stored[this.settings.themeId][2] + ')';
+                 return bgData.stored[this.settings.themeId][1];
             }
         },
         watch: {
@@ -120,23 +120,27 @@
                         return;
                     }
                     let self = this;
-                    let imageLoaded = false;
+                    this.defaultImageLoaded = false;
                     this.isLoading();
                     let bgElement = document.getElementById('background');
                     let img = new Image();
                     img.src = newValue;
-                    img.onload = function () {
-                        bgElement.style.backgroundImage = 'url(' + newValue + ')';
-                        imageLoaded = true;
-                        this.$emit('stopLoading');
-                    }.bind(this);
-                    setTimeout(()=>{
-                        if(!imageLoaded) {
-                            debugger;
-                            bgElement.style.backgroundImage = self.getDefaultBg();
+                    img.onload = ()=>{
+                        if(!this.defaultImageLoaded) {
+                            clearTimeout(defaultImageTimeout);
+                            bgElement.style.backgroundImage = 'url(' + newValue + ')';
                             this.$emit('stopLoading');
                         }
-                    }, 2000);
+                    };
+                    let defaultImageTimeout = setTimeout(()=>{
+                        if(!this.defaultImageLoaded) {
+                            //this.nextUrl = newValue;
+                            chrome.runtime.sendMessage({query: 'loadBackground', url: newValue});
+                            this.defaultImageLoaded = true;
+                            bgElement.style.backgroundImage = 'url(' + self.getDefaultBg() + ')';
+                            this.$emit('stopLoading');
+                        }
+                    }, 2500);
 
                 }
             }

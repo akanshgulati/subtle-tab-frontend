@@ -61,12 +61,12 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 32);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 32:
+/***/ 29:
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(4);
@@ -77,7 +77,7 @@ module.exports = __webpack_require__(4);
 /***/ 4:
 /***/ function(module, exports) {
 
-var tabsCount = 1;
+var tabsCount = 0;
 var bgData = void 0;
 var storage = {
     get: function get(key) {
@@ -89,17 +89,6 @@ var storage = {
     },
     remove: function remove(key) {
         return localStorage.removeItem(key);
-    },
-    increment: function increment(key) {
-        var item = this.get(key);
-        if (typeof item === 'number') {
-            this.set(key, item + 1);
-        }
-    },
-    append: function append(key, value) {
-        var initialValue = this.get(key) || [];
-        initialValue.push(value);
-        this.set(key, initialValue);
     }
 };
 
@@ -126,45 +115,69 @@ function filterResponses(response) {
     }
 }
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    debugger;
     if (request.query === 'getBackground') {
-        getBackground(request.theme, sendResponse);
+        getBackground(request.theme).then(function () {
+            if (sendResponse && typeof sendResponse === 'function') {
+                sendResponse(true);
+            }
+        });
     } else if (request.query === 'getTabsCount') {
         sendResponse(tabsCount);
+    } else if (request.query === 'setTabsCount') {
+        setTabsCount(request.value);
+        sendResponse(true);
+    } else if (request.query === 'loadBackground') {
+        loadBackground(request.url);
     }
     return true;
 });
 
-var getBackground = function getBackground(theme, callback, page) {
-    var xmlhttp = new XMLHttpRequest();
-
-    var currentPage = storage.get('current-page') || {};
-    var themePage = currentPage[theme.value] && +currentPage[theme.value] + 1 || 1;
-    var url = 'http://ec2-52-74-214-57.ap-southeast-1.compute.amazonaws.com/';
-    url += theme.tags + '/' + themePage;
-    xmlhttp.open('GET', url);
-    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            var response = JSON.parse(xmlhttp.responseText);
-            //responses will be other than seen, having good views and sizes
-            bgData = filterResponses(response);
-            currentPage[theme.value] = themePage;
-            storage.set('current-page', currentPage);
-            /*if (Object.keys(bgData).length < 10 && response.pages > page) {
-                getBackground(theme, callback, page + 1);
-            } else {*/
-            storage.set(theme.value, bgData);
-            if (typeof callback === 'function') {
-                callback(bgData);
+var getBackground = function getBackground(theme) {
+    return new Promise(function (resolve, reject) {
+        var xmlhttp = new XMLHttpRequest();
+        var currentPage = storage.get('current-page') || {};
+        var themePage = currentPage[theme.value] && +currentPage[theme.value] + 1 || 1;
+        var url = 'http://ec2-52-74-214-57.ap-southeast-1.compute.amazonaws.com/';
+        url += theme.tags + '/' + themePage;
+        xmlhttp.open('GET', url);
+        xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                var response = JSON.parse(xmlhttp.responseText);
+                //responses will be other than seen, having good views and sizes
+                bgData = filterResponses(response);
+                //If all pages are empty;
+                if (currentPage === response.pages) {
+                    currentPage = 0;
+                }
+                currentPage[theme.value] = themePage;
+                storage.set('current-page', currentPage);
+                /*if (Object.keys(bgData).length < 10 && response.pages > page) {
+                 getBackground(theme, callback, page + 1);
+                 } else {*/
+                storage.set(theme.value, bgData);
+                resolve();
             }
-        }
-        //TODO: Cover failed condition
-    };
-    xmlhttp.send();
+        };
+        xmlhttp.onerror = function () {
+            reject(xmlhttp.status);
+        };
+        xmlhttp.send();
+    });
+};
+var previousURL = void 0;
+var loadBackground = function loadBackground(url) {
+    previousURL = previousURL || url;
+    if (previousURL !== url) {
+        previousURL = url;
+        var image = new Image();
+        image.src = url;
+    }
 };
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details && details.reason && details.reason == 'install') chrome.tabs.create({ url: "index.html" });
+    if (details && details.reason && details.reason == 'install') {
+        chrome.tabs.create({ url: "index.html" });
+    }
 });
 
 chrome.browserAction.onClicked.addListener(function (tab) {
@@ -174,6 +187,9 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 function init() {
     chrome.tabs.onCreated.addListener(function () {
         tabsCount++;
+        if (tabsCount === 2) {
+            storage.set('seen-onboarding', true);
+        }
     });
 }
 init();

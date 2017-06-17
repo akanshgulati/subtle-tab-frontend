@@ -1,7 +1,7 @@
 <template>
     <div>
-        <onboarding id="onboarding" v-if="sharedData.onboarding.showOnboarding" v-on:stopOnboarding="stopOnboarding"></onboarding>
-        <div :class="{'fade_in':componentsData.onboarding.showOnboarding}" v-if="!componentsData.onboarding.showOnboarding">
+        <onboarding id="onboarding" v-if="!seenOnBoarding" v-on:stopOnboarding="stopOnBoarding"></onboarding>
+        <div v-if="seenOnBoarding">
             <div class="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="componentsData.background" v-on:stopLoading="stopLoad" v-on:startLoading="startLoad"></background>
@@ -40,6 +40,7 @@
     export default {
         beforeCreate(){
             this.sharedData = storage.get('sharedData') || config.defaultCustomization;
+            this.seenOnBoarding = storage.get('seen-onboarding') || false;
         },
         beforeMount(){
 
@@ -49,7 +50,8 @@
                 sharedData: this.sharedData,
                 componentsData: JSON.parse(JSON.stringify(this.sharedData)),
                 showCustomizeMenu: false,
-                isLoading: true
+                isLoading: true,
+                seenOnBoarding : this.seenOnBoarding
             }
         },
         watch:{
@@ -71,8 +73,9 @@
             startLoad(){
                 this.isLoading = true;
             },
-            stopOnboarding(){
-                this.sharedData.onboarding.showOnboarding = false;
+            stopOnBoarding(){
+                this.seenOnBoarding = true;
+                storage.set('seen-onboarding', this.seenOnBoarding);
             }
         },
         components: {

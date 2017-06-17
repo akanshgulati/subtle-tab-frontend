@@ -21,7 +21,7 @@ let bgUtil = {
     formImgURL(string, id){
         let arr = string.split(',');
         if (arr.length > 1) {
-            return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr) + this.getWallpaperSize() + '.jpg';
+            return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr) + this.getWallpaperSize();
         } else {
             return string;
         }
@@ -39,9 +39,9 @@ let bgUtil = {
     getWallpaperSize(){
         let screenWidth = window.screen.width;
         if (screenWidth <= 1024) {
-            return '_b';
+            return '_b.jpg';
         } else if(screenWidth > 1024 && screenWidth < 1920 ){
-            return '_h';
+            return '_h.jpg';
         }else{
             return '';
         }

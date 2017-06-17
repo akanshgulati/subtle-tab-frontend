@@ -91,13 +91,14 @@ label {
     background-size: cover;
     position: fixed;
     z-index: 10000;
-    animation: fade_in 3s;
+    animation: fade_in 2s;
 }
 #onboarding h1{
     font-size: 3rem;
     color: white;
     font-weight: 300;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.30);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.50);
+    margin-bottom: 4rem;
 }
 .onboarding-btn{
     width: 12rem;
