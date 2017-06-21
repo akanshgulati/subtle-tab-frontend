@@ -61,36 +61,119 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 33);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 29:
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4);
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(1);
 
 
-/***/ },
-
-/***/ 4:
-/***/ function(module, exports) {
-
-var tabsCount = 0;
-var bgData = void 0;
 var storage = {
     get: function get(key) {
         var value = localStorage.getItem(key);
         return isNaN(value) ? JSON.parse(value) : value;
     },
-    set: function set(key, data) {
-        return localStorage.setItem(key, JSON.stringify(data));
+    set: function set(key, value) {
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1) {
+            var obj = {};
+            obj[key] = value;
+            console.log(obj);
+            chrome.storage.sync.set(obj);
+        } else {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+    },
+    setLocal: function setLocal(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
     },
     remove: function remove(key) {
         return localStorage.removeItem(key);
+    },
+    increment: function increment(key) {
+        var item = this.get(key);
+        if (typeof item === 'number') {
+            this.set(key, item + 1);
+        }
+    },
+    append: function append(key, value) {
+        var initialValue = this.get(key) || [];
+        initialValue.push(value);
+        this.set(key, initialValue);
+    },
+    getMap: function getMap(key) {
+        var value = localStorage.getItem(key);
+        return isNaN(value) ? JSON.parse(value) : value;
+    },
+    setMap: function setMap(key, data) {
+        return localStorage.setItem(key, JSON.stringify(data));
+    },
+
+    chromeSync: {
+        get: function get(key, callback) {
+            chrome.storage.sync.get(key, function (details) {
+                callback(details);
+            });
+        },
+        set: function set(key, value, callback) {
+            chrome.storage.sync.set({ key: value }, function (details) {
+                callback(details);
+            });
+        }
     }
+
 };
+/* harmony default export */ exports["a"] = storage;
+
+/***/ },
+
+/***/ 1:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    THEME: {
+        NATURE: 'nature',
+        ARCHITECTURE: 'building',
+        TRAVEL: 'travel',
+        NIGHT: 'night'
+    },
+    STORAGE: {
+        SHARED_DATA: 'shared-data',
+        WEATHER: 'weather',
+        BACKGROUND_SEEN: 'bg-seen',
+        CURRENT_PAGE: 'current-page',
+        SEEN_ONBOARDING: 'seen-onboarding'
+    },
+    SYNC: ['shared-data', 'bg-seen', 'current-page']
+};
+
+/***/ },
+
+/***/ 33:
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(5);
+
+
+/***/ },
+
+/***/ 5:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
+
+
+
+var tabsCount = 0;
+var bgData = void 0;
+var DEBUG = true;
 
 function getTabsCount() {
     return tabsCount;
@@ -104,7 +187,7 @@ function filterResponses(response) {
     if (response && response.photo) {
         var photoKeys = Object.keys(response.photo);
         var photos = response.photo;
-        var storedSeenIds = storage.get('bg-seen') || [];
+        var storedSeenIds = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN) || [];
         var result = {};
         for (var i = 0; i < photoKeys.length; i++) {
             if (storedSeenIds.indexOf(photos[photoKeys[i]]) === -1) {
@@ -116,28 +199,48 @@ function filterResponses(response) {
 }
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.query === 'getBackground') {
-        getBackground(request.theme).then(function () {
-            if (sendResponse && typeof sendResponse === 'function') {
-                sendResponse(true);
-            }
-        });
+        getBackground(request.theme, request.newPage);
     } else if (request.query === 'getTabsCount') {
         sendResponse(tabsCount);
     } else if (request.query === 'setTabsCount') {
         setTabsCount(request.value);
         sendResponse(true);
-    } else if (request.query === 'loadBackground') {
-        loadBackground(request.url);
+    } else if (request.query === 'loadNextBackground') {
+        loadNextBackground(request.url);
+    } else if (request.query === 'loadCurrentBackground') {
+        loadCurrentBackground(request.url, sendResponse);
+    } else if (request.query === 'log') {
+        _console(request.value);
     }
     return true;
 });
 
-var getBackground = function getBackground(theme) {
+var loadCurrentBackground = function loadCurrentBackground(url, callback) {
+    var defaultImageLoaded = false;
+    var img = new Image();
+    img.src = url;
+    img.onload = function () {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    var defaultImageTimeout = setTimeout(function () {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 2500);
+};
+var getBackground = function getBackground(theme, changePage) {
     return new Promise(function (resolve, reject) {
         var xmlhttp = new XMLHttpRequest();
-        var currentPage = storage.get('current-page') || {};
-        var themePage = currentPage[theme.value] && +currentPage[theme.value] + 1 || 1;
-        var url = 'http://ec2-52-74-214-57.ap-southeast-1.compute.amazonaws.com/';
+        var currentPage = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE) || {};
+        var themePage = currentPage[theme.value] || 0;
+
+        if (changePage) {
+            themePage++;
+        }
+
+        var url = 'http://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
         xmlhttp.open('GET', url);
         xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -147,15 +250,13 @@ var getBackground = function getBackground(theme) {
                 //responses will be other than seen, having good views and sizes
                 bgData = filterResponses(response);
                 //If all pages are empty;
-                if (currentPage === response.pages) {
-                    currentPage = 0;
+                if (themePage === response.pages) {
+                    themePage = 0;
                 }
                 currentPage[theme.value] = themePage;
-                storage.set('current-page', currentPage);
-                /*if (Object.keys(bgData).length < 10 && response.pages > page) {
-                 getBackground(theme, callback, page + 1);
-                 } else {*/
-                storage.set(theme.value, bgData);
+                __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('current-page', currentPage);
+
+                updateThemeStorage(bgData, theme);
                 resolve();
             }
         };
@@ -165,15 +266,39 @@ var getBackground = function getBackground(theme) {
         xmlhttp.send();
     });
 };
+var updateThemeStorage = function updateThemeStorage(bgData, theme) {
+    var themeLocalStorage = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].THEME[theme.value]);
+    if (!themeLocalStorage) {
+        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(theme.value, bgData);
+        return;
+    }
+    var allKeys = Object.keys(themeLocalStorage);
+    var lastURLKey = allKeys[allKeys.length];
+
+    var lastStoredURL = themeLocalStorage[lastURLKey];
+    // Storing last background url for next round;
+    var obj = {};
+    obj[lastURLKey] = lastStoredURL;
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(theme.value, Object.assign({}, obj, bgData));
+};
 var previousURL = void 0;
-var loadBackground = function loadBackground(url) {
+var loadNextBackground = function loadNextBackground(url) {
     previousURL = previousURL || url;
     if (previousURL !== url) {
+        _console('BG: Load Next Background for', url);
         previousURL = url;
         var image = new Image();
         image.src = url;
     }
 };
+
+var _console = function _console(log) {
+    if (DEBUG) {
+        console.log(log);
+    }
+};
+
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details && details.reason && details.reason == 'install') {
         chrome.tabs.create({ url: "index.html" });
@@ -181,14 +306,25 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.create({ url: "index.html" });
+    chrome.tabs.create();
+});
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+    var key = void 0;
+    for (key in changes) {
+        if (!changes.hasOwnProperty(key)) {
+            continue;
+        }
+        _console("Storage Changed" + JSON.stringify(changes[key]));
+        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, changes[key].newValue);
+    }
 });
 
 function init() {
     chrome.tabs.onCreated.addListener(function () {
         tabsCount++;
         if (tabsCount === 2) {
-            storage.set('seen-onboarding', true);
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, true);
         }
     });
 }

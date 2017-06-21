@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -69,13 +69,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(1);
+
+
 var storage = {
     get: function get(key) {
         var value = localStorage.getItem(key);
         return isNaN(value) ? JSON.parse(value) : value;
     },
-    set: function set(key, data) {
-        return localStorage.setItem(key, JSON.stringify(data));
+    set: function set(key, value) {
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1) {
+            var obj = {};
+            obj[key] = value;
+            console.log(obj);
+            chrome.storage.sync.set(obj);
+        } else {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+    },
+    setLocal: function setLocal(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
     },
     remove: function remove(key) {
         return localStorage.removeItem(key);
@@ -97,12 +110,48 @@ var storage = {
     },
     setMap: function setMap(key, data) {
         return localStorage.setItem(key, JSON.stringify(data));
+    },
+
+    chromeSync: {
+        get: function get(key, callback) {
+            chrome.storage.sync.get(key, function (details) {
+                callback(details);
+            });
+        },
+        set: function set(key, value, callback) {
+            chrome.storage.sync.set({ key: value }, function (details) {
+                callback(details);
+            });
+        }
     }
+
 };
 /* harmony default export */ exports["a"] = storage;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    THEME: {
+        NATURE: 'nature',
+        ARCHITECTURE: 'building',
+        TRAVEL: 'travel',
+        NIGHT: 'night'
+    },
+    STORAGE: {
+        SHARED_DATA: 'shared-data',
+        WEATHER: 'weather',
+        BACKGROUND_SEEN: 'bg-seen',
+        CURRENT_PAGE: 'current-page',
+        SEEN_ONBOARDING: 'seen-onboarding'
+    },
+    SYNC: ['shared-data', 'bg-seen', 'current-page']
+};
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -135,25 +184,30 @@ var storage = {
     stored: {
         1: {
             1: './images/backgrounds/nature-1.jpg',
-            2: './images/backgrounds/nature-2.jpeg'
+            2: './images/backgrounds/nature-2.jpg',
+            3: './images/backgrounds/nature-3.jpg'
         },
         2: {
-            1: './images/backgrounds/night-1.jpeg',
-            2: './images/backgrounds/night-2.jpeg'
+            4: './images/backgrounds/building-1.jpg',
+            5: './images/backgrounds/building-2.jpg',
+            6: './images/backgrounds/building-3.jpg'
         },
         3: {
-            1: './images/backgrounds/travel-1.jpeg',
-            2: './images/backgrounds/travel-2.jpeg'
+            7: './images/backgrounds/travel-1.jpg',
+            8: './images/backgrounds/travel-2.jpg',
+            9: './images/backgrounds/travel-3.jpg'
         },
         4: {
-            1: './images/backgrounds/building-1.jpg',
-            2: './images/backgrounds/building-2.jpeg'
+            10: './images/backgrounds/night-1.jpg',
+            11: './images/backgrounds/night-2.jpg',
+            12: './images/backgrounds/night-3.jpg'
         }
+
     }
 };
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -179,13 +233,13 @@ var config = {
 /* harmony default export */ exports["a"] = config;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_vue__);
 
 
@@ -198,23 +252,24 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 });
 
 /***/ },
-/* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_clock_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_clock_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_clock_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_background_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_background_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_background_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_customize_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_customize_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_weather_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_weather_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_onboarding_vue__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_onboarding_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_clock_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_background_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_customize_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_weather_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_onboarding_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_onboarding_vue__);
 //
 //
 //
@@ -245,6 +300,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 //
 //
 //
+
 
 
 
@@ -256,10 +312,24 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
-        this.sharedData = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('sharedData') || __WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* default */].defaultCustomization;
+        this.sharedData = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA) || __WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* default */].defaultCustomization;
         this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('seen-onboarding') || false;
+        /* storage.chromeSync.get(null, (details) => {
+             console.log("Details fetched", details);
+             if (typeof details === 'object') {
+                 console.log("Details on Start", details);
+                 if (details[Constants.STORAGE.SHARED_DATA]) {
+                     storage.set(Constants.STORAGE.SHARED_DATA, details[Constants.STORAGE.SHARED_DATA]);
+                 }
+                 if (details[Constants.STORAGE.BACKGROUND_SEEN]) {
+                     storage.set(Constants.STORAGE.BACKGROUND_SEEN, details[Constants.STORAGE.BACKGROUND_SEEN]);
+                 }
+                 if (details[Constants.STORAGE.CURRENT_PAGE]) {
+                     storage.set(Constants.STORAGE.CURRENT_PAGE, details[Constants.STORAGE.CURRENT_PAGE]);
+                 }
+             }
+         });*/
     },
-    beforeMount: function beforeMount() {},
     data: function data() {
         return {
             sharedData: this.sharedData,
@@ -273,7 +343,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     watch: {
         sharedData: {
             handler: function handler(newValue) {
-                localStorage.setItem('sharedData', JSON.stringify(newValue));
+                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA, newValue);
                 this.componentsData = newValue;
             },
             deep: true
@@ -291,28 +361,26 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         },
         stopOnBoarding: function stopOnBoarding() {
             this.seenOnBoarding = true;
-            __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set('seen-onboarding', this.seenOnBoarding);
+            __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, this.seenOnBoarding);
         }
     },
     components: {
-        Background: __WEBPACK_IMPORTED_MODULE_3__components_background_vue___default.a,
-        Clock: __WEBPACK_IMPORTED_MODULE_2__components_clock_vue___default.a,
-        Customize: __WEBPACK_IMPORTED_MODULE_4__components_customize_vue___default.a,
-        Weather: __WEBPACK_IMPORTED_MODULE_5__components_weather_vue___default.a,
-        Onboarding: __WEBPACK_IMPORTED_MODULE_6__components_onboarding_vue___default.a
+        Background: __WEBPACK_IMPORTED_MODULE_4__components_background_vue___default.a,
+        Clock: __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default.a,
+        Customize: __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default.a,
+        Weather: __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default.a,
+        Onboarding: __WEBPACK_IMPORTED_MODULE_7__components_onboarding_vue___default.a
     }
 };
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(0);
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 //
 //
 //
@@ -325,87 +393,104 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 
 
+var bgElement = void 0;
 
 var backgroundVue = {
     beforeCreate: function beforeCreate() {
-        //this.backgroundJS = chrome.extension.getBackgroundPage();
-        //this.bgTabsCount = this.backgroundJS.getTabsCount() || 0;
         this.bgSeen = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get('bg-seen') || [];
     },
     data: function data() {
         return {
-            url: '',
-            nextUrl: '',
             showBackground: false,
             bgSeen: this.bgSeen,
             tabSwitchCount: this.settings.changeInterval,
-            themeId: this.settings.themeId,
-            defaultImageLoaded: false
+            themeId: '',
+            defaultImageLoaded: false,
+            bgIndex: 0,
+            allBackgrounds: null,
+            bgKeys: null
         };
     },
 
     props: ['settings'],
     mounted: function mounted() {
-        this.getBackgroundURL();
+        bgElement = document.getElementById('background');
+        this.getBackground();
     },
 
     methods: {
-        getBackgroundURL: function getBackgroundURL(updateNextURLOnly) {
-            var _this = this;
-
-            var self = this;
+        getBackground: function getBackground(reset) {
+            debugger;
+            if (reset && this.themeId === this.settings.themeId) {
+                return;
+            }
             var theme = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].getCurrentTheme(this.settings.themeId);
             var localBgData = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
+            var storedBg = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[theme.id];
+
+            var allBackgrounds = Object.assign({}, storedBg, localBgData);
+            var bgKeys = Object.keys(allBackgrounds);
+
+            this.allBackgrounds = allBackgrounds;
+            this.bgKeys = bgKeys;
+            this.themeId = theme.id;
 
             if (navigator.onLine) {
-
-                var storedBg = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[this.settings.themeId];
-                var localBg = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
-                var allBackgrounds = Object.assign({}, storedBg, localBg);
-                var bgKeys = Object.keys(allBackgrounds);
-
+                chrome.runtime.sendMessage({ query: 'log', value: 'GetBackgorund Called ' + theme.id });
                 var i = 0;
-                if (!updateNextURLOnly) {
-                    for (; i < bgKeys.length - 1; i++) {
-                        if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
-                            this.url = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(allBackgrounds[bgKeys[i]], bgKeys[i]);
-                            chrome.runtime.sendMessage({ query: 'loadBackground', url: __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1]) });
-                            //this.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[i + 1]], bgKeys[i + 1]);
-                            this.markBgSeen(bgKeys[i]);
-                            break;
-                        }
+                for (; i < bgKeys.length; i++) {
+                    if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
+                        this.bgIndex = i;
+                        this.loadBackground();
+                        break;
                     }
                 }
-                // This is just when we have to load a new background on localbackground update.
-                else {
-                        chrome.runtime.sendMessage({ query: 'loadBackground', url: __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(allBackgrounds[bgKeys[2]], bgKeys[2]) });
-                        //this.nextUrl = bgUtil.formImgURL(allBackgrounds[bgKeys[2]], bgKeys[2]);
-                    }
 
-                // Case when installing extension initially or bg data gets empty in localstorage.
-                if (!localBgData) {
-                    chrome.runtime.sendMessage({ query: 'getBackground', theme: theme });
-                    //this.backgroundJS.getBackground(theme);
-                } else if (i && i >= bgKeys.length - 1) {
-                    this.url = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(allBackgrounds[bgKeys[bgKeys.length - 1]], bgKeys[bgKeys.length - 1]);
-                    chrome.runtime.sendMessage({ query: 'getBackground', theme: theme }, function () {
-                        _this.getBackgroundURL(true);
-                    });
+                if (!localBgData || i === bgKeys.length - 2) {
+                    chrome.runtime.sendMessage({ query: 'log', value: 'No Local Storage Found for theme ' + theme.id });
+                    chrome.runtime.sendMessage({ query: 'getBackground', theme: theme, newPage: true });
+                } else if (i >= bgKeys.length) {
+                    chrome.runtime.sendMessage({ query: 'getBackground', theme: theme, newPage: false });
+                    bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
                 }
             } else {
-                self.url = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[1][1];
-                self.nextUrl = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[1][2];
+                bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
             }
         },
-        resetBackgroundTheme: function resetBackgroundTheme() {
-            var theme = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].getCurrentTheme(this.settings.themeId);
-            var localBgData = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
+        loadBackground: function loadBackground() {
+            var _this = this;
 
-            if (localBgData && (typeof localBgData === 'undefined' ? 'undefined' : _typeof(localBgData)) === 'object' && Object.keys(localBgData).length === 0) {
-                this.backgroundJS.getBackground(theme, this.getBackgroundURL);
-            } else {
-                this.getBackgroundURL();
-            }
+            chrome.runtime.sendMessage({ query: 'log', value: 'Load Background Called' });
+            debugger;
+            this.isLoading();
+
+            this.defaultImageLoaded = false;
+            var i = this.bgIndex;
+
+            var currentUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
+
+            chrome.runtime.sendMessage({ query: 'loadCurrentBackground', url: currentUrl }, function (responseURL) {
+                if (responseURL) {
+                    _this.defaultImageLoaded = false;
+                    bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
+                    chrome.runtime.sendMessage({ query: 'log', value: 'Current URL' + currentUrl });
+                    _this.$emit('stopLoading');
+                    var nextUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(_this.allBackgrounds[_this.bgKeys[i + 1]], _this.bgKeys[i + 1]);
+                    chrome.runtime.sendMessage({ query: 'log', value: 'Next URL' + nextUrl });
+                    chrome.runtime.sendMessage({ query: 'loadNextBackground', url: nextUrl });
+                } else {
+                    _this.defaultImageLoaded = true;
+                    bgElement.style.backgroundImage = 'url(' + _this.getDefaultBg() + ')';
+                    chrome.runtime.sendMessage({ query: 'log', value: 'Default URL' + _this.settings.themeId });
+                    _this.$emit('stopLoading');
+                    chrome.runtime.sendMessage({ query: 'setTabsCount', value: 'decrement' });
+                }
+                _this.markBgSeen(_this.bgKeys[i]);
+            });
+        },
+        resetBackgroundTheme: function resetBackgroundTheme() {
+            this.getBackground(true);
+            chrome.runtime.sendMessage({ query: 'setTabsCount', value: 0 });
         },
         isLoading: function isLoading() {
             this.$emit('startLoading');
@@ -423,54 +508,28 @@ var backgroundVue = {
             });
         },
         getDefaultBg: function getDefaultBg() {
-            return __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[this.settings.themeId][1];
+            var counter = 0;
+            var value = Math.random();
+            var themeId = this.settings.themeId;
+            counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
+            chrome.runtime.sendMessage({ query: 'log', value: 'getDefaultBg Called with counter, ' + counter });
+            return __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[themeId][1 + (themeId - 1) * 3 + counter];
         }
     },
     watch: {
         settings: {
             handler: function handler() {
+                chrome.runtime.sendMessage({ query: 'log', value: 'Reset Called' });
                 this.resetBackgroundTheme();
             },
             deep: true
-        },
-        url: {
-            handler: function handler(newValue, oldValue) {
-                var _this3 = this;
-
-                if (newValue === oldValue) {
-                    return;
-                }
-                var self = this;
-                this.defaultImageLoaded = false;
-                this.isLoading();
-                var bgElement = document.getElementById('background');
-                var img = new Image();
-                img.src = newValue;
-                img.onload = function () {
-                    if (!_this3.defaultImageLoaded) {
-                        clearTimeout(defaultImageTimeout);
-                        bgElement.style.backgroundImage = 'url(' + newValue + ')';
-                        _this3.$emit('stopLoading');
-                    }
-                };
-                var defaultImageTimeout = setTimeout(function () {
-                    if (!_this3.defaultImageLoaded) {
-                        //this.nextUrl = newValue;
-                        chrome.runtime.sendMessage({ query: 'loadBackground', url: newValue });
-                        _this3.defaultImageLoaded = true;
-                        bgElement.style.backgroundImage = 'url(' + self.getDefaultBg() + ')';
-                        _this3.$emit('stopLoading');
-                    }
-                }, 2500);
-            }
         }
-    },
-    components: {}
+    }
 };
 /* harmony default export */ exports["default"] = backgroundVue;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -482,7 +541,7 @@ var backgroundVue = {
 //
 //
 
-var monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 /* harmony default export */ exports["default"] = {
     data: function data() {
@@ -510,7 +569,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             if (this.settings.showTwelveHour) {
                 this.hrs = this.hrs !== 0 ? this.hrs % 12 : 12;
             }
-            this.hrs = this.getZeroPad(this.hrs);
             this.min = this.getZeroPad(current.getMinutes());
             this.day = dayArr[current.getDay()];
             this.date = current.getDate();
@@ -528,13 +586,11 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 };
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(1);
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(2);
 //
 //
 //
@@ -663,7 +719,38 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 };
 
 /***/ },
-/* 9 */
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ exports["default"] = {
+    data: function data() {
+        return {};
+    },
+
+    props: ['settings'],
+    methods: {
+        closeOnboarding: function closeOnboarding() {
+            this.$emit('stopOnboarding');
+        }
+    }
+};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -712,7 +799,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         checkWeather: function checkWeather() {
             var self = this;
             var now = +new Date();
-            var oneHourTime = 3600000;
+            var oneHourTime = 1800000;
             if (this.localWeather) {
                 if (now - this.localWeather[0] > oneHourTime) {
                     navigator.geolocation.getCurrentPosition(function (position) {
@@ -729,29 +816,39 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
                 });
             }
         },
-        loadWeather: function loadWeather(lat, lon) {
+        loadWeather: function loadWeather(lat, long) {
             var _this = this;
 
             var self = this;
             this.isLoading = true;
-            reallySimpleWeather.weather({
-                wunderkey: '',
-                location: lat + ',' + lon,
-                woeid: '',
-                unit: self.settings.unit === 'f' ? 'f' : 'c',
-                success: function success(weather) {
-                    _this.isLoading = false;
-                    var now = +new Date();
-                    self.temp = weather.temp;
-                    self.weatherCode = weather.code;
-                    self.weatherCity = weather.city;
-                    _this.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
-                    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('weather', _this.localWeather);
-                },
-                error: function error(_error) {
-                    console.log(_error);
-                    self.error = _error;
-                }
+
+            return new Promise(function (resolve, reject) {
+
+                var xmlhttp = new XMLHttpRequest();
+
+                var url = 'http://api.subtletab.com/weather/';
+                url += '?lat=' + lat + '&long=' + long;
+
+                xmlhttp.open('GET', url);
+                xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                        var weather = JSON.parse(xmlhttp.responseText);
+                        var now = +new Date();
+                        self.isLoading = false;
+                        self.temp = weather.temp;
+                        self.weatherCode = weather.code;
+                        self.weatherCity = weather.city;
+
+                        self.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
+                        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('weather', _this.localWeather);
+                        resolve();
+                    }
+                };
+                xmlhttp.onerror = function () {
+                    reject(xmlhttp.status);
+                };
+                xmlhttp.send();
             });
         }
     },
@@ -766,13 +863,13 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 };
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backgroundData__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backgroundData__ = __webpack_require__(2);
 
 
 
@@ -836,21 +933,21 @@ var bgUtil = {
 /* harmony default export */ exports["a"] = bgUtil;
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(12)();
+exports = module.exports = __webpack_require__(14)();
 // imports
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
 
 // exports
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports) {
 
 /*
@@ -906,7 +1003,7 @@ module.exports = function() {
 
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports) {
 
 // shim for using process in browser
@@ -1092,17 +1189,17 @@ process.umask = function() { return 0; };
 
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(5)
+__vue_exports__ = __webpack_require__(6)
 
 /* template */
-var __vue_template__ = __webpack_require__(23)
+var __vue_template__ = __webpack_require__(27)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1136,20 +1233,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(25)
+__webpack_require__(29)
 
 /* script */
-__vue_exports__ = __webpack_require__(6)
+__vue_exports__ = __webpack_require__(7)
 
 /* template */
-var __vue_template__ = __webpack_require__(20)
+var __vue_template__ = __webpack_require__(23)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1183,17 +1280,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(7)
+__vue_exports__ = __webpack_require__(8)
 
 /* template */
-var __vue_template__ = __webpack_require__(21)
+var __vue_template__ = __webpack_require__(25)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1227,17 +1324,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(8)
+__vue_exports__ = __webpack_require__(9)
 
 /* template */
-var __vue_template__ = __webpack_require__(22)
+var __vue_template__ = __webpack_require__(26)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1271,17 +1368,61 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(9)
+__vue_exports__ = __webpack_require__(10)
 
 /* template */
-var __vue_template__ = __webpack_require__(19)
+var __vue_template__ = __webpack_require__(24)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/onboarding.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-494b99fe", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-494b99fe", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] onboarding.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* script */
+__vue_exports__ = __webpack_require__(11)
+
+/* template */
+var __vue_template__ = __webpack_require__(22)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -1315,7 +1456,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 19 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -1354,25 +1495,20 @@ if (false) {
 }
 
 /***/ },
-/* 20 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _vm._m(0)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', [_h('div', {
     staticClass: "util-overlay"
   }), " ", _h('div', {
     attrs: {
       "id": "background"
     }
-  }), " ", _h('div', {
-    style: ({
-      'background-image': 'url(' + _vm.nextUrl + ')'
-    }),
-    attrs: {
-      "id": "background-hidden"
-    }
-  })])
-},staticRenderFns: []}
+  }), " "])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -1382,7 +1518,39 @@ if (false) {
 }
 
 /***/ },
-/* 21 */
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
+    staticClass: "onboarding-message"
+  }, [_h('img', {
+    staticClass: "onboarding-icon",
+    attrs: {
+      "src": "images/icons/onboarding-icon.png",
+      "alt": "Subtle"
+    }
+  }), " ", _vm._m(0), " ", _h('div', {
+    staticClass: "onboarding-btn",
+    on: {
+      "click": _vm.closeOnboarding
+    }
+  }, ["Let's Start"])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('h1', ["Hi, Thank you for choosing", _h('br'), " ", _h('span', {
+    staticClass: "italics semi-bold"
+  }, ["Subtle"])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-494b99fe", module.exports)
+  }
+}
+
+/***/ },
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -1397,7 +1565,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     class: {
       'fade_in': _vm.settings.showDay
     }
-  }, [_vm._s(_vm.day) + ", " + _vm._s(_vm.date) + " " + _vm._s(_vm.month)])])
+  }, [_vm._s(_vm.day) + ", " + _vm._s(_vm.month) + " " + _vm._s(_vm.date) + " "])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -1408,7 +1576,7 @@ if (false) {
 }
 
 /***/ },
-/* 22 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -1419,13 +1587,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, [_h('svg', {
     attrs: {
-      "width": "24px",
-      "height": "24px",
+      "width": "1.5rem",
+      "height": "1.5rem",
       "viewBox": "0 0 12 12",
       "version": "1.1",
       "xmlns": "http://www.w3.org/2000/svg"
     }
-  }, [_h('title', ["error"]), " ", _h('defs'), " ", _h('g', {
+  }, [_h('g', {
     attrs: {
       "stroke": "none",
       "stroke-width": "1",
@@ -1734,7 +1902,7 @@ if (false) {
 }
 
 /***/ },
-/* 23 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -1794,10 +1962,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('svg', {
     attrs: {
       "enable-background": "new 0 0 20 20",
-      "height": "1.6rem",
+      "height": "2rem",
       "version": "1.1",
       "viewBox": "0 0 100 100",
-      "width": "1.6rem",
+      "width": "2rem",
       "xml:space": "preserve",
       "xmlns": "http://www.w3.org/2000/svg",
       "xmlns:xlink": "http://www.w3.org/1999/xlink"
@@ -1846,7 +2014,7 @@ if (false) {
 }
 
 /***/ },
-/* 24 */
+/* 28 */
 /***/ function(module, exports) {
 
 /*
@@ -2068,16 +2236,16 @@ function applyToTag(styleElement, obj) {
 
 
 /***/ },
-/* 25 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(24)(content, {});
+var update = __webpack_require__(28)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2094,7 +2262,7 @@ if(false) {
 }
 
 /***/ },
-/* 26 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8036,10 +8204,10 @@ setTimeout(function () {
 
 module.exports = Vue$2;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(27)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15), __webpack_require__(31)))
 
 /***/ },
-/* 27 */
+/* 31 */
 /***/ function(module, exports) {
 
 var g;
@@ -8064,119 +8232,11 @@ module.exports = g;
 
 
 /***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3);
-
-
-/***/ },
-/* 29 */,
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-var __vue_exports__, __vue_options__
-var __vue_styles__ = {}
-
-/* script */
-__vue_exports__ = __webpack_require__(32)
-
-/* template */
-var __vue_template__ = __webpack_require__(31)
-__vue_options__ = __vue_exports__ = __vue_exports__ || {}
-if (
-  typeof __vue_exports__.default === "object" ||
-  typeof __vue_exports__.default === "function"
-) {
-if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
-__vue_options__ = __vue_exports__ = __vue_exports__.default
-}
-if (typeof __vue_options__ === "function") {
-  __vue_options__ = __vue_options__.options
-}
-__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/onboarding.vue"
-__vue_options__.render = __vue_template__.render
-__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-494b99fe", __vue_options__)
-  } else {
-    hotAPI.reload("data-v-494b99fe", __vue_options__)
-  }
-})()}
-if (__vue_options__.functional) {console.error("[vue-loader] onboarding.vue: functional components are not supported and should be defined in plain js files using render functions.")}
-
-module.exports = __vue_exports__
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [_h('div', {
-    staticClass: "onboarding-message"
-  }, [_h('img', {
-    staticClass: "onboarding-icon",
-    attrs: {
-      "src": "images/icons/onboarding-icon.png",
-      "alt": "Subtle"
-    }
-  }), " ", _vm._m(0), " ", _h('div', {
-    staticClass: "onboarding-btn",
-    on: {
-      "click": _vm.closeOnboarding
-    }
-  }, ["Let's Start"])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('h1', ["Hi, Thank you for choosing", _h('br'), " ", _h('span', {
-    staticClass: "italics semi-bold"
-  }, ["Subtle"])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-494b99fe", module.exports)
-  }
-}
-
-/***/ },
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+module.exports = __webpack_require__(4);
 
-/* harmony default export */ exports["default"] = {
-    data: function data() {
-        return {};
-    },
-
-    props: ['settings'],
-    methods: {
-        closeOnboarding: function closeOnboarding() {
-            this.$emit('stopOnboarding');
-        }
-    }
-};
 
 /***/ }
 /******/ ]);

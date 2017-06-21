@@ -1,12 +1,12 @@
 <template>
     <div id="clock">
         <div class="time">{{hrs}}:{{min}}</div>
-        <div class="date" v-bind:class="{'fade_in' : settings.showDay}">{{day}}, {{date}} {{month}}</div>
+        <div class="date" v-bind:class="{'fade_in' : settings.showDay}">{{day}}, {{month}} {{date}} </div>
     </div>
 </template>
 
 <script>
-    const monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep','Oct','Nov', 'Dec'];
+    const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September','October','November', 'December'];
     const dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     export default {
         data () {
@@ -32,7 +32,6 @@
                 if(this.settings.showTwelveHour){
                     this.hrs = this.hrs !== 0 ? this.hrs % 12 : 12;
                 }
-                this.hrs = this.getZeroPad(this.hrs);
                 this.min = this.getZeroPad(current.getMinutes());
                 this.day = dayArr[current.getDay()];
                 this.date = current.getDate();

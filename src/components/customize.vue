@@ -2,9 +2,7 @@
     <div>
         <header>
             <div class="close-btn" v-on:click="closeCustomizeMenu">
-                <svg width="24px" height="24px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                    <title>error</title>
-                    <defs></defs>
+                <svg width="1.5rem" height="1.5rem" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <g id="close_btn"  fill-rule="nonzero" fill="#999999">
                             <path d="M6,0 C2.69169231,0 0,2.69146154 0,6 C0,9.30853846 2.69169231,12 6,12 C9.30830769,12 12,9.30853846 12,6 C12,2.69146154 9.30830769,0 6,0 Z M6,11.5384615 C2.94623077,11.5384615 0.461538462,9.05376923 0.461538462,6 C0.461538462,2.94623077 2.94623077,0.461538462 6,0.461538462 C9.05376923,0.461538462 11.5384615,2.94623077 11.5384615,6 C11.5384615,9.05376923 9.05376923,11.5384615 6,11.5384615 Z"

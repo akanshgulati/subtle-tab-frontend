@@ -237,8 +237,19 @@ label {
 
 svg #customize_btn {
     fill: #d6d6d6;
-    transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in-out;
     transform-origin: 50% 50%;
+    padding: 0.25rem;
+}
+
+.nav-bar-opener svg {
+    padding: 0.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-bar-opener svg:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
 }
 
 svg:hover #customize_btn {
@@ -252,7 +263,7 @@ svg:hover #customize_btn {
     float: right;
 }
 svg #close_btn{
-    transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in-out;
 }
 svg:hover #close_btn {
     fill: #333;
@@ -323,6 +334,13 @@ svg:hover #close_btn {
     width: 200px;
     border-radius: 5px;
     overflow: hidden;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.thumbnail-image:hover {
+    opacity: 1;
+    transform: scale(1.03);
 }
 
 .thumbnail-name {
@@ -336,7 +354,7 @@ svg:hover #close_btn {
 
 .active div {
     position: relative;
-    transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in-out;
 }
 
 .active .thumbnail-image:hover {
@@ -345,13 +363,12 @@ svg:hover #close_btn {
 
 .active .thumbnail-image:before {
     position: absolute;
-    height: 100%;
-    width: 100%;
-    background: rgba(122, 184, 0, 0.85) url("../images/icons/success.svg") no-repeat center;
-    left: 0;
-    top: 0;
+    height: 105%;
+    width: 105%;
+    background: rgba(122, 184, 0, 0.85) url(../images/icons/success.svg) no-repeat center;
+    left: -1px;
+    top: -1px;
     content: '';
-    border-radius: 5px;
 }
 
 #customize > ul > li > ul > li {
@@ -383,7 +400,7 @@ svg:hover #close_btn {
     padding: 8px 15px;
     font-size: 0.8rem;
     text-align: center;
-    transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in-out;
     vertical-align: middle;
     z-index: 0;
     font-weight: 500;
@@ -452,7 +469,7 @@ svg:hover #close_btn {
 }
 
 .fade_in {
-    animation: fade_in .4s ease-out 0s forwards;
+    animation: fade_in 0.4s ease-in-out 0s forwards;
     animation-fill-mode: both;
     visibility: visible !important;
 }
@@ -466,21 +483,21 @@ svg:hover #close_btn {
 }
 
 .time {
-    font-size: 7rem;
-    line-height: 8rem;
+    font-size: 7.5rem;
+    line-height: 7.5rem;
+    letter-spacing: -0.2rem;
 }
 
 .date {
     max-height: 0;
-    font-size: 3rem;
+    font-size: 2.5rem;
     line-height: 3rem;
-    text-align: center;
     overflow: hidden;
-    transition: max-height 0.5s ease-in, height 0.5s ease-in;
+    transition: max-height 0.5s ease-in-out, height 0.5s ease-in-out;
 }
 .date.fade_in{
-    transition: max-height 0.5s ease-in, height 0.5s ease-in;
-    height: 3.5rem;
+    transition: max-height 0.5s ease-in-out, height 0.5s ease-in-out;
+    height: 3rem;
     max-height: inherit;
 }
 .util-overlay {

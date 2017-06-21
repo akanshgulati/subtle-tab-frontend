@@ -40,7 +40,7 @@
             checkWeather(){
                 let self = this;
                 let now = +new Date();
-                const oneHourTime = 3600000;
+                const oneHourTime = 1800000;
                 if (this.localWeather) {
                     if((now - this.localWeather[0]) > oneHourTime){
                         navigator.geolocation.getCurrentPosition(function (position) {
@@ -57,27 +57,37 @@
                     });
                 }
             },
-            loadWeather(lat, lon){
+            loadWeather(lat, long){
                 const self = this;
                 this.isLoading = true;
-                reallySimpleWeather.weather({
-                    wunderkey: '',
-                    location: lat + ',' + lon,
-                    woeid: '',
-                    unit: self.settings.unit === 'f' ? 'f' : 'c',
-                    success: (weather) => {
-                        this.isLoading = false;
-                        let now = +new Date();
-                        self.temp = weather.temp;
-                        self.weatherCode = weather.code;
-                        self.weatherCity = weather.city;
-                        this.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
-                        storage.set('weather', this.localWeather);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                        self.error = error
-                    }
+
+                return new Promise((resolve, reject) => {
+
+                    let xmlhttp = new XMLHttpRequest();
+
+                    let url = 'http://api.subtletab.com/weather/';
+                    url += '?lat=' + lat + '&long=' + long;
+
+                    xmlhttp.open('GET', url);
+                    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+                    xmlhttp.onreadystatechange = () => {
+                        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                            let weather = JSON.parse(xmlhttp.responseText);
+                            let now = +new Date();
+                            self.isLoading = false;
+                            self.temp = weather.temp;
+                            self.weatherCode = weather.code;
+                            self.weatherCity = weather.city;
+
+                            self.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
+                            storage.set('weather', this.localWeather);
+                            resolve();
+                        }
+                    };
+                    xmlhttp.onerror = ()=>{
+                        reject(xmlhttp.status);
+                    };
+                    xmlhttp.send();
                 });
             }
         },

@@ -1,18 +1,9 @@
+import storage from './utils/storage';
+import constants from './utils/Constants';
+
 let tabsCount = 0;
 let bgData;
-let storage = {
-    get(key){
-        let value = localStorage.getItem(key);
-        return isNaN(value) ? JSON.parse(value) : value;
-    },
-    set(key, data){
-        return localStorage.setItem(key, JSON.stringify(data));
-    },
-    remove(key){
-        return localStorage.removeItem(key);
-    }
-};
-
+const DEBUG = true;
 
 function getTabsCount() {
     return tabsCount;
@@ -26,7 +17,7 @@ function filterResponses(response) {
     if (response && response.photo) {
         let photoKeys = Object.keys(response.photo);
         let photos = response.photo;
-        let storedSeenIds = storage.get('bg-seen') || [];
+        let storedSeenIds = storage.get(constants.STORAGE.BACKGROUND_SEEN) || [];
         let result = {};
         for (let i = 0; i < photoKeys.length; i++) {
             if (storedSeenIds.indexOf(photos[photoKeys[i]]) === -1) {
@@ -39,30 +30,49 @@ function filterResponses(response) {
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
         if (request.query === 'getBackground') {
-            getBackground(request.theme).then(()=>{
-                if(sendResponse && typeof sendResponse === 'function'){
-                    sendResponse(true);
-                }
-            });
+            getBackground(request.theme, request.newPage);
         }
         else if (request.query === 'getTabsCount') {
             sendResponse(tabsCount);
         } else if (request.query === 'setTabsCount') {
             setTabsCount(request.value);
             sendResponse(true);
-        }else if(request.query === 'loadBackground'){
-            loadBackground(request.url);
+        } else if (request.query === 'loadNextBackground') {
+            loadNextBackground(request.url);
+        } else if (request.query === 'loadCurrentBackground') {
+            loadCurrentBackground(request.url, sendResponse);
+        } else if (request.query === 'log') {
+            _console(request.value);
         }
         return true;
     });
 
-
-let getBackground = (theme) => {
+let loadCurrentBackground = (url, callback) => {
+    let defaultImageLoaded = false;
+    let img = new Image();
+    img.src = url;
+    img.onload = () => {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    let defaultImageTimeout = setTimeout(() => {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 2500);
+};
+let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
-        let currentPage = storage.get('current-page') || {};
-        let themePage = (currentPage[theme.value] && (+currentPage[theme.value] + 1)) || 1;
-        let url = 'http://ec2-52-74-214-57.ap-southeast-1.compute.amazonaws.com/';
+        let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
+        let themePage = currentPage[theme.value] || 0;
+
+        if (changePage) {
+            themePage++;
+        }
+
+        let url = 'http://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
         xmlhttp.open('GET', url);
         xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -72,33 +82,55 @@ let getBackground = (theme) => {
                 //responses will be other than seen, having good views and sizes
                 bgData = filterResponses(response);
                 //If all pages are empty;
-                if(currentPage === response.pages){
-                    currentPage = 0;
+                if (themePage === response.pages) {
+                    themePage = 0;
                 }
                 currentPage[theme.value] = themePage;
                 storage.set('current-page', currentPage);
-                /*if (Object.keys(bgData).length < 10 && response.pages > page) {
-                 getBackground(theme, callback, page + 1);
-                 } else {*/
-                storage.set(theme.value, bgData);
+
+                updateThemeStorage(bgData, theme);
                 resolve();
             }
         };
-        xmlhttp.onerror = ()=>{
+        xmlhttp.onerror = () => {
             reject(xmlhttp.status);
         };
         xmlhttp.send();
     });
 };
+let updateThemeStorage = (bgData, theme) => {
+    let themeLocalStorage = storage.get(constants.THEME[theme.value]);
+    if (!themeLocalStorage) {
+        storage.set(theme.value, bgData);
+        return;
+    }
+    let allKeys = Object.keys(themeLocalStorage);
+    let lastURLKey = allKeys[allKeys.length];
+
+    let lastStoredURL = themeLocalStorage[lastURLKey];
+    // Storing last background url for next round;
+    let obj = {};
+    obj[lastURLKey] = lastStoredURL;
+
+    storage.set(theme.value, Object.assign({}, obj, bgData));
+};
 let previousURL;
-let loadBackground = function(url){
+let loadNextBackground = function (url) {
     previousURL = previousURL || url;
-    if(previousURL !== url) {
+    if (previousURL !== url) {
+        _console('BG: Load Next Background for', url);
         previousURL = url;
         let image = new Image();
         image.src = url;
     }
 };
+
+let _console = (log) => {
+    if (DEBUG) {
+        console.log(log);
+    }
+};
+
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details && details.reason && details.reason == 'install') {
         chrome.tabs.create({url: "index.html"});
@@ -106,14 +138,25 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.create({url: "index.html"});
+    chrome.tabs.create();
+});
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    let key;
+    for (key in changes) {
+        if (!changes.hasOwnProperty(key)) {
+            continue;
+        }
+        _console("Storage Changed" + JSON.stringify(changes[key]));
+        storage.setLocal(key, changes[key].newValue);
+    }
 });
 
 function init() {
     chrome.tabs.onCreated.addListener(function () {
         tabsCount++;
         if (tabsCount === 2) {
-            storage.set('seen-onboarding', true);
+            storage.set(constants.STORAGE.SEEN_ONBOARDING, true);
         }
     });
 }

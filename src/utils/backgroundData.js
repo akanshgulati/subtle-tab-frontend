@@ -33,19 +33,24 @@ export default {
     stored: {
         1: {
             1: './images/backgrounds/nature-1.jpg',
-            2: './images/backgrounds/nature-2.jpeg'
+            2: './images/backgrounds/nature-2.jpg',
+            3: './images/backgrounds/nature-3.jpg'
         },
-        2: {
-            1: './images/backgrounds/night-1.jpeg',
-            2: './images/backgrounds/night-2.jpeg'
+        2:{
+            4: './images/backgrounds/building-1.jpg',
+            5: './images/backgrounds/building-2.jpg',
+            6: './images/backgrounds/building-3.jpg',
         },
         3:{
-            1: './images/backgrounds/travel-1.jpeg',
-            2: './images/backgrounds/travel-2.jpeg'
+            7: './images/backgrounds/travel-1.jpg',
+            8: './images/backgrounds/travel-2.jpg',
+            9: './images/backgrounds/travel-3.jpg',
         },
-        4:{
-            1: './images/backgrounds/building-1.jpg',
-            2: './images/backgrounds/building-2.jpeg'
-        }
+        4: {
+            10: './images/backgrounds/night-1.jpg',
+            11: './images/backgrounds/night-2.jpg',
+            12: './images/backgrounds/night-3.jpg',
+        },
+
     }
 }

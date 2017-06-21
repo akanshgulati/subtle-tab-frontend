@@ -1,7 +1,6 @@
 @font-face {
     font-family: 'weather';
     src: url('../fonts/weather.eot'),url('../fonts/weather.ttf') format('truetype');
-
     font-weight: normal;
     font-style: normal;
 }
@@ -18,10 +17,10 @@
 }
 
 .w-icon:before {
-    top: 0.5rem;
+    top: 0.4rem;
     position: relative;
 }
-.icon-31{
+.icon-31, .icon-33{
     font-size: 2.5rem;
 }
 .icon-0:before { content: ":"; }
