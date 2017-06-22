@@ -17,7 +17,7 @@
         </header>
         <ul>
             <li>
-                <h4>Choose Background Theme</h4>
+                <h4>Wallpaper Category</h4>
                 <ul class="thumbnails">
                     <li v-for='(theme, index) in themes' v-bind:class="{active: isActiveTheme(index)}" class="thumbnail">
                         <!--<input type="radio" v-model="settings.background.themeId" :id="theme.value" class="hide" :value="theme.id">-->
@@ -27,7 +27,7 @@
                 </ul>
             </li>
             <li class="flex flex-center">
-                <h4 class="btn-group-header">Change background after</h4>
+                <h4 class="btn-group-header">Change wallpaper after</h4>
                 <div class="btn-group">
                     <div class="btn-inner" :class="{'active': settings.background.changeInterval === 2}" v-on:click="setBgInterval(2)">2 Tabs</div>
                     <div class="btn-inner" :class="{'active': settings.background.changeInterval === 5}" v-on:click="setBgInterval(5)">5 Tabs</div>
@@ -78,22 +78,14 @@
                     </ul>
                 </div>
             </li>
-            <!--<li>Clock
-
-
-            </li>
-            <li>
-                Weather
-                <div class="switch">
-                    <label>
-                        Hide
-                        <input type="checkbox" v-model="settings.showUtilities.showWeather">
-                        <span class="lever"></span>
-                        Show
-                    </label>
-                </div>
-            </li>-->
         </ul>
+        <div class="customize-footer">
+            <span class="version">v{{version}}</span>
+            <div class="success-links">
+                <a href="support">Support</a>
+                <a href="feedback">Feedback</a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -104,7 +96,8 @@
         data: function(){
             return {
                 selectedTheme: this.settings.background.themeId,
-                themes: bgData.themes
+                themes: bgData.themes,
+                version: chrome.runtime.getManifest().version
             };
         },
         methods: {

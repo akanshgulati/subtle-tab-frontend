@@ -2,11 +2,12 @@ import storage from './utils/storage';
 import constants from './utils/Constants';
 
 let tabsCount = 0;
+let prevTabsCount = 0;
 let bgData;
 const DEBUG = true;
 
 function getTabsCount() {
-    return tabsCount;
+    return prevTabsCount === tabsCount ? false : tabsCount;
 }
 
 function setTabsCount(num) {
@@ -33,7 +34,7 @@ chrome.runtime.onMessage.addListener(
             getBackground(request.theme, request.newPage);
         }
         else if (request.query === 'getTabsCount') {
-            sendResponse(tabsCount);
+            sendResponse(getTabsCount());
         } else if (request.query === 'setTabsCount') {
             setTabsCount(request.value);
             sendResponse(true);
@@ -133,7 +134,10 @@ let _console = (log) => {
 
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details && details.reason && details.reason == 'install') {
-        chrome.tabs.create({url: "index.html"});
+        chrome.tabs.create({});
+    }else if (details && details.reason && details.reason == 'update') {
+        storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+        chrome.tabs.create({});
     }
 });
 
@@ -154,6 +158,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 function init() {
     chrome.tabs.onCreated.addListener(function () {
+        prevTabsCount = tabsCount;
         tabsCount++;
         if (tabsCount === 2) {
             storage.set(constants.STORAGE.SEEN_ONBOARDING, true);

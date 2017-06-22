@@ -20,9 +20,13 @@
     font-weight: 900;
     src: url('../fonts/OpenSans-Bold.ttf');
 }
-
+.wi{
+    font-size: 1rem;
+    margin-right: 0.5rem;
+}
 html {
     box-sizing: border-box;
+    overflow-y: hidden;
 }
 
 *, *:before, *:after {
@@ -35,7 +39,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif !important;
 
 }
 
@@ -43,21 +47,35 @@ body {
     border: 2px solid rgb(122, 184, 0);
     background-color: rgb(122, 184, 0);
 }
-[type="radio"]:not(:checked)+label:before, [type="radio"]:not(:checked)+label:after{
+
+[type="radio"]:not(:checked) + label:before, [type="radio"]:not(:checked) + label:after {
     border: 2px solid #666;
 }
-.flex{
+
+.flex {
     display: flex;
 }
-.flex-center{
-   align-items: center;
+
+.flex-end{
+    align-items: flex-end;
 }
-.flex-flow-column{
+
+.flex-center {
+    align-items: center;
+}
+
+.flex-justify-center {
+    justify-content: center;
+}
+
+.flex-flow-column {
     flex-direction: column;
 }
-.flex-grow-1{
+
+.flex-grow-1 {
     flex-grow: 1;
 }
+
 label {
     color: #666;
 }
@@ -92,44 +110,59 @@ label {
     position: fixed;
     z-index: 10000;
     animation: fade_in 2s;
+    color: white;
 }
-#onboarding h1{
-    font-size: 3rem;
+
+#onboarding h1 {
+    font-size: 2.5rem;
     color: white;
     font-weight: 300;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.50);
     margin-bottom: 4rem;
+    margin-top: 0;
 }
-.onboarding-btn{
+
+.onboarding-btn {
     width: 12rem;
     text-align: center;
     line-height: 4rem;
     height: 4rem;
     font-size: 1.5rem;
     border: 1px solid white;
-    background: white;
-    color: #222222;
+    color: #fff;
     cursor: pointer;
     border-radius: 5px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
+    margin: 0 auto;
+    text-shadow: 0 0 10px rgb(103, 103, 103);
 }
 .onboarding-btn:hover{
-    background: transparent;
-    color: white;
+    background: rgba(255, 255, 255, 0.8);
+    color: #666;
+    text-shadow: none;
 }
 .onboarding-message{
-    height: 100%;
-    width: 100%;
-    display: flex;
     text-align: center;
-    flex-direction:column;
-    align-items: center;
-    justify-content: center;
+    margin-bottom:15vh;
 }
 .onboarding-icon{
     animation: fade_in 2s;
     /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
 }
+
+.change-description{
+    font-size: 1rem;
+}
+
+.change-heading{
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 1.5rem 0;
+}
+
+.change-row{
+    margin-bottom: 5vh;
+}
+
 .show-loading {
     animation-name: fade_in;
     animation-duration: 1.5s;
@@ -262,12 +295,17 @@ svg:hover #customize_btn {
     height: 24px;
     float: right;
 }
-svg #close_btn{
+
+svg #close_btn {
     transition: all 0.2s ease-in-out;
 }
+
+.close-btn svg:hover {
+    transform: scale(1.02);
+}
+
 svg:hover #close_btn {
     fill: #333;
-    transform: scale(1.02);
 }
 
 #customize {
@@ -305,6 +343,7 @@ svg:hover #close_btn {
 #customize ul {
     list-style: none;
     padding: 0;
+    margin-bottom: 0;
 }
 
 #customize ul > li {
@@ -334,13 +373,13 @@ svg:hover #close_btn {
     width: 200px;
     border-radius: 5px;
     overflow: hidden;
-    opacity: 0.8;
-    transition: all 0.3s ease;
+    opacity: 0.9;
+    transition: all 0.3s ease-in-out;
 }
 
 .thumbnail-image:hover {
     opacity: 1;
-    transform: scale(1.03);
+    transform: scale(0.98);
 }
 
 .thumbnail-name {
@@ -358,7 +397,7 @@ svg:hover #close_btn {
 }
 
 .active .thumbnail-image:hover {
-    transform: scale(1.01);
+    transform: scale(1);
 }
 
 .active .thumbnail-image:before {
@@ -400,7 +439,7 @@ svg:hover #close_btn {
     padding: 8px 15px;
     font-size: 0.8rem;
     text-align: center;
-    transition: all 0.1s ease-in-out;
+    transition: all 0.3s ease-in-out;
     vertical-align: middle;
     z-index: 0;
     font-weight: 500;
@@ -428,6 +467,22 @@ svg:hover #close_btn {
     margin-right: 1.5rem;
     display: inline-block;
     float: right;
+}
+.customize-footer{
+    color: #666;
+    font-size: 0.7rem;
+}
+.customize-footer a{
+    color: #666;
+}
+
+.success-links{
+    float: right;
+    display: inline-block;
+}
+
+.success-links > a{
+    padding: 0 0.5rem;
 }
 
 .slide-fade-enter-active {

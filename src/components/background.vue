@@ -20,7 +20,7 @@
             return {
                 showBackground: false,
                 bgSeen : this.bgSeen,
-                tabSwitchCount: this.settings.changeInterval,
+                tabsCount: '',
                 themeId: '',
                 defaultImageLoaded: false,
                 bgIndex: 0,
@@ -35,7 +35,6 @@
         },
         methods: {
             getBackground: function (reset) {
-                debugger;
                 if(reset && this.themeId === this.settings.themeId){
                     return;
                 }
@@ -76,7 +75,6 @@
             },
             loadBackground(){
                 chrome.runtime.sendMessage({query: 'log', value: 'Load Background Called'});
-                debugger;
                 this.isLoading();
 
                 this.defaultImageLoaded = false;
@@ -113,6 +111,10 @@
             },
             markBgSeen(id){
                 chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
+                    // to prevent change on refresh;
+                    if(!tabs){
+                        return;
+                    }
                     if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
                         this.bgSeen.push(id);
                         storage.set('bg-seen', this.bgSeen);

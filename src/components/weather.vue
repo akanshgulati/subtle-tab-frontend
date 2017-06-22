@@ -7,8 +7,8 @@
                 <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
                 <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
             </div>
-            <div class="weather-icon flex">
-                <i class="w-icon" :class="'icon-'+weatherCode"></i>
+            <div class="weather-icon flex flex-center">
+                <i class="wi" :class="'wi-'+weatherClass"></i>
                 <span class="weather-city">{{weatherCity}}</span>
             </div>
         </div>
@@ -17,6 +17,7 @@
 
 <script>
     import storage from '../utils/storage';
+    import weatherUtil from '../utils/weatherUtil';
 
     export default {
         beforeCreate(){
@@ -29,6 +30,7 @@
         data () {
             return {
                 weatherCode: null,
+                weatherClass: null,
                 weatherCity: null,
                 temp: null,
                 localWeather: this.localWeather,
@@ -49,6 +51,7 @@
                     }else{
                         this.temp = this.settings.unit === 'f' ? this.localWeather[1] : this.localWeather[2];
                         this.weatherCode = this.localWeather[3];
+                        this.weatherClass = weatherUtil[this.localWeather[3]];
                         this.weatherCity = this.localWeather[4];
                     }
                 }else{
@@ -77,6 +80,7 @@
                             self.isLoading = false;
                             self.temp = weather.temp;
                             self.weatherCode = weather.code;
+                            self.weatherClass = weatherUtil[weather.code];
                             self.weatherCity = weather.city;
 
                             self.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
