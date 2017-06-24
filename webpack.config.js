@@ -4,8 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         build: ['./src/main.js'],
-        subtle: ['./src/subtle.js'],
-        style: ['./src/style.css']
+        subtle: ['./src/subtle.js']
     },
     output: {
         path: path.resolve(__dirname, './build'),

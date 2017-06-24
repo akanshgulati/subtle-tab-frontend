@@ -30,7 +30,7 @@
                 let current = new Date();
                 this.hrs = current.getHours();
                 if(this.settings.showTwelveHour){
-                    this.hrs = this.hrs !== 0 ? this.hrs % 12 : 12;
+                    this.hrs = (this.hrs !== 0 && this.hrs !== 12) ? this.hrs % 12 : 12;
                 }
                 this.min = this.getZeroPad(current.getMinutes());
                 this.day = dayArr[current.getDay()];

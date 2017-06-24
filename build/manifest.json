@@ -1,7 +1,7 @@
 {
   "name": "Subtle Tab",
-  "description": "Rejoices new tab experience for better productivity.",
-  "version": "0.0.0.3",
+  "description": "Personalized experience on new tabs for better productivity",
+  "version": "0.0.1",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"

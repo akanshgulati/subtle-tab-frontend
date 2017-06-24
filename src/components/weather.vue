@@ -45,9 +45,11 @@
                 const oneHourTime = 1800000;
                 if (this.localWeather) {
                     if((now - this.localWeather[0]) > oneHourTime){
-                        navigator.geolocation.getCurrentPosition(function (position) {
-                            self.loadWeather(position.coords.latitude, position.coords.longitude);
-                        });
+                        navigator.geolocation.getCurrentPosition((position) => {
+                                self.loadWeather(position.coords.latitude, position.coords.longitude);
+                            }, (error) => {
+                            }, {timeout: 10000}
+                        );
                     }else{
                         this.temp = this.settings.unit === 'f' ? this.localWeather[1] : this.localWeather[2];
                         this.weatherCode = this.localWeather[3];

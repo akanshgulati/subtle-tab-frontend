@@ -6,7 +6,7 @@ let storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set(key, value){
-        if (constants.SYNC.indexOf(key) > -1) {
+        if (constants.SYNC.indexOf(key) > -1 && localStorage.getItem('sync')) {
             let obj = {};
             obj[key] = value;
             console.log(obj);

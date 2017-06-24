@@ -4,7 +4,7 @@ import constants from './utils/Constants';
 let tabsCount = 0;
 let prevTabsCount = 0;
 let bgData;
-const DEBUG = true;
+const DEBUG = false;
 
 function getTabsCount() {
     return prevTabsCount === tabsCount ? false : tabsCount;
@@ -115,6 +115,7 @@ let updateThemeStorage = (bgData, theme) => {
 
     storage.set(theme.value, Object.assign({}, obj, bgData));
 };
+
 let previousURL;
 let loadNextBackground = function (url) {
     previousURL = previousURL || url;
@@ -133,19 +134,31 @@ let _console = (log) => {
 };
 
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details && details.reason && details.reason == 'install') {
+    if (details && details.reason && details.reason === 'install') {
+        storage.chromeSync.get(null, (details) => {
+            let key;
+            for (key in details) {
+                if (!details.hasOwnProperty(key)) {
+                    continue;
+                }
+                storage.setLocal(key, details[key]);
+            }
+        });
+
         chrome.tabs.create({});
-    }else if (details && details.reason && details.reason == 'update') {
+
+    } else if (details && details.reason && details.reason === 'update') {
         storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
         chrome.tabs.create({});
     }
 });
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.create();
+    chrome.tabs.create({});
 });
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
+
     let key;
     for (key in changes) {
         if (!changes.hasOwnProperty(key)) {
@@ -154,7 +167,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         _console("Storage Changed" + JSON.stringify(changes[key]));
         storage.setLocal(key, changes[key].newValue);
     }
+
 });
+
+chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
 
 function init() {
     chrome.tabs.onCreated.addListener(function () {

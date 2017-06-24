@@ -42,21 +42,6 @@
         beforeCreate(){
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
             this.seenOnBoarding = storage.get('seen-onboarding') || false;
-           /* storage.chromeSync.get(null, (details) => {
-                console.log("Details fetched", details);
-                if (typeof details === 'object') {
-                    console.log("Details on Start", details);
-                    if (details[Constants.STORAGE.SHARED_DATA]) {
-                        storage.set(Constants.STORAGE.SHARED_DATA, details[Constants.STORAGE.SHARED_DATA]);
-                    }
-                    if (details[Constants.STORAGE.BACKGROUND_SEEN]) {
-                        storage.set(Constants.STORAGE.BACKGROUND_SEEN, details[Constants.STORAGE.BACKGROUND_SEEN]);
-                    }
-                    if (details[Constants.STORAGE.CURRENT_PAGE]) {
-                        storage.set(Constants.STORAGE.CURRENT_PAGE, details[Constants.STORAGE.CURRENT_PAGE]);
-                    }
-                }
-            });*/
         },
         data () {
             return {
