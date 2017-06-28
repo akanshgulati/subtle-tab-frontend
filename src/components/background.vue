@@ -71,6 +71,7 @@
 
                 } else {
                     bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
+                    this.$emit('stopLoading');
                 }
             },
             loadBackground(){
