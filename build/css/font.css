@@ -1,11 +1,11 @@
 @media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
     html{
-        font-size: 15px;
+        font-size: 14px;
     }
 }
 @media screen and (min-device-width: 1601px){
     html{
-        font-size: 18px;
+        font-size: 15px;
     }
 }
 .font-large{
@@ -16,11 +16,6 @@
 }
 .font-center{
     text-align: center;
-}
-.logo-onboarding{
-    height:128px;
-    width: 128px;
-    background: url('../images/')
 }
 .italics{
     font-style: italic;

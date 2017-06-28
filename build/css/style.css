@@ -21,7 +21,7 @@
     src: url('../fonts/OpenSans-Bold.ttf');
 }
 .wi{
-    font-size: 1rem;
+    font-size: 1.3rem;
     margin-right: 0.5rem;
 }
 html {
@@ -598,5 +598,5 @@ button.sync-btn {
     font-size: 0.8rem;
 }
 .weather-city{
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
