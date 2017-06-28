@@ -90,7 +90,7 @@ let getBackground = (theme, changePage) => {
                     themePage = 0;
                 }
                 currentPage[theme.value] = themePage;
-                storage.set('current-page', currentPage);
+                storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
 
                 updateThemeStorage(bgData, theme);
                 resolve();

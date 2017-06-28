@@ -60,13 +60,14 @@
                         }
                     }
 
-                    if (!localBgData || i === (bgKeys.length - 2)) {
+                    if (!localBgData || i >= (bgKeys.length - 2)) {
                         chrome.runtime.sendMessage({query: 'log', value: 'No Local Storage Found for theme '+ theme.id});
                         chrome.runtime.sendMessage({query: 'getBackground', theme, newPage: true});
                     }
-                    else if (i >= bgKeys.length) {
-                        chrome.runtime.sendMessage({query: 'getBackground', theme, newPage: false});
+
+                    if (i >= bgKeys.length) {
                         bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
+                        this.$emit('stopLoading');
                     }
 
                 } else {
