@@ -226,7 +226,7 @@ var config = {
         },
         background: {
             themeId: 1,
-            changeInterval: 5
+            changeInterval: 10
         }
     }
 };
@@ -1784,16 +1784,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('div', {
     staticClass: "btn-inner",
     class: {
-      'active': _vm.settings.background.changeInterval === 2
-    },
-    on: {
-      "click": function($event) {
-        _vm.setBgInterval(2)
-      }
-    }
-  }, ["2 Tabs"]), " ", _h('div', {
-    staticClass: "btn-inner",
-    class: {
       'active': _vm.settings.background.changeInterval === 5
     },
     on: {
@@ -1812,6 +1802,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }
     }
   }, ["10 Tabs"]), " ", _h('div', {
+    staticClass: "btn-inner",
+    class: {
+      'active': _vm.settings.background.changeInterval === 20
+    },
+    on: {
+      "click": function($event) {
+        _vm.setBgInterval(15)
+      }
+    }
+  }, ["15 Tabs"]), " ", _h('div', {
     staticClass: "btn-inner",
     class: {
       'active': _vm.settings.background.changeInterval === 20

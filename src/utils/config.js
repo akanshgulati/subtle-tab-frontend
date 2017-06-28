@@ -13,7 +13,7 @@ const config = {
         },
         background: {
             themeId: 1,
-            changeInterval: 5
+            changeInterval: 10
         }
     }
 };
