@@ -33,7 +33,7 @@
                 <div class="btn-group">
                     <div class="btn-inner" :class="{'active': settings.background.changeInterval === 5}" v-on:click="setBgInterval(5)">5 Tabs</div>
                     <div class="btn-inner" :class="{'active': settings.background.changeInterval === 10}" v-on:click="setBgInterval(10)">10 Tabs</div>
-                    <div class="btn-inner" :class="{'active': settings.background.changeInterval === 20}" v-on:click="setBgInterval(15)">15 Tabs</div>
+                    <div class="btn-inner" :class="{'active': settings.background.changeInterval === 15}" v-on:click="setBgInterval(15)">15 Tabs</div>
                     <div class="btn-inner" :class="{'active': settings.background.changeInterval === 20}" v-on:click="setBgInterval(20)">20 Tabs</div>
                 </div>
             </li>
