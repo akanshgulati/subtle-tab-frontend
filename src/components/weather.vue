@@ -40,31 +40,40 @@
         },
         methods: {
             checkWeather(){
+                if(!navigator.onLine){
+                    this.weatherCity = 'Offline';
+                    return;
+                }
                 let self = this;
                 let now = +new Date();
-                const oneHourTime = 1800000;
+                const oneHourTime = 900000;
                 if (this.localWeather) {
                     if((now - this.localWeather[0]) > oneHourTime){
                         navigator.geolocation.getCurrentPosition((position) => {
                                 self.loadWeather(position.coords.latitude, position.coords.longitude);
                             }, (error) => {
+                                console.log(error)
                             }, {timeout: 10000}
                         );
                     }else{
-                        this.temp = this.settings.unit === 'f' ? this.localWeather[1] : this.localWeather[2];
+                        this.temp = this.settings.unit === 'f' ? this.localWeather[2] : this.localWeather[1];
                         this.weatherCode = this.localWeather[3];
                         this.weatherClass = weatherUtil[this.localWeather[3]];
                         this.weatherCity = this.localWeather[4];
                     }
                 }else{
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        self.loadWeather(position.coords.latitude, position.coords.longitude);
-                    });
+                    navigator.geolocation.getCurrentPosition((position) => {
+                            self.loadWeather(position.coords.latitude, position.coords.longitude);
+                        }, (error) => {
+                            console.log(error)
+                        }, {timeout: 10000}
+                    );
                 }
             },
             loadWeather(lat, long){
                 const self = this;
                 this.isLoading = true;
+                chrome.runtime.sendMessage({query: 'startWeather'});
 
                 return new Promise((resolve, reject) => {
 
@@ -80,12 +89,12 @@
                             let weather = JSON.parse(xmlhttp.responseText);
                             let now = +new Date();
                             self.isLoading = false;
-                            self.temp = weather.temp;
+                            self.temp = self.settings.unit === 'f' ? weather.alt.temp : weather.temp;
                             self.weatherCode = weather.code;
                             self.weatherClass = weatherUtil[weather.code];
                             self.weatherCity = weather.city;
 
-                            self.localWeather = [now, self.settings.unit === 'f' ? weather.temp : weather.alt.temp, self.settings.unit === 'c' ? weather.temp : weather.alt.temp, self.weatherCode, self.weatherCity];
+                            self.localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
                             storage.set('weather', this.localWeather);
                             resolve();
                         }

@@ -44,6 +44,8 @@ chrome.runtime.onMessage.addListener(
             loadCurrentBackground(request.url, sendResponse);
         } else if (request.query === 'log') {
             _console(request.value);
+        } else if (request.query === 'startWeather') {
+            startWeather();
         }
         return true;
     });
@@ -63,6 +65,7 @@ let loadCurrentBackground = (url, callback) => {
         callback(false);
     }, 2500);
 };
+
 let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
@@ -99,6 +102,7 @@ let getBackground = (theme, changePage) => {
         xmlhttp.send();
     });
 };
+
 let updateThemeStorage = (bgData, theme) => {
     let themeLocalStorage = storage.get(constants.THEME[theme.value]);
     if (!themeLocalStorage) {
@@ -148,8 +152,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
         chrome.tabs.create({});
 
     } else if (details && details.reason && details.reason === 'update') {
-        storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
-        chrome.tabs.create({});
+        //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+        //chrome.tabs.create({});
     }
 });
 
@@ -170,9 +174,61 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 });
 
-chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
 
+function getWeather(lat, long) {
+    let xmlhttp = new XMLHttpRequest();
+
+    let url = 'http://api.subtletab.com/weather/';
+    url += '?lat=' + lat + '&long=' + long;
+
+    xmlhttp.open('GET', url);
+    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+    xmlhttp.onreadystatechange = () => {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            let weather = JSON.parse(xmlhttp.responseText);
+            let now = +new Date();
+            let localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
+            storage.set('weather', localWeather);
+        }
+    };
+    xmlhttp.send();
+}
+function loadWeather() {
+    navigator.geolocation.getCurrentPosition((position) => {
+            getWeather(position.coords.latitude, position.coords.longitude);
+        }, (error) => {
+            _console(error)
+        }, {timeout: 10000}
+    );
+
+}
+let weatherInterval;
+function startWeather() {
+
+    let localSettings = storage.get(constants.STORAGE.SHARED_DATA);
+    if (localSettings && localSettings.showUtilities.showWeather) {
+        if (!weatherInterval) {
+            weatherInterval = setInterval(() => {
+                if (navigator.onLine) {
+                    loadWeather();
+                } else {
+                    stopWeather();
+                }
+            }, 300000)
+        }
+    } else {
+        stopWeather();
+    }
+
+}
+
+function stopWeather() {
+    clearInterval(weatherInterval);
+}
 function init() {
+
+    chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+
     chrome.tabs.onCreated.addListener(function () {
         prevTabsCount = tabsCount;
         tabsCount++;
