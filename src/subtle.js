@@ -89,6 +89,10 @@ let getBackground = (theme, changePage) => {
                 if (themePage === response.pages) {
                     themePage = 0;
                 }
+
+                if (changePage) {
+                    storage.set(constants.STORAGE['BACKGROUND_SEEN_' + theme.value.toUpperCase()], '');
+                }
                 currentPage[theme.value] = themePage;
                 storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
 
@@ -111,12 +115,10 @@ let updateThemeStorage = (bgData, theme) => {
     }
     let allKeys = Object.keys(themeLocalStorage);
     let lastURLKey = allKeys[allKeys.length];
-
     let lastStoredURL = themeLocalStorage[lastURLKey];
     // Storing last background url for next round;
     let obj = {};
     obj[lastURLKey] = lastStoredURL;
-
     storage.set(theme.value, Object.assign({}, obj, bgData));
 };
 
@@ -169,11 +171,15 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             continue;
         }
         _console("Storage Changed" + JSON.stringify(changes[key]));
-        storage.setLocal(key, changes[key].newValue);
+        if (changes[key].newValue) {
+            storage.setLocal(key, changes[key].newValue);
+        } else {
+            //To handle cases when no data is present
+            storage.remove(key);
+        }
     }
 
 });
-
 
 function getWeather(lat, long) {
     let xmlhttp = new XMLHttpRequest();
@@ -193,6 +199,7 @@ function getWeather(lat, long) {
     };
     xmlhttp.send();
 }
+
 function loadWeather() {
     navigator.geolocation.getCurrentPosition((position) => {
             getWeather(position.coords.latitude, position.coords.longitude);
@@ -228,6 +235,15 @@ function stopWeather() {
 function init() {
 
     chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+
+    chrome.storage.sync.get(null, (data) => {
+        for (let key in data) {
+            if (!data.hasOwnProperty(key)) {
+                continue;
+            }
+            storage.setLocal(key, data[key]);
+        }
+    });
 
     chrome.tabs.onCreated.addListener(function () {
         prevTabsCount = tabsCount;

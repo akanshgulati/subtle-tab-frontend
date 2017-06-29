@@ -10,22 +10,24 @@
     import bgUtil from '../utils/bgUtil'
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
+    import constants from '../utils/Constants'
     let bgElement;
 
     let backgroundVue = {
         beforeCreate(){
-            this.bgSeen = storage.get('bg-seen') || [];
+            //this.bgSeen = storage.get('bg-seen') || [];
         },
         data () {
             return {
                 showBackground: false,
-                bgSeen : this.bgSeen,
+                bgSeen : '',
                 tabsCount: '',
                 themeId: '',
                 defaultImageLoaded: false,
                 bgIndex: 0,
                 allBackgrounds: null,
-                bgKeys: null
+                bgKeys: null,
+                themeVal: ''
             }
         },
         props: ['settings'],
@@ -34,17 +36,22 @@
             this.getBackground();
         },
         methods: {
+            getAllBackgrounds(theme){
+                let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
+                const localBgData = storage.get(theme.value);
+                const storedBg = bgData.stored[theme.id];
+                return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
+            },
             getBackground: function (reset) {
                 if(reset && this.themeId === this.settings.themeId){
                     return;
                 }
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
+                this.themeVal = theme.value;
                 const localBgData = storage.get(theme.value);
-                const storedBg = bgData.stored[theme.id];
-
-                const allBackgrounds = Object.assign({}, storedBg, localBgData);
+                this.bgSeen = storage.get('bg-seen-'+ theme.value) || [];
+                const allBackgrounds = this.getAllBackgrounds(theme);
                 const bgKeys = Object.keys(allBackgrounds);
-
                 this.allBackgrounds = allBackgrounds;
                 this.bgKeys = bgKeys;
                 this.themeId = theme.id;
@@ -78,21 +85,17 @@
             loadBackground(){
                 chrome.runtime.sendMessage({query: 'log', value: 'Load Background Called'});
                 this.isLoading();
-
                 this.defaultImageLoaded = false;
                 let i = this.bgIndex;
-
                 let currentUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
-
-
                 chrome.runtime.sendMessage({query: 'loadCurrentBackground', url: currentUrl}, (responseURL) =>{
                     if(responseURL){
                         this.defaultImageLoaded = false;
                         bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
-                        chrome.runtime.sendMessage({query: 'log', value: 'Current URL' + currentUrl});
+                        chrome.runtime.sendMessage({query: 'log', value: 'Current URL ' + currentUrl});
                         this.$emit('stopLoading');
                         let nextUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i + 1]], this.bgKeys[i + 1]);
-                        chrome.runtime.sendMessage({query: 'log', value: 'Next URL' + nextUrl});
+                        chrome.runtime.sendMessage({query: 'log', value: 'Next URL ' + nextUrl});
                         chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
                     }else{
                         this.defaultImageLoaded = true;
@@ -119,12 +122,11 @@
                     }
                     if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
                         this.bgSeen.push(id);
-                        storage.set('bg-seen', this.bgSeen);
+                        storage.set('bg-seen-' + this.themeVal, this.bgSeen);
                     }
                     else if (this.defaultImageLoaded) {
                         chrome.runtime.sendMessage({query: 'setTabsCount', value: parseInt(tabs) - 1});
                     }
-
                 });
             },
             getDefaultBg(){

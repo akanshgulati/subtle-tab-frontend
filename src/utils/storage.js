@@ -6,14 +6,13 @@ let storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set(key, value){
-        if (constants.SYNC.indexOf(key) > -1 && localStorage.getItem('sync')) {
+        if (constants.SYNC.indexOf(key) > -1) {
             let obj = {};
             obj[key] = value;
-            console.log(obj);
             chrome.storage.sync.set(obj);
-        } else {
-            localStorage.setItem(key, JSON.stringify(value));
         }
+        localStorage.setItem(key, JSON.stringify(value));
+
     },
     setLocal(key, value){
         localStorage.setItem(key, JSON.stringify(value));
