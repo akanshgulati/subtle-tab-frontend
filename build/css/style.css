@@ -306,7 +306,7 @@ svg:hover #close_btn {
 #customize {
     position: fixed;
     left: calc(50vw - 450px);
-    top: calc(50vh - 210px);
+    top: calc(50vh - 14.27rem);
     width: 900px;
     background: #ffffff;
     color: #fff;
