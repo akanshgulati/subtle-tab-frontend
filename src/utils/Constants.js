@@ -13,7 +13,8 @@ export default {
         BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
         BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
         CURRENT_PAGE: 'current-page',
-        SEEN_ONBOARDING: 'seen-onboarding'
+        SEEN_ONBOARDING: 'seen-onboarding',
+        NOTES_META: 'notes_meta'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night'

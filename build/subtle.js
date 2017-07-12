@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 34);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -79,14 +79,12 @@ var storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set: function set(key, value) {
-        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 && localStorage.getItem('sync')) {
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1) {
             var obj = {};
             obj[key] = value;
-            console.log(obj);
             chrome.storage.sync.set(obj);
-        } else {
-            localStorage.setItem(key, JSON.stringify(value));
         }
+        localStorage.setItem(key, JSON.stringify(value));
     },
     setLocal: function setLocal(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
@@ -145,16 +143,20 @@ var storage = {
     STORAGE: {
         SHARED_DATA: 'shared-data',
         WEATHER: 'weather',
-        BACKGROUND_SEEN: 'bg-seen',
+        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
+        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
+        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
+        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
         CURRENT_PAGE: 'current-page',
-        SEEN_ONBOARDING: 'seen-onboarding'
+        SEEN_ONBOARDING: 'seen-onboarding',
+        NOTES_META: 'notes_meta'
     },
-    SYNC: ['shared-data', 'bg-seen', 'current-page']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night']
 };
 
 /***/ },
 
-/***/ 34:
+/***/ 38:
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5);
@@ -257,6 +259,10 @@ var getBackground = function getBackground(theme, changePage) {
                 if (themePage === response.pages) {
                     themePage = 0;
                 }
+
+                if (changePage) {
+                    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE['BACKGROUND_SEEN_' + theme.value.toUpperCase()], '');
+                }
                 currentPage[theme.value] = themePage;
                 __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE, currentPage);
 
@@ -279,12 +285,10 @@ var updateThemeStorage = function updateThemeStorage(bgData, theme) {
     }
     var allKeys = Object.keys(themeLocalStorage);
     var lastURLKey = allKeys[allKeys.length];
-
     var lastStoredURL = themeLocalStorage[lastURLKey];
     // Storing last background url for next round;
     var obj = {};
     obj[lastURLKey] = lastStoredURL;
-
     __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(theme.value, Object.assign({}, obj, bgData));
 };
 
@@ -336,7 +340,12 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             continue;
         }
         _console("Storage Changed" + JSON.stringify(changes[key]));
-        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, changes[key].newValue);
+        if (changes[key].newValue) {
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, changes[key].newValue);
+        } else {
+            //To handle cases when no data is present
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].remove(key);
+        }
     }
 });
 
@@ -358,6 +367,7 @@ function getWeather(lat, long) {
     };
     xmlhttp.send();
 }
+
 function loadWeather() {
     navigator.geolocation.getCurrentPosition(function (position) {
         getWeather(position.coords.latitude, position.coords.longitude);
@@ -390,6 +400,15 @@ function stopWeather() {
 function init() {
 
     chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+
+    chrome.storage.sync.get(null, function (data) {
+        for (var key in data) {
+            if (!data.hasOwnProperty(key)) {
+                continue;
+            }
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, data[key]);
+        }
+    });
 
     chrome.tabs.onCreated.addListener(function () {
         prevTabsCount = tabsCount;
