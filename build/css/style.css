@@ -280,7 +280,7 @@ label {
     cursor: pointer;
 }
 
-svg #customize_btn {
+svg #customize_btn, svg #note_btn {
     fill: #d6d6d6;
     transition: all 0.2s ease-in-out;
     transform-origin: 50% 50%;
@@ -301,7 +301,7 @@ svg #customize_btn {
     border-radius: 3px;
 }
 
-svg:hover #customize_btn {
+svg:hover #customize_btn, svg:hover #note_btn {
     fill: white;
     transform: scale(1.03);
 }
@@ -644,7 +644,7 @@ button.sync-btn {
 /*NOTE*/
 .notes-widget{
     border-right: 1px solid rgba(255, 255, 255, 0.3);
-    padding-right: 2rem;
+    padding-right: 1rem;
     margin-right: 1rem;
 }
 .notes-icon:hover {
@@ -666,8 +666,10 @@ button.sync-btn {
 
 #notes {
     position: absolute;
-    right: 5rem;
+    right: 4rem;
     width: 40vw;
+    min-width: 42rem;
+    min-height: 24rem;
     height: 45vh;
     margin-top: 1rem;
 }
@@ -698,12 +700,12 @@ button.sync-btn {
 .notes-count{
     padding: 0.3rem 0.5rem;
     border-bottom: 2px solid #f3f3f3;
-    text-align: center;
+    font-weight: 500;
 }
 #notes .sidebar {
     height: 90%;
     background: white;
-    border-radius: 2px;
+    border-radius: 3px 0 0 3px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 100%;
     transition: all 0.5s ease;
@@ -717,7 +719,7 @@ button.sync-btn {
     transition: all 0.5s;
 }
 #notes .show-sidebar {
-    transform: translateX(-100.1%);
+    transform: translateX(-100%);
 }
 
 #notes .button-section {
@@ -725,6 +727,7 @@ button.sync-btn {
     width: 100%;
     border-top: 2px solid #f3f3f3;
     background: rgba(243, 243, 243, 0.43);
+    border-radius: 3px 3px 0 0;
 }
 
 #notes .button-section img {
@@ -751,13 +754,13 @@ button.sync-btn {
 
 .note {
     background: white;
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.2);
     color: #666666;
+    border-radius: 3px;
 }
 
 .note, .note:before, .note:after {
-    border: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .note:before, .note:after {
@@ -785,9 +788,9 @@ button.sync-btn {
 }
 
 .note-list li {
-    height: 45px;
+    height: 3.5rem;
     font-size: 0.8rem;
-    padding: 0.2rem 0.4rem 0.2rem 1rem;
+    padding: 0.5rem 0.4rem 0.2rem 1rem;
 }
 
 .note-title {
@@ -821,13 +824,14 @@ button.sync-btn {
     border: 1px solid #cbcbcb;
     border-radius: 50%;
     padding: 3px;
-    max-height: 2rem;
-    max-width: 2rem;
+    height: 1.7rem;
+    width: 1.7rem;
 }
 
 #notes .arrow {
     transition: all 0.5s ease;
     transform: rotate(90deg);
+    padding: 0.35rem !important;
 }
 
 #notes .arrow.rotate {
@@ -848,22 +852,26 @@ button.sync-btn {
     transition: all 0.3s ease-in-out;
 }
 
-#notes img:hover {
-    box-shadow: inset 0 0 10px #bdbdbd;
+
+#notes img.pointer:hover {
+    box-shadow: inset 0 0 4px #cfcfcf;
 }
 
-#notes .del-note img {
-
+.create_note_img{
+    width: 10rem;
 }
 
-#notes .big-plus {
-    border: 2px solid #676767;
-    border-radius: 50%;
-    transition: all 0.2s ease-in-out;
+.create_note {
+    font-size: 1rem;
+    border: 1px solid #cbcbcb;
+    padding: 0.5rem 1rem;
+    border-radius: 21px;
+    transition: all 0.3s ease-in-out;
+    margin-top: 2rem;
 }
 
-#notes .big-plus:hover {
-    box-shadow: inset 0 0 8px #939393;
+.create_note:hover{
+    color: #161616;
 }
 
 #notes .flip-list-move {

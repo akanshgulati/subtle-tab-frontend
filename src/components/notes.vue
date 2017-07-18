@@ -2,7 +2,8 @@
     <div id="notes" class="row">
         <div class="col s5 full-height relative no-padding flex flex-center">
             <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': notesMeta.showSidebar && notesMeta.count}">
-                <div class="notes-count">{{notes.length}} / 10 Notes</div>
+                <div class="notes-count">
+                    <span>Notes</span> <span class="right">{{notes.length}} / 10</span></div>
                 <transition-group name="flip-list" tag="ul" id="note-list" class="note-list">
                     <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
                         v-on:click="setCurrentNote(note.id)" v-bind:key="note">
@@ -16,11 +17,11 @@
                 </div>
             </div>
         </div>
-        <div v-if="!notesMeta.count" v-on:click="createFirstNote" class="col s7 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
-            <div class="big-plus pointer">
-                <svg fill="#666666" enable-background="new 0 0 70 70" height="6rem" id="Icons" version="1.1" viewBox="0 0 70 70" width="6rem" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="pointer"><polygon points="53,32.5 37.5,32.5 37.5,17 32.5,17 32.5,32.5 17,32.5 17,37.5 32.5,37.5 32.5,53 37.5,53 37.5,37.5 53,37.5 "></polygon></svg>
+        <div v-if="!notesMeta.count" class="col s7 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
+            <div>
+                <img src="images/note_landing_page_icon.png">
             </div>
-            <h5 class="italics">Create first note</h5>
+            <h5 class="italics create_note pointer" v-on:click="createFirstNote">Create first note</h5>
         </div>
         <div v-if="notesMeta.count" class="col s7 note full-height no-padding relative flex-flow-column flex">
             <div class="button-section">
@@ -119,20 +120,23 @@
                 for (let i = 0; i < this.notes.length; i++) {
                     if (this.notes[i].id === id) {
                         this.currentNote = this.notes[i];
+                        //this.currentNote.updatedOn = +new Date();
                         break;
                     }
                 }
-                //this.currentNote = this.currentNote.id;
-                //this.currentNote.updatedOn = +new Date();
                 this.errorMessage = null;
                 document.getElementById("note").innerHTML = this.currentNote.content;
             },
             trimContent(value){
-                value = value.replace(/<(?:.|\n)*?>/gm, '');
-                if(!value.length || !value){
-                    return 'No Name';
+                let ellipsis = '';
+                value = value.replace(/<(?:.|\n)*?>/gm, ' ');
+                if (!value.length || !value) {
+                    return 'New Note';
                 }
-                return value.slice(0, 20);
+                if (value.length > 25) {
+                    ellipsis = '...';
+                }
+                return value.slice(0, 25) + ellipsis;
             },
             populateNotes(){
                 let note;
@@ -190,8 +194,8 @@
                 if (this.notes.length > 0) {
                     this.currentNote = this.notes[0];
                     this.setCurrentNote(this.currentNote.id);
-                    this.notesMeta.count--;
                 }
+                this.notesMeta.count--;
             },
             createNote(){
                 if(this.notes && this.notes.length > 9){
