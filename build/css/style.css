@@ -79,6 +79,14 @@ body {
     flex-grow: 1;
 }
 
+.mar-0 {
+    margin: 0 !important;
+}
+
+.pad-0 {
+    padding: 0 !important;
+}
+
 label {
     color: #666;
 }
@@ -326,23 +334,27 @@ svg:hover #close_btn {
     top: calc(50vh - 14.27rem);
     width: 900px;
     background: #ffffff;
-    color: #fff;
+    color: #666;
     border-radius: 5px;
     padding: 1rem;
     opacity: 0;
     z-index: 10;
     visibility: hidden;
 }
-
-button.sync-btn {
-    margin: 0 10px;
-    background: #a5a4a4;
-    border: 0;
-    border-radius: 5px;
+.shortcut-key{
+    background: #818181;
+    padding: 1px 4px;
     color: white;
-    font-size: 0.9rem;
+    margin-right:0.3rem;
 }
-
+.shortcut-bar{
+    margin-top: 0;
+    margin-left: 8px;
+}
+.shortcut-bar li{
+    margin-right: 1rem;
+    margin-bottom: 0 !important;
+}
 .customization-overlay {
     position: fixed;
     z-index: 9;
@@ -503,6 +515,9 @@ button.sync-btn {
 .customize-footer {
     color: #666;
     font-size: 0.7rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
 }
 
 .customize-footer a {
@@ -698,17 +713,18 @@ button.sync-btn {
     background: rgba(243, 243, 243, 0.43);
 }
 .notes-count{
-    padding: 0.3rem 0.5rem;
+    padding: 0.6rem 0.5rem;
     border-bottom: 2px solid #f3f3f3;
     font-weight: 500;
+    font-size: 0.9rem;
 }
 #notes .sidebar {
-    height: 90%;
+    height: 92%;
     background: white;
     border-radius: 3px 0 0 3px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 100%;
-    transition: all 0.5s ease;
+    transition: all 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940);
     overflow: hidden;
     transform-origin: 100% 0;
     right: -100%;

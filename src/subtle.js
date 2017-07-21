@@ -70,7 +70,7 @@ let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
-        let themePage = currentPage[theme.value] || 0;
+            let themePage = currentPage[theme.value] || 0;
 
         if (changePage) {
             themePage++;

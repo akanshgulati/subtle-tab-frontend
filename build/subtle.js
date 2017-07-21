@@ -79,7 +79,7 @@ var storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set: function set(key, value) {
-        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1) {
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
             var obj = {};
             obj[key] = value;
             chrome.storage.sync.set(obj);
@@ -113,14 +113,28 @@ var storage = {
 
     chromeSync: {
         get: function get(key, callback) {
-            chrome.storage.sync.get(key, function (details) {
-                callback(details);
-            });
+            try {
+                chrome.storage.sync.get(key, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         },
         set: function set(key, value, callback) {
-            chrome.storage.sync.set({ key: value }, function (details) {
-                callback(details);
-            });
+            try {
+                var obj = {};
+                obj[key] = value;
+                chrome.storage.sync.set(obj, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 
@@ -151,7 +165,7 @@ var storage = {
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-']
 };
 
 /***/ },

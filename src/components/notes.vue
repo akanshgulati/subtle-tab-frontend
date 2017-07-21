@@ -1,9 +1,9 @@
 <template>
-    <div id="notes" class="row">
+    <div id="notes" class="row" v-on:click.stop="">
         <div class="col s5 full-height relative no-padding flex flex-center">
             <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': notesMeta.showSidebar && notesMeta.count}">
                 <div class="notes-count">
-                    <span>Notes</span> <span class="right">{{notes.length}} / 10</span></div>
+                    <span>Notes (N)</span> <span class="right">{{notes.length}} / 10</span></div>
                 <transition-group name="flip-list" tag="ul" id="note-list" class="note-list">
                     <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
                         v-on:click="setCurrentNote(note.id)" v-bind:key="note">
@@ -29,7 +29,7 @@
                 <img src="images/arrow.svg" class="pointer arrow" v-on:click="toggleNoteList" :class="{'rotate': notesMeta.showSidebar}">
             </div>
             <div class="note-error" v-if="errorMessage">{{errorMessage}}</div>
-            <div id="note" contenteditable="true" v-html="currentNoteContent" @input="debounceInput"></div>
+            <div id="note" contenteditable="true" v-html="currentNoteContent" @input="handler"></div>
         </div>
     </div>
 </template>
@@ -40,7 +40,7 @@
     import constants from '../utils/Constants'
     export default {
         beforeCreate(){
-            this.notesMeta = storage.get(constants.STORAGE.NOTES_META) || { count: 0, showSidebar: true };
+            this.notesMeta = storage.get(constants.STORAGE.NOTES_META) || {count: 0, showSidebar: true, deletedNotes: [], createdNotes: []};
         },
         data () {
             return {
@@ -69,38 +69,58 @@
             }
         },
         methods:{
+            handler(e){
+                this.debouncedInput(e, this);
+                this.debouncedInputSync(this);
+            },
+            debouncedInput: _debounce((el, self) => {
+                let content = el.target.innerHTML;
+                if (content.length > 7000) {
+                    content = content.slice(0, 7000);
+                }
+                self.currentNote.content = content;
+                self.currentNote.updatedOn = +new Date();
+                storage.setLocal('note-' + self.currentNote.id, self.currentNote);
+            }, 1000),
+            debouncedInputSync: _debounce(function(self){
+                console.log('Called 2', new Date());
+                storage.chromeSync.set('note-' + self.currentNote.id, self.currentNote);
+            }, 5000),
             addNoteLimit(element){
                 let el = document.getElementById(element);
                 let self = this;
                 if(!el){
                     return;
                 }
-                let maxValue = 2000;
+                let maxValue = 7000;
                 el.onkeyup = function(e){
-                    if (e.which !== 8 && el.innerText.length > maxValue) {
+                    if (el.innerHTML.length > maxValue) {
                         self.errorMessage = 'Content limit reached for this note.';
                         e.preventDefault();
+                    }else if(e.which === 27){
+                        el.blur();
                     }else{
                         self.errorMessage = null;
                     }
                 };
 
                 el.onkeydown = function(e) {
-                    if (e.which !== 8 && el.innerText.length > maxValue) {
+                    if (e.which !== 8 && el.innerHTML.length > maxValue) {
+                        self.errorMessage = 'Content limit reached for this note.';
                         e.preventDefault();
                     }
                 };
             },
             getNoteTemplate(){
-                let id = this.notesMeta.count + 1;
-                for (let j = 1; j < id; j++) {
-                    if (!storage.get('note-' + j)) {
-                        id = j;
-                        break;
-                    }
+            //    let id = this.notesMeta.count + 1;
+                let id;
+                // Removing the id
+                if (this.notesMeta.deletedNotes.length) {
+                    id = Math.min(...this.notesMeta.deletedNotes);
+                    this.notesMeta.deletedNotes.splice(this.notesMeta.deletedNotes.indexOf(id), 1);
+                } else {
+                    id = this.notesMeta.createdNotes.length + 1;
                 }
-                this.notesMeta.count++;
-
                 return {
                     id: id,
                     createdOn: +new Date(),
@@ -140,13 +160,13 @@
             },
             populateNotes(){
                 let note;
-                for (let i = 0; i < this.notesMeta.count; i++) {
-                    note = storage.get('note-' + (i + 1));
+                for (let i = 0; i < this.notesMeta.createdNotes.length; i++) {
+                    note = storage.get('note-' + this.notesMeta.createdNotes[i]);
                     if (note) {
                         this.notes.push(note)
                     }
                 }
-                if (this.notesMeta.count > 0) {
+                if (this.notesMeta.createdNotes.length > 0 && this.notes.length > 0) {
                     this.sortNotes();
                     this.currentNote = this.notes[0];
                     this.currentNoteContent = this.currentNote.content;
@@ -167,15 +187,21 @@
             },
             debounceInput(el){
                 let self = this;
-                _debounce(() => {
-                    let content = el.target.innerHTML;
-                    if (content.length > 2000) {
-                        content = content.slice(0, 2000);
-                    }
-                    self.currentNote.content = content;
-                    self.currentNote.updatedOn = +new Date();
-                    storage.set('note-' + self.currentNote.id, self.currentNote);
-                }, 1000)();
+
+                let content = el.target.innerHTML;
+                if (content.length > 5000) {
+                    content = content.slice(0, 5000);
+                }
+
+                self.currentNote.content = content;
+                self.currentNote.updatedOn = +new Date();
+                storage.setLocal('note-' + self.currentNote.id, self.currentNote);
+                console.log('Called once in 1 seconds', new Date());
+
+                /*_debounce(() => {
+                    console.log('Called once in 2 seconds', new Date());
+                    storage.chromeSync.set('note-' + self.currentNote.id, self.currentNote);
+                }, 2000)();*/
             },
             toggleNoteList(){
                 this.notesMeta.showSidebar = !this.notesMeta.showSidebar
@@ -183,6 +209,9 @@
             deleteNote(e){
                 e.preventDefault();
                 e.stopPropagation();
+                if (!confirm('Are you sure you want to delete this note?')) {
+                    return;
+                }
                 for (let j = 0; j < this.notes.length; j++) {
                     if (this.notes[j].id === this.currentNote.id) {
                         this.notes.splice(j, 1);
@@ -191,18 +220,25 @@
                 }
                 storage.remove('note-' + this.currentNote.id);
                 console.log("Removing note with id ", this.currentNote.id);
+
+                this.notesMeta.deletedNotes.push(this.currentNote.id);
+                this.notesMeta.createdNotes.splice(this.notesMeta.createdNotes.indexOf(this.currentNote.id), 1);
+                this.notesMeta.count--;
+
                 if (this.notes.length > 0) {
                     this.currentNote = this.notes[0];
                     this.setCurrentNote(this.currentNote.id);
                 }
-                this.notesMeta.count--;
             },
-            createNote(){
+            createNote(e){
+                e.stopPropagation();
                 if(this.notes && this.notes.length > 9){
                     return;
                 }
                 let newNote = this.getNoteTemplate();
                 this.notes.unshift(newNote);
+                this.notesMeta.createdNotes.push(newNote.id);
+                this.notesMeta.count++;
                 storage.set('note-' + newNote.id, newNote);
                 setTimeout(() => this.setCurrentNote(newNote.id), 100);
             },
@@ -239,5 +275,5 @@
                 return now - date >= 86400000 ? date.toLocaleDateString() : date.toLocaleTimeString();
             }
         }
-    }
+    };
 </script>

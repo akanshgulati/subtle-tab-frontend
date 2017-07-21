@@ -1,66 +1,41 @@
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing. The function also has a property 'clear'
- * that is a function which will clear the timer to prevent previously scheduled executions.
- *
- * @source underscore.js
- * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
- * @param {Function} function to wrap
- * @param {Number} timeout in ms (`100`)
- * @param {Boolean} whether to execute at the beginning (`false`)
- * @api public
- */
+let _ = function(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+};
 
-module.exports = function debounce(func, wait, immediate){
-    var timeout, args, context, timestamp, result;
-    if (null == wait) wait = 100;
-
-    function later() {
-        var last = Date.now() - timestamp;
-
-        if (last < wait && last >= 0) {
-            timeout = setTimeout(later, wait - last);
-        } else {
-            timeout = null;
-            if (!immediate) {
-                result = func.apply(context, args);
-                context = args = null;
-            }
-        }
+_.now = Date.now || function() {
+        return new Date().getTime();
     };
 
-    var debounced = function(){
+module.exports = function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    if (!options) options = {};
+    var later = function() {
+        previous = options.leading === false ? 0 : _.now();
+        timeout = null;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+    };
+    return function() {
+        var now = _.now();
+        if (!previous && options.leading === false) previous = now;
+        var remaining = wait - (now - previous);
         context = this;
         args = arguments;
-        timestamp = Date.now();
-        var callNow = immediate && !timeout;
-        if (!timeout) timeout = setTimeout(later, wait);
-        if (callNow) {
+        if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            previous = now;
             result = func.apply(context, args);
-            context = args = null;
+            if (!timeout) context = args = null;
+        } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining);
         }
-
         return result;
     };
-
-    debounced.clear = function() {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-    };
-
-    debounced.flush = function() {
-        if (timeout) {
-            result = func.apply(context, args);
-            context = args = null;
-
-            clearTimeout(timeout);
-            timeout = null;
-        }
-    };
-
-    return debounced;
 };

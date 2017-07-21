@@ -6,13 +6,12 @@ let storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set(key, value){
-        if (constants.SYNC.indexOf(key) > -1) {
+        if (constants.SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
             let obj = {};
             obj[key] = value;
             chrome.storage.sync.set(obj);
         }
         localStorage.setItem(key, JSON.stringify(value));
-
     },
     setLocal(key, value){
         localStorage.setItem(key, JSON.stringify(value));
@@ -40,14 +39,28 @@ let storage = {
     },
     chromeSync: {
         get(key, callback){
-            chrome.storage.sync.get(key, (details) => {
-                callback(details);
-            });
+            try {
+                chrome.storage.sync.get(key, (details) => {
+                    if(callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         },
         set(key, value, callback){
-            chrome.storage.sync.set({key: value}, (details) => {
-                callback(details);
-            });
+            try {
+                let obj = {};
+                obj[key] = value;
+                chrome.storage.sync.set(obj, (details) => {
+                    if(callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 

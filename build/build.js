@@ -78,7 +78,7 @@ var storage = {
         return isNaN(value) ? JSON.parse(value) : value;
     },
     set: function set(key, value) {
-        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1) {
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
             var obj = {};
             obj[key] = value;
             chrome.storage.sync.set(obj);
@@ -112,14 +112,28 @@ var storage = {
 
     chromeSync: {
         get: function get(key, callback) {
-            chrome.storage.sync.get(key, function (details) {
-                callback(details);
-            });
+            try {
+                chrome.storage.sync.get(key, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         },
         set: function set(key, value, callback) {
-            chrome.storage.sync.set({ key: value }, function (details) {
-                callback(details);
-            });
+            try {
+                var obj = {};
+                obj[key] = value;
+                chrome.storage.sync.set(obj, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 
@@ -149,7 +163,7 @@ var storage = {
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-']
 };
 
 /***/ },
@@ -324,6 +338,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 //
 //
 //
+//
+//
 
 
 
@@ -349,6 +365,18 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             isLoading: true,
             seenOnBoarding: this.seenOnBoarding
         };
+    },
+    mounted: function mounted() {
+        var self = this;
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode === 78) {
+                self.showNotes = true;
+            } else if (e.keyCode === 67) {
+                self.showCustomizeMenu = true;
+            } else if (e.keyCode === 27) {
+                self.closeWindows();
+            }
+        });
     },
 
     watch: {
@@ -376,6 +404,10 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         stopOnBoarding: function stopOnBoarding() {
             this.seenOnBoarding = true;
             __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, this.seenOnBoarding);
+        },
+        closeWindows: function closeWindows() {
+            this.showNotes = false;
+            this.showCustomizeMenu = false;
         }
     },
     components: {
@@ -711,6 +743,29 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -750,6 +805,8 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_debounce__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 //
 //
 //
@@ -792,7 +849,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
-        this.notesMeta = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.NOTES_META) || { count: 0, showSidebar: true };
+        this.notesMeta = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.NOTES_META) || { count: 0, showSidebar: true, deletedNotes: [], createdNotes: [] };
     },
     data: function data() {
         return {
@@ -822,38 +879,59 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         }
     },
     methods: {
+        handler: function handler(e) {
+            this.debouncedInput(e, this);
+            this.debouncedInputSync(this);
+        },
+
+        debouncedInput: __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default()(function (el, self) {
+            var content = el.target.innerHTML;
+            if (content.length > 7000) {
+                content = content.slice(0, 7000);
+            }
+            self.currentNote.content = content;
+            self.currentNote.updatedOn = +new Date();
+            __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].setLocal('note-' + self.currentNote.id, self.currentNote);
+        }, 1000),
+        debouncedInputSync: __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default()(function (self) {
+            console.log('Called 2', new Date());
+            __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].chromeSync.set('note-' + self.currentNote.id, self.currentNote);
+        }, 5000),
         addNoteLimit: function addNoteLimit(element) {
             var el = document.getElementById(element);
             var self = this;
             if (!el) {
                 return;
             }
-            var maxValue = 2000;
+            var maxValue = 7000;
             el.onkeyup = function (e) {
-                if (e.which !== 8 && el.innerText.length > maxValue) {
+                if (el.innerHTML.length > maxValue) {
                     self.errorMessage = 'Content limit reached for this note.';
                     e.preventDefault();
+                } else if (e.which === 27) {
+                    el.blur();
                 } else {
                     self.errorMessage = null;
                 }
             };
 
             el.onkeydown = function (e) {
-                if (e.which !== 8 && el.innerText.length > maxValue) {
+                if (e.which !== 8 && el.innerHTML.length > maxValue) {
+                    self.errorMessage = 'Content limit reached for this note.';
                     e.preventDefault();
                 }
             };
         },
         getNoteTemplate: function getNoteTemplate() {
-            var id = this.notesMeta.count + 1;
-            for (var j = 1; j < id; j++) {
-                if (!__WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('note-' + j)) {
-                    id = j;
-                    break;
-                }
+            //    let id = this.notesMeta.count + 1;
+            var id = void 0;
+            // Removing the id
+            if (this.notesMeta.deletedNotes.length) {
+                id = Math.min.apply(Math, _toConsumableArray(this.notesMeta.deletedNotes));
+                this.notesMeta.deletedNotes.splice(this.notesMeta.deletedNotes.indexOf(id), 1);
+            } else {
+                id = this.notesMeta.createdNotes.length + 1;
             }
-            this.notesMeta.count++;
-
             return {
                 id: id,
                 createdOn: +new Date(),
@@ -894,13 +972,13 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         },
         populateNotes: function populateNotes() {
             var note = void 0;
-            for (var i = 0; i < this.notesMeta.count; i++) {
-                note = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('note-' + (i + 1));
+            for (var i = 0; i < this.notesMeta.createdNotes.length; i++) {
+                note = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('note-' + this.notesMeta.createdNotes[i]);
                 if (note) {
                     this.notes.push(note);
                 }
             }
-            if (this.notesMeta.count > 0) {
+            if (this.notesMeta.createdNotes.length > 0 && this.notes.length > 0) {
                 this.sortNotes();
                 this.currentNote = this.notes[0];
                 this.currentNoteContent = this.currentNote.content;
@@ -920,15 +998,21 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         },
         debounceInput: function debounceInput(el) {
             var self = this;
-            __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default()(function () {
-                var content = el.target.innerHTML;
-                if (content.length > 2000) {
-                    content = content.slice(0, 2000);
-                }
-                self.currentNote.content = content;
-                self.currentNote.updatedOn = +new Date();
-                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set('note-' + self.currentNote.id, self.currentNote);
-            }, 1000)();
+
+            var content = el.target.innerHTML;
+            if (content.length > 5000) {
+                content = content.slice(0, 5000);
+            }
+
+            self.currentNote.content = content;
+            self.currentNote.updatedOn = +new Date();
+            __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].setLocal('note-' + self.currentNote.id, self.currentNote);
+            console.log('Called once in 1 seconds', new Date());
+
+            /*_debounce(() => {
+                console.log('Called once in 2 seconds', new Date());
+                storage.chromeSync.set('note-' + self.currentNote.id, self.currentNote);
+            }, 2000)();*/
         },
         toggleNoteList: function toggleNoteList() {
             this.notesMeta.showSidebar = !this.notesMeta.showSidebar;
@@ -936,6 +1020,9 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         deleteNote: function deleteNote(e) {
             e.preventDefault();
             e.stopPropagation();
+            if (!confirm('Are you sure you want to delete this note?')) {
+                return;
+            }
             for (var j = 0; j < this.notes.length; j++) {
                 if (this.notes[j].id === this.currentNote.id) {
                     this.notes.splice(j, 1);
@@ -944,20 +1031,27 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             }
             __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].remove('note-' + this.currentNote.id);
             console.log("Removing note with id ", this.currentNote.id);
+
+            this.notesMeta.deletedNotes.push(this.currentNote.id);
+            this.notesMeta.createdNotes.splice(this.notesMeta.createdNotes.indexOf(this.currentNote.id), 1);
+            this.notesMeta.count--;
+
             if (this.notes.length > 0) {
                 this.currentNote = this.notes[0];
                 this.setCurrentNote(this.currentNote.id);
             }
-            this.notesMeta.count--;
         },
-        createNote: function createNote() {
+        createNote: function createNote(e) {
             var _this = this;
 
+            e.stopPropagation();
             if (this.notes && this.notes.length > 9) {
                 return;
             }
             var newNote = this.getNoteTemplate();
             this.notes.unshift(newNote);
+            this.notesMeta.createdNotes.push(newNote.id);
+            this.notesMeta.count++;
             __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set('note-' + newNote.id, newNote);
             setTimeout(function () {
                 return _this.setCurrentNote(newNote.id);
@@ -1271,71 +1365,46 @@ var bgUtil = {
 /* 14 */
 /***/ function(module, exports) {
 
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing. The function also has a property 'clear'
- * that is a function which will clear the timer to prevent previously scheduled executions.
- *
- * @source underscore.js
- * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
- * @param {Function} function to wrap
- * @param {Number} timeout in ms (`100`)
- * @param {Boolean} whether to execute at the beginning (`false`)
- * @api public
- */
+var _ = function _(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+};
 
-module.exports = function debounce(func, wait, immediate) {
-    var timeout, args, context, timestamp, result;
-    if (null == wait) wait = 100;
+_.now = Date.now || function () {
+    return new Date().getTime();
+};
 
-    function later() {
-        var last = Date.now() - timestamp;
-
-        if (last < wait && last >= 0) {
-            timeout = setTimeout(later, wait - last);
-        } else {
-            timeout = null;
-            if (!immediate) {
-                result = func.apply(context, args);
-                context = args = null;
-            }
-        }
+module.exports = function (func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    if (!options) options = {};
+    var later = function later() {
+        previous = options.leading === false ? 0 : _.now();
+        timeout = null;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
     };
-
-    var debounced = function debounced() {
+    return function () {
+        var now = _.now();
+        if (!previous && options.leading === false) previous = now;
+        var remaining = wait - (now - previous);
         context = this;
         args = arguments;
-        timestamp = Date.now();
-        var callNow = immediate && !timeout;
-        if (!timeout) timeout = setTimeout(later, wait);
-        if (callNow) {
+        if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            previous = now;
             result = func.apply(context, args);
-            context = args = null;
+            if (!timeout) context = args = null;
+        } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining);
         }
-
         return result;
     };
-
-    debounced.clear = function () {
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-    };
-
-    debounced.flush = function () {
-        if (timeout) {
-            result = func.apply(context, args);
-            context = args = null;
-
-            clearTimeout(timeout);
-            timeout = null;
-        }
-    };
-
-    return debounced;
 };
 
 /***/ },
@@ -2009,6 +2078,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticClass: "row",
     attrs: {
       "id": "notes"
+    },
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+      }
     }
   }, [_h('div', {
     staticClass: "col s5 full-height relative no-padding flex flex-center"
@@ -2019,7 +2093,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, [_h('div', {
     staticClass: "notes-count"
-  }, [_h('span', ["Notes"]), " ", _h('span', {
+  }, [_h('span', ["Notes (N)"]), " ", _h('span', {
     staticClass: "right"
   }, [_vm._s(_vm.notes.length) + " / 10"])]), " ", _h('transition-group', {
     staticClass: "note-list",
@@ -2103,7 +2177,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "innerHTML": _vm._s(_vm.currentNoteContent)
     },
     on: {
-      "input": _vm.debounceInput
+      "input": _vm.handler
     }
   })]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
@@ -2245,7 +2319,13 @@ if (false) {
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [_h('header', [_h('div', {
+  return _h('div', {
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+      }
+    }
+  }, [_h('header', [_h('div', {
     staticClass: "flex flex-center right"
   }, [_h('div', {
     staticClass: "close-btn",
@@ -2283,7 +2363,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "d": "M8.24007692,3.75992308 C8.14984615,3.66969231 8.004,3.66969231 7.91376923,3.75992308 L6,5.67369231 L4.08623077,3.75992308 C3.996,3.66969231 3.85015385,3.66969231 3.75992308,3.75992308 C3.66969231,3.85015385 3.66969231,3.996 3.75992308,4.08623077 L5.67369231,6 L3.75992308,7.91376923 C3.66969231,8.004 3.66969231,8.14984615 3.75992308,8.24007692 C3.80492308,8.28507692 3.864,8.30769231 3.92307692,8.30769231 C3.98215385,8.30769231 4.04123077,8.28507692 4.08623077,8.24007692 L6,6.32630769 L7.91376923,8.24007692 C7.95876923,8.28507692 8.01784615,8.30769231 8.07692308,8.30769231 C8.136,8.30769231 8.19507692,8.28507692 8.24007692,8.24007692 C8.33030769,8.14984615 8.33030769,8.004 8.24007692,7.91376923 L6.32630769,6 L8.24007692,4.08623077 C8.33030769,3.996 8.33030769,3.85015385 8.24007692,3.75992308 Z",
       "id": "Shape"
     }
-  })])])])])]), " ", _h('span', ["Customize"])]), " ", _h('ul', [_h('li', [_h('h4', ["Wallpaper Category"]), " ", _h('ul', {
+  })])])])])]), " ", _h('span', ["Customize (C)"])]), " ", _h('ul', [_h('li', [_h('h4', ["Wallpaper Category"]), " ", _h('ul', {
     staticClass: "thumbnails"
   }, [_vm._l((_vm.themes), function(theme, index) {
     return _h('li', {
@@ -2558,12 +2638,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "for": "weather-fehren"
     }
-  }, ["Fahrenheit"])])])])])]), " ", _h('div', {
+  }, ["Fahrenheit"])])])])]), " ", _vm._m(0)]), " ", _h('div', {
     staticClass: "customize-footer"
+  }, [_h('div', {
+    staticClass: "flex"
   }, [_h('span', {
     staticClass: "version"
-  }, ["v" + _vm._s(_vm.version)]), " ", _vm._m(0)])])
+  }, ["v" + _vm._s(_vm.version)]), " ", _h('span', {
+    staticStyle: {
+      "margin": "0 0.5rem"
+    }
+  }, ["|"]), " ", _vm._m(1)]), " ", _vm._m(2)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('li', {
+    staticClass: "flex flex-center"
+  }, [_h('div', [_h('div', {
+    staticClass: "flex flex-center"
+  })])])
+},function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "flex"
+  }, [_h('span', {
+    staticClass: "semi-bold"
+  }, ["Shortcuts"]), " ", _h('ul', {
+    staticClass: "flex shortcut-bar"
+  }, [_h('li', [_h('span', {
+    staticClass: "shortcut-key"
+  }, ["N"]), " Open Notes"]), " ", _h('li', [_h('span', {
+    staticClass: "shortcut-key"
+  }, ["C"]), " Open Customize"]), " ", _h('li', [_h('span', {
+    staticClass: "shortcut-key"
+  }, ["Esc"]), " Close all"])])])
+},function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
     staticClass: "success-links"
   }, [_h('a', {
@@ -2591,7 +2697,11 @@ if (false) {
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', [(!_vm.seenOnBoarding) ? _h('onboarding', {
+  return _h('div', {
+    on: {
+      "click": _vm.closeWindows
+    }
+  }, [(!_vm.seenOnBoarding) ? _h('onboarding', {
     attrs: {
       "id": "onboarding"
     },
@@ -2637,11 +2747,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('div', {
     staticClass: "flex flex-center"
   }, [_h('div', {
-    staticClass: "notes-widget"
+    staticClass: "notes-widget",
+    on: {
+      "keydown": function($event) {
+        $event.stopPropagation();
+      }
+    }
   }, [_h('div', {
     staticClass: "notes-icon pointer",
     on: {
-      "click": _vm.toggleNotes
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.toggleNotes($event)
+      }
     }
   }, [_h('svg', {
     staticStyle: {
@@ -2713,7 +2831,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       'fade_in': !_vm.showCustomizeMenu
     },
     on: {
-      "click": _vm.toggleCustomizeMenu
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.toggleCustomizeMenu($event)
+      }
     }
   }, [_h('svg', {
     attrs: {
@@ -2746,7 +2867,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "settings": _vm.componentsData.weather
     }
-  }) : _vm._e()])])]), " ", (_vm.showCustomizeMenu) ? _h('div', {
+  }) : _vm._e()])])]), " ", _h('div', {
+    attrs: {
+      "id": "customize-section"
+    }
+  }, [(_vm.showCustomizeMenu) ? _h('div', {
     staticClass: "customization-overlay"
   }) : _vm._e(), " ", _h('customize', {
     class: {
@@ -2759,7 +2884,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "closeCustomizeMenu": _vm.toggleCustomizeMenu
     }
-  })]) : _vm._e()])
+  })])]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

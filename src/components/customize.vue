@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-on:click.stop="">
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
@@ -15,7 +15,7 @@
                     </svg>
                 </div>
             </div>
-            <span>Customize</span>
+            <span>Customize (C)</span>
         </header>
         <ul>
             <li>
@@ -38,51 +38,74 @@
                 </div>
             </li>
             <li class="flex flex-center">
-                <div class="flex-grow-1 flex flex-flow-column">
-                    <div class="flex flex-center">
-                        <h4>Clock</h4>
-                        <div class="switch">
-                            <label>
-                                <input type="checkbox" v-model="settings.showUtilities.showClock">
-                                <span class="lever"></span>
-                            </label>
-                        </div>
+            <div class="flex-grow-1 flex flex-flow-column">
+                <div class="flex flex-center">
+                    <h4>Clock</h4>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" v-model="settings.showUtilities.showClock">
+                            <span class="lever"></span>
+                        </label>
                     </div>
-
-                    <ul>
-                        <li><input type="checkbox" v-model="settings.clock.showTwelveHour" id="clock-twelveHour" class="filled-in" :disabled="!settings.showUtilities.showClock">
-                            <label for="clock-twelveHour">12 Hour Format</label>
-                        </li>
-                        <li><input type="checkbox" v-model="settings.clock.showDay" id="clock-day" class="filled-in" :disabled="!settings.showUtilities.showClock">
-                            <label for="clock-day">Show Day</label></li>
-                    </ul>
                 </div>
-                <div class="flex-grow-1 flex flex-flow-column">
-                    <div class="flex flex-center">
-                        <h4>Weather</h4>
-                        <div class="switch">
-                            <label>
-                                <input type="checkbox" v-model="settings.showUtilities.showWeather">
-                                <span class="lever"></span>
-                            </label>
-                        </div>
-                    </div>
 
-                    <ul>
-                        <li>
-                            <input type="radio" v-model="settings.weather.unit" id="weather-celcius" class="filled-in" value="c" :disabled="!settings.showUtilities.showWeather">
-                            <label for="weather-celcius">Celsius</label>
-                        </li>
-                        <li>
-                            <input type="radio" v-model="settings.weather.unit" id="weather-fehren" class="filled-in" value="f" :disabled="!settings.showUtilities.showWeather">
-                            <label for="weather-fehren">Fahrenheit</label>
-                        </li>
-                    </ul>
+                <ul>
+                    <li><input type="checkbox" v-model="settings.clock.showTwelveHour" id="clock-twelveHour" class="filled-in" :disabled="!settings.showUtilities.showClock">
+                        <label for="clock-twelveHour">12 Hour Format</label>
+                    </li>
+                    <li><input type="checkbox" v-model="settings.clock.showDay" id="clock-day" class="filled-in" :disabled="!settings.showUtilities.showClock">
+                        <label for="clock-day">Show Day</label></li>
+                </ul>
+            </div>
+            <div class="flex-grow-1 flex flex-flow-column">
+                <div class="flex flex-center">
+                    <h4>Weather</h4>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" v-model="settings.showUtilities.showWeather">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <ul>
+                    <li>
+                        <input type="radio" v-model="settings.weather.unit" id="weather-celcius" class="filled-in" value="c" :disabled="!settings.showUtilities.showWeather">
+                        <label for="weather-celcius">Celsius</label>
+                    </li>
+                    <li>
+                        <input type="radio" v-model="settings.weather.unit" id="weather-fehren" class="filled-in" value="f" :disabled="!settings.showUtilities.showWeather">
+                        <label for="weather-fehren">Fahrenheit</label>
+                    </li>
+                </ul>
+            </div>
+        </li>
+            <li class="flex flex-center">
+                <div>
+                    <div class="flex flex-center">
+                        <!--<h4>Shortcuts</h4>
+                        <ul class="flex shortcut-bar">
+                            <li><span class="shortcut-key">N</span> Open Notes</li>
+                            <li><span class="shortcut-key">C</span> Open Customize</li>
+                            <li><span class="shortcut-key">Esc</span> Close all</li>
+                        </ul>-->
+                    </div>
                 </div>
             </li>
         </ul>
         <div class="customize-footer">
-            <span class="version">v{{version}}</span>
+            <div class="flex">
+                <span class="version">v{{version}}</span>
+                <span style="margin:0 0.5rem">|</span>
+                <div class="flex">
+                    <span class="semi-bold">Shortcuts</span>
+                    <ul class="flex shortcut-bar">
+                        <li><span class="shortcut-key">N</span> Open Notes</li>
+                        <li><span class="shortcut-key">C</span> Open Customize</li>
+                        <li><span class="shortcut-key">Esc</span> Close all</li>
+                    </ul>
+                </div>
+            </div>
             <div class="success-links">
                 <a href="https://goo.gl/forms/XcIS7fojHNT166nA2" target="_blank">Support</a>
                 <a href="https://goo.gl/forms/hMD1i4sXIUVwkKtD2" target="_blank">Feedback</a>

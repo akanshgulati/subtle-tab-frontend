@@ -17,6 +17,7 @@ export default {
         NOTES_META: 'notes_meta'
     },
     SYNC: [
-        'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night'
+        'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
+        'notes_meta', 'notes-'
     ]
 };
