@@ -70,6 +70,9 @@ body {
 .flex-justify-center {
     justify-content: center;
 }
+.flex-justify-space-between {
+    justify-content: space-between;
+}
 
 .flex-flow-column {
     flex-direction: column;
@@ -682,11 +685,11 @@ svg:hover #close_btn {
 #notes {
     position: absolute;
     right: 4rem;
-    width: 40vw;
-    min-width: 42rem;
-    min-height: 24rem;
-    height: 45vh;
+    width: 24vw;
+    min-width: 330px;
     margin-top: 1rem;
+    min-height: 25rem;
+    height: 43vh;
 }
 
 .full-height {
@@ -704,7 +707,18 @@ svg:hover #close_btn {
 .no-padding {
     padding: 0 !important;
 }
-
+.widget-header{
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    border-top: 2px solid #f3f3f3;
+    background: rgba(243, 243, 243, 0.43);
+    border-radius: 3px 3px 0 0;
+}
+.widget-heading{
+    font-size: 1rem;
+    font-weight: 500;
+}
 #notes .add-note {
     padding: 0.5rem 0;
     width: 100%;
@@ -719,40 +733,39 @@ svg:hover #close_btn {
     font-size: 0.9rem;
 }
 #notes .sidebar {
-    height: 92%;
-    background: white;
-    border-radius: 3px 0 0 3px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
+    height: 100%;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940);
     overflow: hidden;
     transform-origin: 100% 0;
-    right: -100%;
-    position: relative;
+    position: absolute;
+    border-right: 1px solid #f3f3f3;
+    background: #f3f3f3;
+    width: 75%;
+    left: -75%;
 }
 .sidebar ul li{
-    background-color: white;
+    background-color: #f3f3f3;
     transition: all 0.5s;
 }
 #notes .show-sidebar {
-    transform: translateX(-100%);
+    transform: translateX(100%);
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
 }
 
 #notes .button-section {
-    padding: 0.5rem 1rem;
     width: 100%;
-    border-top: 2px solid #f3f3f3;
-    background: rgba(243, 243, 243, 0.43);
-    border-radius: 3px 3px 0 0;
+    padding-left: 1rem;
 }
 
 #notes .button-section img {
     padding: 0.5rem 0;
     width: 100%;
-    border-top: 2px solid #f3f3f3;
     background: rgba(243, 243, 243, 0.43);
 }
-
+#notes .button-section img:not(:last-child){
+    margin-right:5px;
+}
 #notes #note {
     height: 100%;
     border: 0;
@@ -760,6 +773,7 @@ svg:hover #close_btn {
     padding: 1rem;
     font-size: 0.9rem;
     overflow-y: auto;
+    flex: 1;
 }
 #note p{
     margin: 0;
@@ -767,7 +781,10 @@ svg:hover #close_btn {
 #note:focus, #note:active {
     outline: none;
 }
-
+#notes .note-section{
+    overflow-x: hidden;
+    flex: 1;
+}
 .note {
     background: white;
     box-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.2);
@@ -823,7 +840,7 @@ svg:hover #close_btn {
 
 #notes .active {
     border-left: 3px solid rgb(122, 184, 0);
-    background: #f3f3f3;
+    background: #fff;
 }
 
 #notes .add-note img {

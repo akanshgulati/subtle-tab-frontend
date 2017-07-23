@@ -1,35 +1,43 @@
 <template>
-    <div id="notes" class="row" v-on:click.stop="">
-        <div class="col s5 full-height relative no-padding flex flex-center">
-            <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': notesMeta.showSidebar && notesMeta.count}">
-                <div class="notes-count">
-                    <span>Notes (N)</span> <span class="right">{{notes.length}} / 10</span></div>
-                <transition-group name="flip-list" tag="ul" id="note-list" class="note-list">
-                    <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
-                        v-on:click="setCurrentNote(note.id)" v-bind:key="note">
-                        <p class="note-title" v-html="trimContent(note.content)"></p>
-                        <div class="note-data">{{note.createdOn | formatDate}}</div>
-                    </li>
-                </transition-group>
-                <!--</ul>-->
-                <div class="add-note" v-if="sortedNoted.length < 10">
-                    <img src="images/plus.svg" class="pointer" alt="" style="vertical-align: bottom;" v-on:click="createNote">
-                </div>
-            </div>
-        </div>
-        <div v-if="!notesMeta.count" class="col s7 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
+    <div id="notes" v-on:click.stop="">
+        <div v-if="!notesMeta.count" class="col s12 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
             <div>
                 <img src="images/note_landing_page_icon.png">
             </div>
             <h5 class="italics create_note pointer" v-on:click="createFirstNote">Create first note</h5>
         </div>
-        <div v-if="notesMeta.count" class="col s7 note full-height no-padding relative flex-flow-column flex">
-            <div class="button-section">
-                <img src="images/delete.svg" class="pointer right" v-on:click="deleteNote">
-                <img src="images/arrow.svg" class="pointer arrow" v-on:click="toggleNoteList" :class="{'rotate': notesMeta.showSidebar}">
+        <div v-if="notesMeta.count" class="full-height">
+            <div class="note full-height no-padding relative flex-flow-column flex">
+                <header class="flex widget-header flex-justify-space-between flex-center">
+                    <h4 class="widget-heading mar-0">Notes</h4>
+                    <div class="button-section flex flex-justify-space-between">
+                        <div>
+                            <img src="images/arrow.svg" class="pointer arrow" v-on:click="toggleNoteList" :class="{'rotate': notesMeta.showSidebar}">
+                            <img src="images/plus.svg" v-if="sortedNoted.length < 10" class="pointer" alt="" style="vertical-align: bottom;"
+                                 v-on:click="createNote">
+                        </div>
+                        <div>
+                            <img src="images/delete.svg" class="pointer" v-on:click="deleteNote">
+                        </div>
+                    </div>
+                </header>
+                <div class="note-error" v-if="errorMessage">{{errorMessage}}</div>
+                <section class="flex relative note-section flex-flow-column">
+                    <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': notesMeta.showSidebar && notesMeta.count}">
+                            <!--<div class="notes-count">
+                                <span>Notes (N)</span> <span class="right">{{notes.length}} / 10</span></div>-->
+                            <transition-group name="flip-list" tag="ul" id="note-list" class="note-list">
+                                <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
+                                    v-on:click="setCurrentNote(note.id); notesMeta.showSidebar = false;" v-bind:key="note">
+                                    <p class="note-title" v-html="trimContent(note.content)"></p>
+                                    <div class="note-data">{{note.createdOn | formatDate}}</div>
+                                </li>
+                            </transition-group>
+                            <!--</ul>-->
+                        </div>
+                    <div id="note" contenteditable="true" v-html="currentNoteContent" @input="handler" v-on:click.stop="notesMeta.showSidebar = false"></div>
+                </section>
             </div>
-            <div class="note-error" v-if="errorMessage">{{errorMessage}}</div>
-            <div id="note" contenteditable="true" v-html="currentNoteContent" @input="handler"></div>
         </div>
     </div>
 </template>

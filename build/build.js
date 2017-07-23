@@ -473,7 +473,7 @@ var backgroundVue = {
             var currentPage = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE);
             var localBgData = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
             var storedBg = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[theme.id];
-            return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
+            return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && (localBgData ? localBgData : Object.assign({}, storedBg, localBgData));
         },
 
         getBackground: function getBackground(reset) {
@@ -807,6 +807,14 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2075,7 +2083,6 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
-    staticClass: "row",
     attrs: {
       "id": "notes"
     },
@@ -2084,18 +2091,64 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         $event.stopPropagation();
       }
     }
+  }, [(!_vm.notesMeta.count) ? _h('div', {
+    staticClass: "col s12 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center"
+  }, [_vm._m(0), " ", _h('h5', {
+    staticClass: "italics create_note pointer",
+    on: {
+      "click": _vm.createFirstNote
+    }
+  }, ["Create first note"])]) : _vm._e(), " ", (_vm.notesMeta.count) ? _h('div', {
+    staticClass: "full-height"
   }, [_h('div', {
-    staticClass: "col s5 full-height relative no-padding flex flex-center"
+    staticClass: "note full-height no-padding relative flex-flow-column flex"
+  }, [_h('header', {
+    staticClass: "flex widget-header flex-justify-space-between flex-center"
+  }, [_h('h4', {
+    staticClass: "widget-heading mar-0"
+  }, ["Notes"]), " ", _h('div', {
+    staticClass: "button-section flex flex-justify-space-between"
+  }, [_h('div', [_h('img', {
+    staticClass: "pointer arrow",
+    class: {
+      'rotate': _vm.notesMeta.showSidebar
+    },
+    attrs: {
+      "src": "images/arrow.svg"
+    },
+    on: {
+      "click": _vm.toggleNoteList
+    }
+  }), " ", (_vm.sortedNoted.length < 10) ? _h('img', {
+    staticClass: "pointer",
+    staticStyle: {
+      "vertical-align": "bottom"
+    },
+    attrs: {
+      "src": "images/plus.svg",
+      "alt": ""
+    },
+    on: {
+      "click": _vm.createNote
+    }
+  }) : _vm._e()]), " ", _h('div', [_h('img', {
+    staticClass: "pointer",
+    attrs: {
+      "src": "images/delete.svg"
+    },
+    on: {
+      "click": _vm.deleteNote
+    }
+  })])])]), " ", (_vm.errorMessage) ? _h('div', {
+    staticClass: "note-error"
+  }, [_vm._s(_vm.errorMessage)]) : _vm._e(), " ", _h('section', {
+    staticClass: "flex relative note-section flex-flow-column"
   }, [_h('div', {
     staticClass: "sidebar flex-flow-column flex",
     class: {
       'show-sidebar': _vm.notesMeta.showSidebar && _vm.notesMeta.count
     }
-  }, [_h('div', {
-    staticClass: "notes-count"
-  }, [_h('span', ["Notes (N)"]), " ", _h('span', {
-    staticClass: "right"
-  }, [_vm._s(_vm.notes.length) + " / 10"])]), " ", _h('transition-group', {
+  }, [_h('transition-group', {
     staticClass: "note-list",
     attrs: {
       "name": "flip-list",
@@ -2111,7 +2164,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       },
       on: {
         "click": function($event) {
-          _vm.setCurrentNote(note.id)
+          _vm.setCurrentNote(note.id);
+          _vm.notesMeta.showSidebar = false;
         }
       }
     }, [_h('p', {
@@ -2122,53 +2176,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }), " ", _h('div', {
       staticClass: "note-data"
     }, [_vm._s(_vm._f("formatDate")(note.createdOn))])])
-  })]), " ", " ", (_vm.sortedNoted.length < 10) ? _h('div', {
-    staticClass: "add-note"
-  }, [_h('img', {
-    staticClass: "pointer",
-    staticStyle: {
-      "vertical-align": "bottom"
-    },
-    attrs: {
-      "src": "images/plus.svg",
-      "alt": ""
-    },
-    on: {
-      "click": _vm.createNote
-    }
-  })]) : _vm._e()])]), " ", (!_vm.notesMeta.count) ? _h('div', {
-    staticClass: "col s7 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center"
-  }, [_vm._m(0), " ", _h('h5', {
-    staticClass: "italics create_note pointer",
-    on: {
-      "click": _vm.createFirstNote
-    }
-  }, ["Create first note"])]) : _vm._e(), " ", (_vm.notesMeta.count) ? _h('div', {
-    staticClass: "col s7 note full-height no-padding relative flex-flow-column flex"
-  }, [_h('div', {
-    staticClass: "button-section"
-  }, [_h('img', {
-    staticClass: "pointer right",
-    attrs: {
-      "src": "images/delete.svg"
-    },
-    on: {
-      "click": _vm.deleteNote
-    }
-  }), " ", _h('img', {
-    staticClass: "pointer arrow",
-    class: {
-      'rotate': _vm.notesMeta.showSidebar
-    },
-    attrs: {
-      "src": "images/arrow.svg"
-    },
-    on: {
-      "click": _vm.toggleNoteList
-    }
-  })]), " ", (_vm.errorMessage) ? _h('div', {
-    staticClass: "note-error"
-  }, [_vm._s(_vm.errorMessage)]) : _vm._e(), " ", _h('div', {
+  })]), " "]), " ", _h('div', {
     attrs: {
       "id": "note",
       "contenteditable": "true"
@@ -2177,9 +2185,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "innerHTML": _vm._s(_vm.currentNoteContent)
     },
     on: {
-      "input": _vm.handler
+      "input": _vm.handler,
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.notesMeta.showSidebar = false
+      }
     }
-  })]) : _vm._e()])
+  })])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', [_h('img', {
     attrs: {

@@ -40,7 +40,7 @@
                 let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
                 const localBgData = storage.get(theme.value);
                 const storedBg = bgData.stored[theme.id];
-                 currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && (localBgData ? localBgData : Object.assign({}, storedBg, localBgData));
+                 return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && (localBgData ? localBgData : Object.assign({}, storedBg, localBgData));
             },
             getBackground: function (reset) {
                 if(reset && this.themeId === this.settings.themeId){
