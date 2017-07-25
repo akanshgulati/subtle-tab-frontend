@@ -1,7 +1,7 @@
 {
   "name": "Subtle Tab",
   "description": "Personalized experience on new tabs for better productivity",
-  "version": "0.0.1.2",
+  "version": "0.0.1.3",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -14,7 +14,8 @@
   "permissions": [
     "geolocation",
     "http://*.subtletab.com/",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "browser_action": {
     "default_title": "Subtle"
@@ -24,6 +25,7 @@
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png"
   },
+  "offline_enabled": true,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "manifest_version": 2
 }

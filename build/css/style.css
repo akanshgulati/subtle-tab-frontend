@@ -161,6 +161,13 @@ label {
     text-align: center;
     margin-bottom: 15vh;
 }
+.onboarding-message .version{
+    font-size: 0.8rem;
+    position: absolute;
+    top: -7px;
+    color: rgba(255, 255, 255, 0.50);
+    font-weight: 600;
+}
 
 .onboarding-icon {
     animation: fade_in 2s;
@@ -300,16 +307,12 @@ svg #customize_btn, svg #note_btn {
 
 .nav-bar-opener {
     opacity: 0;
+    margin-left: 1.5rem;
 }
 
 .nav-bar-opener svg {
     padding: 0.25rem;
     transition: all 0.2s ease-in-out;
-}
-
-.nav-bar-opener svg:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
 }
 
 svg:hover #customize_btn, svg:hover #note_btn {
@@ -661,14 +664,13 @@ svg:hover #close_btn {
 
 /*NOTE*/
 .notes-widget{
-    border-right: 1px solid rgba(255, 255, 255, 0.3);
-    padding-right: 1rem;
-    margin-right: 1rem;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    padding-right: 1.5rem;
 }
-.notes-icon:hover {
+/*.notes-icon:hover {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 3px;
-}
+}*/
 
 #note_btn{
     width: 2rem;
@@ -684,7 +686,7 @@ svg:hover #close_btn {
 
 #notes {
     position: absolute;
-    right: 4rem;
+    right: 0rem;
     width: 24vw;
     min-width: 330px;
     margin-top: 1rem;
@@ -711,14 +713,17 @@ svg:hover #close_btn {
     justify-content: space-between;
     padding: 0.5rem 1rem;
     width: 100%;
-    border-top: 2px solid #f3f3f3;
-    background: rgba(243, 243, 243, 0.43);
+    box-shadow: -1px 0.33rem 3px -4px #ccc;
+    background: #fff;
     border-radius: 3px 3px 0 0;
 }
+
 .widget-heading{
     font-size: 1rem;
     font-weight: 500;
+    margin-left: 1rem !important;
 }
+
 #notes .add-note {
     padding: 0.5rem 0;
     width: 100%;
@@ -734,38 +739,57 @@ svg:hover #close_btn {
 }
 #notes .sidebar {
     height: 100%;
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940);
     overflow: hidden;
-    transform-origin: 100% 0;
     position: absolute;
     border-right: 1px solid #f3f3f3;
-    background: #f3f3f3;
+    background: rgb(234, 234, 234);
     width: 75%;
     left: -75%;
 }
 .sidebar ul li{
-    background-color: #f3f3f3;
     transition: all 0.5s;
+    box-shadow: 0px 0.35rem 7px -5px #ccc;
+    width: 90%;
+    background: #f9f9f9;
+    margin-bottom: 1rem;
+}
+
+.sidebar ul li:not(.active):hover{
+    background: #fff;
+    box-shadow: 0 0.8rem 10px -5px #ccc;
+}
+
+#notes .sidebar ul li.active{
+    border-left: 3px solid rgb(122, 184, 0);
+    background: #fff;
+    box-shadow: 0 0.8rem 10px -5px #ccc;
 }
 #notes .show-sidebar {
     transform: translateX(100%);
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.2);
 }
 
 #notes .button-section {
-    width: 100%;
-    padding-left: 1rem;
+    margin-left: auto;
 }
 
-#notes .button-section img {
-    padding: 0.5rem 0;
-    width: 100%;
-    background: rgba(243, 243, 243, 0.43);
+#notes .button-section svg {
+    margin-left: 0.5rem;
 }
-#notes .button-section img:not(:last-child){
-    margin-right:5px;
+
+#notes header svg #delete_note, #notes header svg #create_note, #notes header svg #hamburger {
+    transition: all 0.3s ease;
 }
+
+#notes header svg:hover #delete_note, #notes header svg:hover #create_note, #notes header svg:hover #hamburger{
+    fill: #4d4d4d;
+}
+
+#notes header svg:hover #hamburger{
+    stroke: #4d4d4d;
+}
+
 #notes #note {
     height: 100%;
     border: 0;
@@ -787,7 +811,7 @@ svg:hover #close_btn {
 }
 .note {
     background: white;
-    box-shadow: 0 0 1.2rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1rem 1.2rem rgba(0, 0, 0, 0.2);
     color: #666666;
     border-radius: 3px;
 }
@@ -818,10 +842,12 @@ svg:hover #close_btn {
     overflow-y: auto;
     margin-bottom: 0;
     margin-top: 0.1rem;
+    padding: 1rem 0;
 }
 
 .note-list li {
-    height: 3.5rem;
+    min-height: 3.5rem;
+    max-height: 3.5rem;
     font-size: 0.8rem;
     padding: 0.5rem 0.4rem 0.2rem 1rem;
 }
@@ -836,11 +862,6 @@ svg:hover #close_btn {
     font-size: 0.8em;
     flex: 1;
     color: #666;
-}
-
-#notes .active {
-    border-left: 3px solid rgb(122, 184, 0);
-    background: #fff;
 }
 
 #notes .add-note img {
@@ -909,4 +930,23 @@ svg:hover #close_btn {
 
 #notes .flip-list-move {
     transition: transform 0.5s;
+}
+
+.notes-arrow_box {
+    position: relative;
+}
+.notes-arrow_box:before {
+    bottom: 100%;
+    right: 2rem;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.notes-arrow_box:before {
+    border-bottom-color: #fff;
+    border-width: 0.7rem;
 }
