@@ -317,7 +317,6 @@ svg #customize_btn, svg #note_btn {
 
 svg:hover #customize_btn, svg:hover #note_btn {
     fill: white;
-    transform: scale(1.03);
 }
 
 .close-btn {
