@@ -14,8 +14,7 @@
   "permissions": [
     "geolocation",
     "http://*.subtletab.com/",
-    "storage",
-    "notifications"
+    "storage"
   ],
   "browser_action": {
     "default_title": "Subtle"
