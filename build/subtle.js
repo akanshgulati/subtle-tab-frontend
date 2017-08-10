@@ -337,8 +337,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
         chrome.tabs.create({});
     } else if (details && details.reason && details.reason === 'update') {
-        //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
-        //chrome.tabs.create({});
+        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, false);
     }
 });
 

@@ -35,7 +35,7 @@
                 temp: null,
                 localWeather: this.localWeather,
                 error: null,
-                isLoading: false
+                isLoading: true
             }
         },
         methods: {
@@ -60,6 +60,7 @@
                         this.weatherCode = this.localWeather[3];
                         this.weatherClass = weatherUtil[this.localWeather[3]];
                         this.weatherCity = this.localWeather[4];
+                        this.isLoading = false;
                     }
                 }else{
                     navigator.geolocation.getCurrentPosition((position) => {

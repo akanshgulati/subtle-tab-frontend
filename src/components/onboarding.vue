@@ -7,7 +7,7 @@
                 </div>
                 <div class="col s6 flex flex-flow-column flex-justify-center">
                     <h1>Hi, Thank you for <br> choosing
-                        <span class="italics semi-bold">Subtle</span>
+                        <span class="italics semi-bold relative">Subtle<span class="version">v{{version}}</span></span>
                     </h1>
                     <div class="onboarding-btn" v-on:click="closeOnboarding">Let's Start</div>
                 </div>
@@ -22,12 +22,12 @@
                     <div class="change-description">Latest weather updates <br/>with date and time</div>
                 </div>
                 <div class="col s3 center">
-                    <div class="change-heading">Customizations</div>
-                    <div class="change-description">Various customizations <br/>for widgets</div>
+                    <div class="change-heading">Notes Widget</div>
+                    <div class="change-description">Sticky notes to <br/> keep important content.  </div>
                 </div>
                 <div class="col s3 center">
                     <div class="change-heading">Remain Synced</div>
-                    <div class="change-description">Keep your settings synced <br/>across various devices</div>
+                    <div class="change-description">Keep your settings <br> and notes synced </div>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
     export default {
         data(){
             return {
-                welcomeMockup: './images/welcome_mockup.png'
+                version: chrome.runtime.getManifest().version
             };
         },
         mounted() {

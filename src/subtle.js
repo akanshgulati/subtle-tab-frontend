@@ -154,8 +154,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
         chrome.tabs.create({});
 
     } else if (details && details.reason && details.reason === 'update') {
-        //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
-        //chrome.tabs.create({});
+        storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     }
 });
 
