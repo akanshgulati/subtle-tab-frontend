@@ -9,8 +9,7 @@
         <div v-if="notesMeta.count" class="full-height">
             <div class="note full-height no-padding relative flex-flow-column flex">
                 <header class="flex widget-header flex-center">
-                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3rem" height="1rem" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <defs></defs>
+                    <svg class="pointer flex-no-shrink" v-on:click="toggleNoteList" width="1.3rem" height="1rem" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
                                 <path d="M0.132183908,0 L22.8678161,0" id="XMLID_6_"></path>

@@ -30,6 +30,11 @@ let storage = {
         initialValue.push(value);
         this.set(key, initialValue);
     },
+    prepend(key, value){
+        let initialValue = this.get(key) || [];
+        initialValue.unshift(value);
+        this.set(key, initialValue);
+    },
     getMap(key){
         let value = localStorage.getItem(key);
         return isNaN(value) ? JSON.parse(value) : value;

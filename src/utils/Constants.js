@@ -14,7 +14,12 @@ export default {
         BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
+        NOTES_META: 'notes_meta',
+        TODOS_META: 'todos_meta',
+        TODO_LISTS_META: 'todo_lists_meta',
+        TODO_LIST: 'todo_list_',
+        TODO: 'todo_',
+        CURRENT_TODO_LIST: 'current_todo_list'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
