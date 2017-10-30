@@ -9,7 +9,11 @@ const config = {
             showDay: true
         },
         weather: {
-            unit: 'c'
+            unit: 'c',
+            location: {
+                type: 'geo',
+                name : ''
+            }
         },
         background: {
             themeId: 1,
