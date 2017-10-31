@@ -11,7 +11,7 @@
                     </div>
                     <div id="position--top-right">
                         <div class="flex flex-center">
-                            <div class="notes-widget relative" v-on:keydown.stop="">
+                            <div class="notes-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showNotes">
                                 <div class="notes-icon pointer" v-on:click.stop="toggleNotes">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8rem" >
                                         <g id="note_btn">

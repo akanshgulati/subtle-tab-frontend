@@ -256,13 +256,16 @@ function stopWeather() {
 function updateLocalStorage(){
     let sharedData;
     // Show onboarding with latest features
-    storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+    //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     // Add feature of custom location in weather
-    if(sharedData){
-        if(!sharedData.weather.location){
+    if(sharedData && typeof sharedData === 'object'){
+        if(sharedData.weather && !sharedData.weather.location){
             sharedData.weather.location = config.defaultCustomization.weather.location;
             sharedData.weather.location.name = storage.get(constants.STORAGE.WEATHER)[4] || '';
+        }
+        if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
+            sharedData.showUtilities.showNotes = true;
         }
     }
 
