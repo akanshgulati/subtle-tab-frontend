@@ -54,6 +54,10 @@ body {
 [type="radio"]:not(:checked) + label:before, [type="radio"]:not(:checked) + label:after {
     border: 2px solid #666;
 }
+[type="text"]{
+    height: auto !important;
+    padding: 0.5rem !Important;
+}
 
 .flex {
     display: flex;
@@ -88,6 +92,9 @@ body {
 
 .pad-0 {
     padding: 0 !important;
+}
+.overflow-hidden{
+    overflow: hidden;
 }
 
 label {
@@ -338,13 +345,76 @@ svg:hover #close_btn {
     left: calc(50vw - 450px);
     top: calc(50vh - 14.27rem);
     width: 900px;
+    height: 28.54rem;
     background: #ffffff;
     color: #666;
     border-radius: 5px;
-    padding: 1rem;
     opacity: 0;
     z-index: 10;
+    overflow: hidden;
     visibility: hidden;
+}
+#customize .save-button{
+    background: rgb(122, 184, 0);
+    padding: 1px 4px;
+    color: white;
+    margin-left: 0.3rem;
+}
+#customize .save-button:disabled{
+    background: grey;
+    padding: 1px 4px;
+    color: white;
+    margin-left: 0.3rem;
+}
+.csidebar {
+    border-right: 1px solid #e3e3e3;
+    width: 20%;
+}
+.csidebar li{
+    color: #333;
+}
+.csidebar li label.active{
+    background: #ebebeb;
+}
+.csidebar label:before , .csidebar label:after{
+    display: none !important;
+}
+.csidebar > ul > li > label {
+    padding: 1rem !Important;
+    height: auto !important;
+    line-height: 1 !important;
+    display: block !important;
+    font-weight: 500;
+}
+
+#customize .container {
+    width: 80%;
+    padding: 0 1rem;
+    overflow: auto;
+}
+#customize .container h4 {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+#customize .container > section > div {
+    margin-bottom: 1rem;
+}
+#customize .container .inline-list{
+    padding-left: 0.25rem;
+}
+
+#customize .container .inline-list-item{
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(236, 236, 236, 0.51);
+}
+#customize .container .sub-heading{
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+#customize .container .inline-radio, #customize .container .inline-checkbox{
+    padding-left: 25px;
+    margin-left: 0.5rem;
 }
 .shortcut-key{
     background: #818181;
@@ -353,12 +423,10 @@ svg:hover #close_btn {
     margin-right:0.3rem;
 }
 .shortcut-bar{
-    margin-top: 0;
-    margin-left: 8px;
+    margin-left: 8px !important;
 }
 .shortcut-bar li{
     margin-right: 1rem;
-    margin-bottom: 0 !important;
 }
 .customization-overlay {
     position: fixed;
@@ -377,41 +445,31 @@ svg:hover #close_btn {
 
 #customize header {
     color: #333;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 500;
+    padding: 1rem;
+    border-bottom: 1px solid #e3e3e3;
 }
 
 #customize ul {
     list-style: none;
     padding: 0;
-    margin-bottom: 0;
+    margin: 0;
 }
 
-#customize ul > li {
-    margin-bottom: 0.5rem;
-}
 
-#customize > ul > li h4 {
-    font-size: 1.05rem;
-    color: #666;
-    font-weight: 500;
-}
-
-.thumbnails {
-    display: flex;
-}
 
 .thumbnail {
     margin-right: 1rem;
     cursor: pointer;
+    flex-basis: 100%;
 }
 
 .thumbnail-image {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 120px;
-    width: 200px;
+    height: 100px;
     border-radius: 5px;
     overflow: hidden;
     opacity: 0.9;
@@ -460,13 +518,9 @@ svg:hover #close_btn {
     margin-bottom: 0.5rem;
 }
 
-.btn-group-header {
-    flex: 1 0 20%;
-}
-
 .btn-group {
     display: table;
-    width: 500px;
+    width: 100%;
     table-layout: fixed;
     flex: 1 0 70%;
     flex-flow: row wrap;
@@ -512,17 +566,20 @@ svg:hover #close_btn {
 }
 
 #customize .switch {
-    margin-right: 1.5rem;
     display: inline-block;
     float: right;
+    transform: scale(0.8);
 }
 
 .customize-footer {
     color: #666;
+    background: #ebebeb;
     font-size: 0.7rem;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+    padding: 1rem;
+    border-top: 1px solid #e3e3e3;
 }
 
 .customize-footer a {
