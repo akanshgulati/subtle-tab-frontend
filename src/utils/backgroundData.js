@@ -52,5 +52,16 @@ export default {
             12: './images/backgrounds/night-3.jpg',
         },
 
-    }
+    },
+    customBackgrounds: [
+        'https://subtletab.com/extras/1.jpg',
+        'https://subtletab.com/extras/2.jpg',
+        'https://subtletab.com/extras/3.jpg',
+        'https://subtletab.com/extras/4.jpg',
+        'https://subtletab.com/extras/5.jpg',
+        'https://subtletab.com/extras/6.jpg',
+        'https://subtletab.com/extras/7.jpg',
+        'https://subtletab.com/extras/7.jpg',
+        'https://subtletab.com/extras/8.jpg',
+    ]
 }

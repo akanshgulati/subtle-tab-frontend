@@ -517,7 +517,17 @@ svg:hover #close_btn {
 #customize > ul > li > ul > li:last-child {
     margin-bottom: 0.5rem;
 }
+#customize textarea:focus{
+    outline: none;
+}
 
+#customize textarea {
+    resize: none;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    height: 70px;
+    font-size: 0.9rem
+}
 .btn-group {
     display: table;
     width: 100%;
@@ -948,9 +958,16 @@ svg:hover #close_btn {
     transform: rotate(-90deg) !important;
 }
 
+.error {
+    color: #F44336;
+}
+
+.success {
+    color: rgb(122, 184, 0);
+}
 .note-error{
     text-align: center;
-    color: red;
+    color: #F44336;
     position: absolute;
     bottom: 0;
     width: 100%;
