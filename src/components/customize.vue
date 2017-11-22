@@ -1,5 +1,5 @@
 <template>
-    <div v-on:click.stop="" class="flex flex-flow-column">
+    <div v-on:click.stop="" v-on:keydown.stop="" class="flex flex-flow-column">
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
@@ -77,7 +77,37 @@
                     </section>
                     <section v-if="activeTab === 'background'">
                         <div>
-                            <h4>Category</h4>
+                            <h4>Settings</h4>
+                            <ul class="inline-list">
+                                <li class="inline-list-item">
+                                    <span class="sub-heading">Change Interval (tabs)</span>
+                                    <div class="right">
+                                        <input type="radio" v-model="settings.background.changeInterval" id="bgInterval5"
+                                               class="filled-in" value="5">
+                                        <label for="bgInterval5" class="inline-radio">5</label>
+                                        <input type="radio" v-model="settings.background.changeInterval" id="bgInterval10"
+                                               class="filled-in" value="10">
+                                        <label for="bgInterval10" class="inline-radio">10</label>
+                                        <input type="radio" v-model="settings.background.changeInterval" id="bgInterval15"
+                                               class="filled-in" value="15">
+                                        <label for="bgInterval15" class="inline-radio">15</label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item">
+                                    <span class="sub-heading">Wallpaper Type</span>
+                                    <div class="right">
+                                        <input type="radio" v-model="settings.background.type" id="wallpaperType1"
+                                               class="filled-in" value="custom"/>
+                                        <label for="wallpaperType1" class="inline-radio">Custom</label>
+                                        <input type="radio" v-model="settings.background.type" id="wallpaperType2"
+                                               class="filled-in" value="predefined"/>
+                                        <label for="wallpaperType2" class="inline-radio">Default</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="settings.background.type !== 'custom'" :class="{'fade_in': settings.background.type !== 'custom'}">
+                            <h4>Default Category</h4>
                             <ul class="flex">
                                 <li v-for='(theme, index) in themes' v-bind:class="{active: isActiveTheme(index)}" class="thumbnail">
                                     <input type="radio" v-model="settings.background.themeId"
@@ -89,20 +119,13 @@
                                 </li>
                             </ul>
                         </div>
-                        <div>
-                            <h4>Change interval</h4>
-                            <div class="btn-group">
-                                <div class="btn-inner" :class="{'active': settings.background.changeInterval === 5}"
-                                     v-on:click="setBgInterval(5)">5 Tabs</div>
-                                <div class="btn-inner" :class="{'active': settings.background.changeInterval === 10}"
-                                     v-on:click="setBgInterval(10)">10 Tabs</div>
-                                <div class="btn-inner" :class="{'active': settings.background.changeInterval === 15}"
-                                     v-on:click="setBgInterval(15)">15 Tabs</div>
-                                <div class="btn-inner" :class="{'active': settings.background.changeInterval === 20}"
-                                     v-on:click="setBgInterval(20)">20 Tabs</div>
-                            </div>
+                        <div v-if="settings.background.type === 'custom'" :class="{'fade_in': settings.background.type === 'custom'}">
+                            <h4>Custom List</h4>
+                            <textarea name="" id="" cols="30" rows="15" v-model="currentBgCustom"></textarea>
+                            <button class="save-button mar-0" v-on:click.stop="saveCustomBg"
+                                    :disabled="!currentBgCustom.trim().length">Save List</button>
+                            <span v-html="isCustomBgSaveMsg"></span>
                         </div>
-
                     </section>
                     <section v-if="activeTab === 'clock'">
                         <div>
@@ -199,6 +222,7 @@
 <script>
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
+    import constants from '../utils/Constants'
 
     export default{
         data: function(){
@@ -207,8 +231,17 @@
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
                 activeTab: 'general',
-                customLocation: this.settings.weather.location.name
+                customLocation: this.settings.weather.location.name,
+                currentBgCustom: '',
+                isCustomBgSaveMsg: ''
             };
+        },
+        mounted(){
+            let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+            if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]'
+                && bgCustom.length) {
+                this.currentBgCustom = bgCustom.join('\n');
+            }
         },
         methods: {
             isActiveTheme: function(index){
@@ -227,6 +260,40 @@
                 if (this.customLocation !== this.settings.weather.location.name) {
                     this.settings.weather.location.name = this.customLocation;
                 }
+            },
+            saveCustomBg(){
+                let validateImgUrls = (backgrounds)=> {
+                    for (let i = 0; i < backgrounds.length; i++) {
+                        if (backgrounds[i].match(/^(http?|https):\/\/.*(jpeg|png|gif|bmp|jpg)/g) === null) {
+                            this.isCustomBgSaveMsg = `<span class='error'>Wallpapers links are not in correct format.</span>`;
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+
+                let cleanUrls = (backgrounds)=> {
+                    return backgrounds.reduce((filtered, background) => {
+                        if (typeof background === 'string' && background.length > 5) {
+                            filtered.push(background.trim());
+                        }
+                        return filtered;
+                    }, []);
+                };
+
+                if(this.currentBgCustom){
+                    let backgrounds = this.currentBgCustom.split('\n');
+                    if(backgrounds && backgrounds.length && validateImgUrls(backgrounds)) {
+                        backgrounds = cleanUrls(backgrounds);
+                        storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgrounds);
+                        this.isCustomBgSaveMsg = `<span class='success'>Wallpapers saved successfully.</span>`;
+                    }
+                }else{
+                    this.isCustomBgSaveMsg = `<span class='error'>Wallpapers not saved</span>`;
+                }
+                setTimeout(()=>{
+                    this.isCustomBgSaveMsg = ''
+                }, 2000);
             }
         },
         props:['settings'],

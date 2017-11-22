@@ -18,7 +18,8 @@ const config = {
         },
         background: {
             themeId: 1,
-            changeInterval: 10
+            changeInterval: 10,
+            type: 'predefined'
         }
     }
 };

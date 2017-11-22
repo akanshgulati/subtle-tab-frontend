@@ -1,6 +1,7 @@
 import storage from './utils/storage';
 import constants from './utils/Constants';
 import config from './utils/config'
+import backgroundData from './utils/backgroundData'
 
 let tabsCount = 0;
 let prevTabsCount = 0;
@@ -47,6 +48,10 @@ chrome.runtime.onMessage.addListener(
             _console(request.value);
         } else if (request.query === 'startWeather') {
             startWeather();
+        } else if (request.query === 'loadCurrentCustomBackground'){
+            loadCurrentCustomBackground(request.url, sendResponse);
+        } else if (request.query === 'loadNextCustomBackground'){
+            loadNextBackground(request.url)
         }
         return true;
     });
@@ -61,12 +66,37 @@ let loadCurrentBackground = (url, callback) => {
             callback(url);
         }
     };
+    img.onerror = () => {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+
     let defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
     }, 2500);
 };
-
+let loadCurrentCustomBackground = (url, callback) => {
+    let defaultImageLoaded = false;
+    let img = new Image();
+    img.src = url;
+    img.onload = () => {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    img.onerror = () => {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+    let defaultImageTimeout = setTimeout(() => {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 4000);
+};
 let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
@@ -171,7 +201,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             continue;
         }
         _console("Storage Changed" + JSON.stringify(changes[key]));
-        if (changes[key].newValue) {
+        if (typeof changes[key].newValue !== undefined) {
             storage.setLocal(key, changes[key].newValue);
         } else {
             //To handle cases when no data is present
@@ -266,6 +296,10 @@ function updateLocalStorage(){
         }
         if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
             sharedData.showUtilities.showNotes = true;
+        }
+        if(sharedData.background && !sharedData.background.type){
+            sharedData.background.type = 'predefined';
+            storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds);
         }
     }
 

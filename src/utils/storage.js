@@ -3,7 +3,7 @@ import constants from './Constants';
 let storage = {
     get(key){
         let value = localStorage.getItem(key);
-        return isNaN(value) ? JSON.parse(value) : value;
+        return JSON.parse(value);
     },
     set(key, value){
         if (constants.SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
