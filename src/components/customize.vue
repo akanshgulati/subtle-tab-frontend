@@ -23,19 +23,31 @@
                     <ul>
                         <li>
                             <input type="radio" v-model="activeTab" value="general" id="tab4">
-                            <label for="tab4" :class="{'active': activeTab === 'general'}">General</label>
+                            <label for="tab4" class="flex-center" :class="{'active': activeTab === 'general'}">
+                                <img src="images/icons/general-icon.png">
+                                <span>General</span>
+                            </label>
                         </li>
                         <li>
                             <input type="radio" v-model="activeTab" value="background" id="tab1">
-                            <label for="tab1" :class="{'active': activeTab === 'background'}">Wallpaper</label>
+                            <label for="tab1" class="flex-center"  :class="{'active': activeTab === 'background'}">
+                                <img src="images/icons/wallpaper-icon.png">
+                                <span>Wallpaper</span>
+                            </label>
                         </li>
                         <li>
                             <input type="radio" v-model="activeTab" value="clock" id="tab2">
-                            <label for="tab2" :class="{'active': activeTab === 'clock'}">Clock</label>
+                            <label for="tab2" class="flex-center" :class="{'active': activeTab === 'clock'}">
+                                <img src="images/icons/clock-icon.png">
+                                <span>Clock</span>
+                            </label>
                         </li>
                         <li>
                             <input type="radio" v-model="activeTab" value="weather" id="tab3">
-                            <label for="tab3" :class="{'active': activeTab === 'weather'}">Weather</label>
+                            <label for="tab3" class="flex-center"  :class="{'active': activeTab === 'weather'}">
+                                <img src="images/icons/weather-icon.png">
+                                <span>Weather</span>
+                            </label>
                         </li>
                     </ul>
                 </div>

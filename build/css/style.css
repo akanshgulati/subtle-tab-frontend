@@ -383,10 +383,14 @@ svg:hover #close_btn {
     padding: 1rem !Important;
     height: auto !important;
     line-height: 1 !important;
-    display: block !important;
+    display: flex !important;
     font-weight: 500;
 }
 
+.csidebar img {
+    max-width: 1.5rem;
+    margin-right: 0.5rem;
+}
 #customize .container {
     width: 80%;
     padding: 0 1rem;
@@ -456,8 +460,6 @@ svg:hover #close_btn {
     padding: 0;
     margin: 0;
 }
-
-
 
 .thumbnail {
     margin-right: 1rem;
