@@ -318,7 +318,7 @@ svg #customize_btn, svg #note_btn, svg #todo_btn{
     transition: all 0.2s ease-in-out;
 }
 
-svg:hover #customize_btn, svg:hover #note_btn {
+svg:hover #customize_btn, svg:hover #note_btn, svg:hover #todo_btn {
     fill: white;
 }
 
