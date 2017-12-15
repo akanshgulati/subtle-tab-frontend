@@ -1,5 +1,7 @@
 import storage from './utils/storage';
 import constants from './utils/Constants';
+import config from './utils/config'
+import backgroundData from './utils/backgroundData'
 
 let tabsCount = 0;
 let prevTabsCount = 0;
@@ -46,6 +48,10 @@ chrome.runtime.onMessage.addListener(
             _console(request.value);
         } else if (request.query === 'startWeather') {
             startWeather();
+        } else if (request.query === 'loadCurrentCustomBackground'){
+            loadCurrentCustomBackground(request.url, sendResponse);
+        } else if (request.query === 'loadNextCustomBackground'){
+            loadNextBackground(request.url)
         }
         return true;
     });
@@ -60,12 +66,37 @@ let loadCurrentBackground = (url, callback) => {
             callback(url);
         }
     };
+    img.onerror = () => {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+
     let defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
     }, 2500);
 };
-
+let loadCurrentCustomBackground = (url, callback) => {
+    let defaultImageLoaded = false;
+    let img = new Image();
+    img.src = url;
+    img.onload = () => {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    img.onerror = () => {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+    let defaultImageTimeout = setTimeout(() => {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 4000);
+};
 let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
@@ -76,7 +107,7 @@ let getBackground = (theme, changePage) => {
             themePage++;
         }
 
-        let url = 'http://api.subtletab.com/theme/';
+        let url = 'https://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
         xmlhttp.open('GET', url);
         xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -154,7 +185,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
         chrome.tabs.create({});
 
     } else if (details && details.reason && details.reason === 'update') {
-        storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+        updateLocalStorage();
     }
 });
 
@@ -170,7 +201,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             continue;
         }
         _console("Storage Changed" + JSON.stringify(changes[key]));
-        if (changes[key].newValue) {
+        if (typeof changes[key].newValue !== undefined) {
             storage.setLocal(key, changes[key].newValue);
         } else {
             //To handle cases when no data is present
@@ -180,11 +211,16 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 });
 
-function getWeather(lat, long) {
+function getWeather(data) {
     let xmlhttp = new XMLHttpRequest();
 
-    let url = 'http://api.subtletab.com/weather/';
-    url += '?lat=' + lat + '&long=' + long;
+    let url = 'https://api.subtletab.com/weather/new';
+
+    if(data.type !== 'custom'){
+        url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
+    } else {
+        url += '?location=' + data.location + '&type=custom';
+    }
 
     xmlhttp.open('GET', url);
     xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -199,16 +235,31 @@ function getWeather(lat, long) {
     xmlhttp.send();
 }
 
-function loadWeather() {
-    navigator.geolocation.getCurrentPosition((position) => {
-            getWeather(position.coords.latitude, position.coords.longitude);
-        }, (error) => {
-            _console(error)
-        }, {timeout: 10000}
-    );
-
+function loadWeather(settings) {
+    let options = {};
+    if (settings.weather.type !== 'custom') {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                options = {
+                    lat: position.coords.latitude,
+                    long: position.coords.longitude,
+                    type: 'geo'
+                };
+                getWeather(options);
+            }, (error) => {
+                _console(error)
+            }, {timeout: 10000}
+        );
+    } else {
+        options = {
+            location: settings.weather.location,
+            type: 'custom'
+        };
+        getWeather(options);
+    }
 }
 let weatherInterval;
+
 function startWeather() {
 
     let localSettings = storage.get(constants.STORAGE.SHARED_DATA);
@@ -216,7 +267,8 @@ function startWeather() {
         if (!weatherInterval) {
             weatherInterval = setInterval(() => {
                 if (navigator.onLine) {
-                    loadWeather();
+                    localSettings = storage.get(constants.STORAGE.SHARED_DATA);
+                    loadWeather(localSettings);
                 } else {
                     stopWeather();
                 }
@@ -225,11 +277,33 @@ function startWeather() {
     } else {
         stopWeather();
     }
-
 }
 
 function stopWeather() {
     clearInterval(weatherInterval);
+}
+
+function updateLocalStorage(){
+    let sharedData;
+    // Show onboarding with latest features
+    //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+    sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    // Add feature of custom location in weather
+    if(sharedData && typeof sharedData === 'object'){
+        if(sharedData.weather && !sharedData.weather.location){
+            sharedData.weather.location = config.defaultCustomization.weather.location;
+            sharedData.weather.location.name = storage.get(constants.STORAGE.WEATHER)[4] || '';
+        }
+        if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
+            sharedData.showUtilities.showNotes = true;
+        }
+        if(sharedData.background && !sharedData.background.type){
+            sharedData.background.type = 'predefined';
+            storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds);
+        }
+    }
+
+    storage.set(constants.STORAGE.SHARED_DATA, sharedData);
 }
 function init() {
 

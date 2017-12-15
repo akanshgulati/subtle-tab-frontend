@@ -27,13 +27,14 @@
                 bgIndex: 0,
                 allBackgrounds: null,
                 bgKeys: null,
-                themeVal: ''
+                themeVal: '',
+                backgroundType: this.settings.type || 'predefined'
             }
         },
         props: ['settings'],
         mounted(){
             bgElement = document.getElementById('background');
-            this.getBackground();
+            this.getBg();
         },
         methods: {
             getAllBackgrounds(theme){
@@ -42,8 +43,16 @@
                 const storedBg = bgData.stored[theme.id];
                 return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
             },
+            getBg(reset) {
+                if (this.settings && this.settings.type !== 'custom') {
+                    this.getBackground(reset);
+                } else {
+                    this.loadCustomBackground(reset);
+                }
+                this.backgroundType = this.settings.type;
+            },
             getBackground: function (reset) {
-                if(reset && this.themeId === this.settings.themeId){
+                if(reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type){
                     return;
                 }
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
@@ -82,6 +91,59 @@
                     this.$emit('stopLoading');
                 }
             },
+            loadCustomBackground(reset) {
+                // this check is required to make sure to not change custom wallpaper when type is not changed
+                if(reset && this.backgroundType === this.settings.type){
+                    return;
+                }
+                let customBackgrounds = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+                let customSeenBgIndex = storage.get(constants.STORAGE.BACKGROUND_SEEN_CUSTOM);
+                // because customSeenBgIndex can be 0 , so strict checking
+                customSeenBgIndex = customSeenBgIndex === null ? -1 : customSeenBgIndex;
+                this.isLoading();
+                this.defaultImageLoaded = false;
+
+                if (!customBackgrounds || customBackgrounds.length < 1) {
+                    // console.log("no custom backgrounds");
+                    this.defaultImageLoaded = true;
+                    bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
+                    this.$emit('stopLoading');
+                    this.markCustomBgSeen(customSeenBgIndex);
+                    return;
+                }
+
+                // to increment index from stored index value or default value
+                if (customSeenBgIndex === customBackgrounds.length - 1) {
+                    customSeenBgIndex = 0;
+                } else {
+                    customSeenBgIndex++;
+                }
+
+                let currentUrl = customBackgrounds[customSeenBgIndex];
+
+                chrome.runtime.sendMessage({
+                    query: 'loadCurrentCustomBackground',
+                    url: currentUrl
+                }, (responseURL) => {
+                    if (responseURL) {
+                        // console.log("background loaded in time");
+                        this.defaultImageLoaded = false;
+                        bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
+                        if (customBackgrounds.length > 1) {
+                            let nextUrlIndex = customSeenBgIndex === (customBackgrounds.length - 1) ? 0 : customSeenBgIndex + 1;
+                            let nextUrl = customBackgrounds[nextUrlIndex];
+                            chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
+                        }
+                    } else {
+                        // console.log("background not loaded in time");
+                        this.defaultImageLoaded = true;
+                        bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
+                    }
+                    this.$emit('stopLoading');
+                    this.markCustomBgSeen(customSeenBgIndex);
+                });
+
+            },
             loadBackground(){
                 chrome.runtime.sendMessage({query: 'log', value: 'Load Background Called'});
                 this.isLoading();
@@ -108,7 +170,7 @@
                 });
             },
             resetBackgroundTheme(){
-                this.getBackground(true);
+                this.getBg(true);
                 chrome.runtime.sendMessage({query: 'setTabsCount', value: 0});
             },
             isLoading(){
@@ -136,6 +198,19 @@
                 counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
                 chrome.runtime.sendMessage({query: 'log', value: 'getDefaultBg Called with counter, ' + counter});
                 return bgData.stored[themeId][1 + (themeId - 1) * 3 + counter];
+            },
+            markCustomBgSeen(index){
+                chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
+                    // to prevent change on refresh;
+                    if(!tabs){
+                        return;
+                    }
+                    if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
+                        storage.set(constants.STORAGE.BACKGROUND_SEEN_CUSTOM, index);
+                    } else if (this.defaultImageLoaded) {
+                        chrome.runtime.sendMessage({query: 'setTabsCount', value: parseInt(tabs) - 1});
+                    }
+                });
             }
         },
         watch: {
