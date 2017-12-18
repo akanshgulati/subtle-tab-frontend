@@ -301,6 +301,9 @@ function updateLocalStorage(){
             sharedData.background.type = 'predefined';
             storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds);
         }
+        if(sharedData.clock && !sharedData.clock.type){
+            sharedData.clock.type = sharedData.clock.showTwelveHour ? 'twelve' : 'twentyfour';
+        }
     }
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);

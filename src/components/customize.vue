@@ -125,7 +125,7 @@
                                     <input type="radio" v-model="settings.background.themeId"
                                                        :id="theme.value" class="hide" :value="theme.id">
                                     <div v-on:click="selectActive(index)"
-                                         :style=" { 'background-image': 'url(' + theme.imgUrl + ')'}"
+                                         :style=" { 'background-image' : 'url(' + theme.imgUrl + ')'}"
                                          class="thumbnail-image"></div>
                                     <p class="thumbnail-name font-center">{{theme.lValue}}</p>
                                 </li>
@@ -146,11 +146,11 @@
                                 <li class="inline-list-item">
                                     <span class="sub-heading">Clock format</span>
                                     <div class="right">
-                                        <input type="radio" v-model="settings.clock.showTwelveHour" id="clock12"
-                                               class="filled-in" value="true">
+                                        <input type="radio" v-model="settings.clock.type" id="clock12"
+                                               class="filled-in" value="twelve">
                                         <label for="clock12" class="inline-radio">12 Hour</label>
-                                        <input type="radio" v-model="settings.clock.showTwelveHour" id="clock24"
-                                               class="filled-in" value="false">
+                                        <input type="radio" v-model="settings.clock.type" id="clock24"
+                                               class="filled-in" value="twentyfour">
                                         <label for="clock24" class="inline-radio">24 Hour</label>
                                     </div>
                                 </li>
@@ -249,7 +249,7 @@
             };
         },
         mounted(){
-            let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+            let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM) || bgData.customBackgrounds;
             if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]'
                 && bgCustom.length) {
                 this.currentBgCustom = bgCustom.join('\n');

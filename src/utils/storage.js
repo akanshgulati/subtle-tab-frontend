@@ -2,10 +2,16 @@ import constants from './Constants';
 
 let storage = {
     get(key){
+        if(!key){
+            return
+        }
         let value = localStorage.getItem(key);
         return JSON.parse(value);
     },
     set(key, value){
+        if (!key || value === undefined || value === null) {
+            return
+        }
         if (constants.SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
             let obj = {};
             obj[key] = value;
@@ -14,6 +20,9 @@ let storage = {
         localStorage.setItem(key, JSON.stringify(value));
     },
     setLocal(key, value){
+        if (!key || value === undefined || value === null) {
+            return
+        }
         localStorage.setItem(key, JSON.stringify(value));
     },
     remove(key){

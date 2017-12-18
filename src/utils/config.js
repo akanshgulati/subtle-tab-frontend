@@ -7,7 +7,8 @@ const config = {
         },
         clock: {
             showTwelveHour: true,
-            showDay: true
+            showDay: true,
+            type: 'twelve'
         },
         weather: {
             unit: 'c',
