@@ -57,7 +57,7 @@
                             <h4>Features</h4>
                             <ul class="inline-list">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Clock</span>
+                                    <span class="sub-heading">Weather</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showWeather">
