@@ -29,7 +29,7 @@
             updateDateTime () {
                 let current = new Date();
                 this.hrs = current.getHours();
-                if(this.settings.showTwelveHour){
+                if(this.settings.type === 'twelve'){
                     this.hrs = (this.hrs !== 0 && this.hrs !== 12) ? this.hrs % 12 : 12;
                 }
                 this.min = this.getZeroPad(current.getMinutes());
@@ -41,8 +41,8 @@
                 return (parseInt(n, 10) >= 10 ? '' : '0') + n
             },
             concatAMPM () {
-                if(this.settings.showTwelveHour) {
-                    return this.hours >= 12 ? 'PM' : 'AM'
+                if(this.settings.type === 'twelve') {
+                    return this.hrs >= 12 ? 'PM' : 'AM'
                 }
             }
         }
