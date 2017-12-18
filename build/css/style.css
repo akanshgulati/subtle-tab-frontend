@@ -311,12 +311,11 @@ svg #customize_btn, svg #note_btn {
 }
 
 .nav-bar-opener {
-    opacity: 0;
     margin-left: 1.5rem;
 }
 
 .nav-bar-opener svg {
-    padding: 0.25rem;
+    padding: 0.20rem;
     transition: all 0.2s ease-in-out;
 }
 
