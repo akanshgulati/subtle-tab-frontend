@@ -243,7 +243,7 @@
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
                 activeTab: 'general',
-                customLocation: this.settings.weather.location.name,
+                customLocation: this.settings.weather.location.name || storage.get(constants.STORAGE.WEATHER)[4],
                 currentBgCustom: '',
                 isCustomBgSaveMsg: ''
             };

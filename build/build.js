@@ -994,7 +994,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             themes: __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__["a" /* default */].themes,
             version: chrome.runtime.getManifest().version,
             activeTab: 'general',
-            customLocation: this.settings.weather.location.name,
+            customLocation: this.settings.weather.location.name || __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4],
             currentBgCustom: '',
             isCustomBgSaveMsg: ''
         };
