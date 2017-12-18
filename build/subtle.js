@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 38);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -70,7 +70,38 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(1);
+/* harmony default export */ exports["a"] = {
+    THEME: {
+        NATURE: 'nature',
+        ARCHITECTURE: 'building',
+        TRAVEL: 'travel',
+        NIGHT: 'night'
+    },
+    STORAGE: {
+        SHARED_DATA: 'shared-data',
+        WEATHER: 'weather',
+
+        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
+        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
+        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
+        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
+        BACKGROUND_CUSTOM: 'bg-custom',
+        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+
+        CURRENT_PAGE: 'current-page',
+        SEEN_ONBOARDING: 'seen-onboarding',
+        NOTES_META: 'notes_meta'
+    },
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
+};
+
+/***/ },
+
+/***/ 1:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(0);
 
 
 var storage = {
@@ -149,37 +180,6 @@ var storage = {
 
 };
 /* harmony default export */ exports["a"] = storage;
-
-/***/ },
-
-/***/ 1:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    THEME: {
-        NATURE: 'nature',
-        ARCHITECTURE: 'building',
-        TRAVEL: 'travel',
-        NIGHT: 'night'
-    },
-    STORAGE: {
-        SHARED_DATA: 'shared-data',
-        WEATHER: 'weather',
-
-        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
-        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
-        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
-        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
-        BACKGROUND_CUSTOM: 'bg-custom',
-        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
-
-        CURRENT_PAGE: 'current-page',
-        SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
-    },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
-};
 
 /***/ },
 
@@ -275,7 +275,7 @@ var config = {
 
 /***/ },
 
-/***/ 38:
+/***/ 39:
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5);
@@ -287,8 +287,8 @@ module.exports = __webpack_require__(5);
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_config__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__ = __webpack_require__(2);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };

@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 37);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -69,7 +69,37 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(1);
+/* harmony default export */ exports["a"] = {
+    THEME: {
+        NATURE: 'nature',
+        ARCHITECTURE: 'building',
+        TRAVEL: 'travel',
+        NIGHT: 'night'
+    },
+    STORAGE: {
+        SHARED_DATA: 'shared-data',
+        WEATHER: 'weather',
+
+        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
+        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
+        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
+        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
+        BACKGROUND_CUSTOM: 'bg-custom',
+        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+
+        CURRENT_PAGE: 'current-page',
+        SEEN_ONBOARDING: 'seen-onboarding',
+        NOTES_META: 'notes_meta'
+    },
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
+};
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(0);
 
 
 var storage = {
@@ -148,36 +178,6 @@ var storage = {
 
 };
 /* harmony default export */ exports["a"] = storage;
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    THEME: {
-        NATURE: 'nature',
-        ARCHITECTURE: 'building',
-        TRAVEL: 'travel',
-        NIGHT: 'night'
-    },
-    STORAGE: {
-        SHARED_DATA: 'shared-data',
-        WEATHER: 'weather',
-
-        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
-        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
-        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
-        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
-        BACKGROUND_CUSTOM: 'bg-custom',
-        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
-
-        CURRENT_PAGE: 'current-page',
-        SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
-    },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
-};
 
 /***/ },
 /* 2 */
@@ -274,9 +274,9 @@ var config = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_vue__);
 
 
@@ -295,19 +295,19 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_clock_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_background_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_customize_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_weather_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notes_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__);
 //
 //
@@ -447,8 +447,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Constants__ = __webpack_require__(0);
 //
 //
 //
@@ -747,8 +747,8 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
 //
 //
 //
@@ -1070,10 +1070,10 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_debounce__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 //
@@ -1378,7 +1378,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
 //
 //
 //
@@ -1450,8 +1450,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_common__ = __webpack_require__(14);
 //
 //
 //
@@ -1469,13 +1471,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+
+
 
 
 
 
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
-        this.localWeather = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get('weather');
+        this.localWeather = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER);
     },
 
     props: ['settings'],
@@ -1490,16 +1494,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             temp: null,
             localWeather: this.localWeather,
             error: null,
-            isLoading: true
+            isLoading: false,
+            localSettings: Object.assign({}, this.settings)
         };
     },
 
     methods: {
         checkWeather: function checkWeather(forceUpdate) {
+
             if (!navigator.onLine) {
                 this.weatherCity = 'Offline';
                 return;
             }
+
             var now = +new Date();
             var oneHourTime = 900000;
 
@@ -1511,10 +1518,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 // Check if local weather is not more than an hour old and also
                 // checks if local city
                 if (now - this.localWeather[0] < oneHourTime) {
-                    this.temp = this.settings.unit === 'f' ? this.localWeather[2] : this.localWeather[1];
-                    this.weatherCode = this.localWeather[3];
-                    this.weatherClass = __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__["a" /* default */][this.localWeather[3]];
-                    this.weatherCity = this.localWeather[4];
+                    this.showWeather(this.localWeather);
                     this.isLoading = false;
                 } else {
                     this.prepareWeatherCall();
@@ -1524,42 +1528,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         getWeather: function getWeather(data) {
             var _this = this;
 
-            var self = this;
             this.isLoading = true;
             chrome.runtime.sendMessage({ query: 'startWeather' });
 
-            return new Promise(function (resolve, reject) {
+            var url = 'https://api.subtletab.com/weather/new';
+            if (data.type !== 'custom') {
+                url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
+            } else {
+                url += '?location=' + data.location + '&type=custom';
+            }
 
-                var xmlhttp = new XMLHttpRequest();
-
-                var url = 'https://api.subtletab.com/weather/new';
-                if (data.type !== 'custom') {
-                    url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
-                } else {
-                    url += '?location=' + data.location + '&type=custom';
-                }
-
-                xmlhttp.open('GET', url);
-                xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        var weather = JSON.parse(xmlhttp.responseText);
-                        var now = +new Date();
-                        self.isLoading = false;
-                        self.temp = self.settings.unit === 'f' ? weather.alt.temp : weather.temp;
-                        self.weatherCode = weather.code;
-                        self.weatherClass = __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__["a" /* default */][weather.code];
-                        self.weatherCity = weather.city;
-
-                        self.localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
-                        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('weather', _this.localWeather);
-                        resolve();
-                    }
-                };
-                xmlhttp.onerror = function () {
-                    reject(xmlhttp.status);
-                };
-                xmlhttp.send();
+            return __WEBPACK_IMPORTED_MODULE_3__utils_common__["a" /* default */].http(url).then(function (_resp) {
+                var weather = _resp;
+                _this.isLoading = false;
+                _this.updateLocalWeather(weather);
+                _this.showWeather(_this.localWeather);
             });
         },
         prepareWeatherCall: function prepareWeatherCall() {
@@ -1567,6 +1550,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
             var options = void 0;
             if (this.settings.location.type !== 'custom') {
+                // adding loading because below call takes time
+                this.isLoading = true;
                 navigator.geolocation.getCurrentPosition(function (position) {
                     options = {
                         lat: position.coords.latitude,
@@ -1576,20 +1561,43 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                     _this2.getWeather(options);
                 }, function (error) {
                     console.log(error);
-                }, { timeout: 10000 });
+                }, {
+                    timeout: 10000
+                });
             } else {
-                options = {
-                    location: this.settings.location.name,
-                    type: 'custom'
-                };
-                this.getWeather(options);
+                if (this.settings.location && this.settings.location.name) {
+                    options = {
+                        location: this.settings.location.name,
+                        type: 'custom'
+                    };
+                    this.getWeather(options);
+                }
             }
+        },
+        showWeather: function showWeather(weatherArr) {
+            this.temp = this.settings.unit === 'f' ? weatherArr[2] : weatherArr[1];
+            this.weatherCode = weatherArr[3];
+            this.weatherClass = __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__["a" /* default */][weatherArr[3]];
+            this.weatherCity = weatherArr[4];
+        },
+        updateLocalWeather: function updateLocalWeather(weatherObj) {
+            if (Object.keys(weatherObj).length !== 4) {
+                return;
+            }
+            var now = +new Date();
+            this.localWeather = [now, weatherObj.temp, weatherObj.alt.temp, weatherObj.code, weatherObj.city];
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER, this.localWeather);
         }
     },
     watch: {
         settings: {
             handler: function handler(newValue) {
-                this.checkWeather(true);
+                if (this.localSettings.unit !== newValue.unit) {
+                    this.checkWeather();
+                } else if (this.localSettings.location.name !== newValue.location.name || this.localSettings.location.type !== newValue.location.type) {
+                    this.checkWeather(true);
+                }
+                this.localSettings = JSON.parse(JSON.stringify(newValue));
             },
             deep: true
         }
@@ -1602,7 +1610,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backgroundData__ = __webpack_require__(2);
 
 
@@ -1668,6 +1676,31 @@ var bgUtil = {
 
 /***/ },
 /* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    http: function http(url, method, data) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            method = method || 'GET';
+            xmlhttp.open(method, url);
+            xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState === 4) {
+                    resolve(JSON.parse(xmlhttp.responseText));
+                }
+            };
+            xmlhttp.onerror = function () {
+                reject(xmlhttp.status);
+            };
+            xmlhttp.send(JSON.stringify(data));
+        });
+    }
+};
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
 var _ = function _(obj) {
@@ -1713,7 +1746,7 @@ module.exports = function (func, wait, options) {
 };
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1769,10 +1802,10 @@ module.exports = function (func, wait, options) {
 };
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(17)();
+exports = module.exports = __webpack_require__(18)();
 // imports
 
 
@@ -1783,7 +1816,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 /*
@@ -1839,7 +1872,7 @@ module.exports = function() {
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 // shim for using process in browser
@@ -2025,7 +2058,7 @@ process.umask = function() { return 0; };
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2035,7 +2068,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(6)
 
 /* template */
-var __vue_template__ = __webpack_require__(32)
+var __vue_template__ = __webpack_require__(33)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2069,20 +2102,20 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(34)
+__webpack_require__(35)
 
 /* script */
 __vue_exports__ = __webpack_require__(7)
 
 /* template */
-var __vue_template__ = __webpack_require__(28)
+var __vue_template__ = __webpack_require__(29)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2116,7 +2149,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2126,7 +2159,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(8)
 
 /* template */
-var __vue_template__ = __webpack_require__(30)
+var __vue_template__ = __webpack_require__(31)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2160,7 +2193,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2170,7 +2203,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(9)
 
 /* template */
-var __vue_template__ = __webpack_require__(31)
+var __vue_template__ = __webpack_require__(32)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2204,7 +2237,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2214,7 +2247,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(10)
 
 /* template */
-var __vue_template__ = __webpack_require__(27)
+var __vue_template__ = __webpack_require__(28)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2248,7 +2281,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2258,7 +2291,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(11)
 
 /* template */
-var __vue_template__ = __webpack_require__(29)
+var __vue_template__ = __webpack_require__(30)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2292,7 +2325,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -2302,7 +2335,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(12)
 
 /* template */
-var __vue_template__ = __webpack_require__(26)
+var __vue_template__ = __webpack_require__(27)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2336,7 +2369,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2375,7 +2408,7 @@ if (false) {
 }
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2615,7 +2648,7 @@ if (false) {
 }
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2638,7 +2671,7 @@ if (false) {
 }
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2708,7 +2741,7 @@ if (false) {
 }
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2734,7 +2767,7 @@ if (false) {
 }
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2926,7 +2959,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticClass: "inline-list-item"
   }, [_h('span', {
     staticClass: "sub-heading"
-  }, ["Clock"]), " ", _h('div', {
+  }, ["Weather"]), " ", _h('div', {
     staticClass: "switch"
   }, [_h('label', [_h('input', {
     directives: [{
@@ -3579,7 +3612,7 @@ if (false) {
 }
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -3779,7 +3812,7 @@ if (false) {
 }
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 /*
@@ -4001,16 +4034,16 @@ function applyToTag(styleElement, obj) {
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(33)(content, {});
+var update = __webpack_require__(34)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -4027,7 +4060,7 @@ if(false) {
 }
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9969,10 +10002,10 @@ setTimeout(function () {
 
 module.exports = Vue$2;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18), __webpack_require__(36)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19), __webpack_require__(37)))
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 var g;
@@ -9997,7 +10030,7 @@ module.exports = g;
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(4);
