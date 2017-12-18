@@ -309,6 +309,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notes_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__utils_backgroundData__ = __webpack_require__(2);
 //
 //
 //
@@ -360,6 +361,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 //
 //
 //
+
 
 
 
@@ -374,7 +376,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
         this.sharedData = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA) || __WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* default */].defaultCustomization;
-        this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('seen-onboarding') || false;
+        this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING) || false;
     },
     data: function data() {
         return {
@@ -397,6 +399,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 self.closeWindows();
             }
         });
+        this.init();
     },
 
     watch: {
@@ -428,6 +431,14 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         closeWindows: function closeWindows() {
             this.showNotes = false;
             this.showCustomizeMenu = false;
+        },
+        init: function init() {
+            // this is done for backgrounds
+            var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
+            if (!bgCustom) {
+                bgCustom = __WEBPACK_IMPORTED_MODULE_9__utils_backgroundData__["a" /* default */].customBackgrounds;
+                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, bgCustom);
+            }
         }
     },
     components: {
@@ -982,6 +993,10 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -994,13 +1009,17 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             themes: __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__["a" /* default */].themes,
             version: chrome.runtime.getManifest().version,
             activeTab: 'general',
-            customLocation: this.settings.weather.location.name || __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4],
+            customLocation: '',
             currentBgCustom: '',
             isCustomBgSaveMsg: ''
         };
     },
     mounted: function mounted() {
-        var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM) || __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__["a" /* default */].customBackgrounds;
+        // this is done for weather
+        this.customLocation = this.settings.weather.location.name || __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER) && __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4];
+        // this is done for backgrounds
+        var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
+
         if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]' && bgCustom.length) {
             this.currentBgCustom = bgCustom.join('\n');
         }
@@ -1015,9 +1034,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         },
         closeCustomizeMenu: function closeCustomizeMenu() {
             this.$emit('closeCustomizeMenu');
-        },
-        setBgInterval: function setBgInterval(value) {
-            this.settings.background.changeInterval = value;
         },
         updateCustomLocation: function updateCustomLocation() {
             if (this.customLocation !== this.settings.weather.location.name) {
@@ -3266,7 +3282,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     class: {
       'fade_in': _vm.settings.background.type === 'custom'
     }
-  }, [_h('h4', ["Custom List"]), " ", _h('textarea', {
+  }, [_h('h4', ["Custom List"]), " ", _h('span', ["Add each image in new line and press save list button"]), " ", _h('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3464,9 +3480,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, ["Custom"])])]), " ", _h('li', {
     staticClass: "inline-list-item flex overflow-hidden flex-center flex-justify-space-between"
-  }, [_h('span', {
-    staticClass: "sub-heading"
-  }, ["Location"]), " ", _h('div', {
+  }, [_vm._m(0), " ", _h('div', {
     staticClass: "right flex"
   }, [_h('input', {
     directives: [{
@@ -3477,6 +3491,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }],
     staticClass: "mar-0",
     attrs: {
+      "placeholder": "e.g. Mumbai",
       "type": "text",
       "disabled": _vm.settings.weather.location.type === 'geo'
     },
@@ -3573,8 +3588,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticStyle: {
       "margin": "0 0.5rem"
     }
-  }, ["|"]), " ", _vm._m(0)]), " ", _vm._m(1)])])
+  }, ["|"]), " ", _vm._m(1)]), " ", _vm._m(2)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', [_h('div', {
+    staticClass: "sub-heading"
+  }, ["City/Town/Village"]), " ", _h('span', ["Enter correct name and press save button."])])
+},function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
     staticClass: "flex"
   }, [_h('span', {
@@ -3744,9 +3763,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }) : _vm._e()]) : _vm._e(), " ", _h('div', {
     staticClass: "pointer nav-bar-opener",
-    class: {
-      'fade_in': !_vm.showCustomizeMenu
-    },
     on: {
       "click": function($event) {
         $event.stopPropagation();
@@ -3784,13 +3800,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "settings": _vm.componentsData.weather
     }
-  }) : _vm._e()])])]), " ", _h('div', {
+  }) : _vm._e()])])]), " ", (_vm.showCustomizeMenu) ? _h('div', {
     attrs: {
       "id": "customize-section"
     }
-  }, [(_vm.showCustomizeMenu) ? _h('div', {
+  }, [_h('div', {
     staticClass: "customization-overlay"
-  }) : _vm._e(), " ", _h('customize', {
+  }), " ", _h('customize', {
     class: {
       'fade_in': _vm.showCustomizeMenu
     },
@@ -3801,7 +3817,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "closeCustomizeMenu": _vm.toggleCustomizeMenu
     }
-  })])]) : _vm._e()])
+  })]) : _vm._e()]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
