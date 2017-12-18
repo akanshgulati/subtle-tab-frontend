@@ -18,10 +18,12 @@
 <script>
     import storage from '../utils/storage';
     import weatherUtil from '../utils/weatherUtil';
+    import constants from '../utils/Constants';
+    import commonUtils from '../utils/common';
 
     export default {
         beforeCreate(){
-            this.localWeather = storage.get('weather');
+            this.localWeather = storage.get(constants.STORAGE.WEATHER);
         },
         props: ['settings'],
         mounted () {
@@ -35,15 +37,18 @@
                 temp: null,
                 localWeather: this.localWeather,
                 error: null,
-                isLoading: true
+                isLoading: false,
+                localSettings: Object.assign({}, this.settings)
             }
         },
         methods: {
             checkWeather(forceUpdate){
-                if(!navigator.onLine){
-                    this.weatherCity = 'Offline';
-                    return;
+
+                if (!navigator.onLine) {
+                    this.weatherCity = 'Offline'
+                    return
                 }
+
                 let now = +new Date();
                 const oneHourTime = 900000;
 
@@ -55,10 +60,7 @@
                     // Check if local weather is not more than an hour old and also
                     // checks if local city
                     if ((now - this.localWeather[0]) < oneHourTime) {
-                        this.temp = this.settings.unit === 'f' ? this.localWeather[2] : this.localWeather[1];
-                        this.weatherCode = this.localWeather[3];
-                        this.weatherClass = weatherUtil[this.localWeather[3]];
-                        this.weatherCity = this.localWeather[4];
+                        this.showWeather(this.localWeather)
                         this.isLoading = false;
 
                     } else {
@@ -67,71 +69,79 @@
                 }
             },
             getWeather(data){
-                const self = this;
                 this.isLoading = true;
                 chrome.runtime.sendMessage({query: 'startWeather'});
 
-                return new Promise((resolve, reject) => {
+                let url = 'https://api.subtletab.com/weather/new'
+                if (data.type !== 'custom') {
+                    url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo'
+                } else {
+                    url += '?location=' + data.location + '&type=custom'
+                }
 
-                    let xmlhttp = new XMLHttpRequest();
-
-                    let url = 'https://api.subtletab.com/weather/new';
-                    if(data.type !== 'custom'){
-                        url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
-                    } else {
-                        url += '?location=' + data.location + '&type=custom';
-                    }
-
-                    xmlhttp.open('GET', url);
-                    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-                    xmlhttp.onreadystatechange = () => {
-                        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                            let weather = JSON.parse(xmlhttp.responseText);
-                            let now = +new Date();
-                            self.isLoading = false;
-                            self.temp = self.settings.unit === 'f' ? weather.alt.temp : weather.temp;
-                            self.weatherCode = weather.code;
-                            self.weatherClass = weatherUtil[weather.code];
-                            self.weatherCity = weather.city;
-
-                            self.localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
-                            storage.set('weather', this.localWeather);
-                            resolve();
-                        }
-                    };
-                    xmlhttp.onerror = ()=>{
-                        reject(xmlhttp.status);
-                    };
-                    xmlhttp.send();
-                });
+                return commonUtils.http(url).then(_resp =>{
+                    let weather = _resp
+                    this.isLoading = false;
+                    this.updateLocalWeather(weather)
+                    this.showWeather(this.localWeather)
+                })
             },
-            prepareWeatherCall(){
-                let options;
+            prepareWeatherCall() {
+                let options
                 if (this.settings.location.type !== 'custom') {
-                    navigator.geolocation.getCurrentPosition((position) => {
+                    // adding loading because below call takes time
+                    this.isLoading = true
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
                             options = {
                                 lat: position.coords.latitude,
                                 long: position.coords.longitude,
                                 type: 'geo'
-                            };
-                            this.getWeather(options);
-                        }, (error) => {
+                            }
+                            this.getWeather(options)
+                        },
+                        (error) => {
                             console.log(error)
-                        }, {timeout: 10000}
-                    );
+                        },
+                        {
+                            timeout: 10000
+                        }
+                    )
                 } else {
-                    options = {
-                        location: this.settings.location.name,
-                        type: 'custom'
-                    };
-                    this.getWeather(options);
+                    if (this.settings.location && this.settings.location.name) {
+                        options = {
+                            location: this.settings.location.name,
+                            type: 'custom'
+                        }
+                        this.getWeather(options)
+                    }
                 }
+            },
+            showWeather(weatherArr) {
+                this.temp = this.settings.unit === 'f' ? weatherArr[2] : weatherArr[1]
+                this.weatherCode = weatherArr[3]
+                this.weatherClass = weatherUtil[weatherArr[3]]
+                this.weatherCity = weatherArr[4]
+            },
+            updateLocalWeather(weatherObj) {
+                if (Object.keys(weatherObj).length !== 4) {
+                    return
+                }
+                let now = +new Date();
+                this.localWeather = [now, weatherObj.temp, weatherObj.alt.temp, weatherObj.code, weatherObj.city];
+                storage.set(constants.STORAGE.WEATHER, this.localWeather);
             }
         },
         watch:{
             settings:{
                 handler: function (newValue) {
-                    this.checkWeather(true);
+                    if (this.localSettings.unit !== newValue.unit) {
+                        this.checkWeather()
+                    } else if (this.localSettings.location.name !== newValue.location.name ||
+                        this.localSettings.location.type !== newValue.location.type) {
+                        this.checkWeather(true)
+                    }
+                    this.localSettings = JSON.parse(JSON.stringify(newValue));
                 },
                 deep: true
             }

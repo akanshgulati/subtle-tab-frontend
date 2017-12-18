@@ -57,7 +57,7 @@
                             <h4>Features</h4>
                             <ul class="inline-list">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Clock</span>
+                                    <span class="sub-heading">Weather</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showWeather">
@@ -125,7 +125,7 @@
                                     <input type="radio" v-model="settings.background.themeId"
                                                        :id="theme.value" class="hide" :value="theme.id">
                                     <div v-on:click="selectActive(index)"
-                                         :style=" { 'background-image': 'url(' + theme.imgUrl + ')'}"
+                                         :style=" { 'background-image' : 'url(' + theme.imgUrl + ')'}"
                                          class="thumbnail-image"></div>
                                     <p class="thumbnail-name font-center">{{theme.lValue}}</p>
                                 </li>
@@ -133,6 +133,7 @@
                         </div>
                         <div v-if="settings.background.type === 'custom'" :class="{'fade_in': settings.background.type === 'custom'}">
                             <h4>Custom List</h4>
+                            <span>Add each image in new line and press save list button</span>
                             <textarea name="" id="" cols="30" rows="15" v-model="currentBgCustom"></textarea>
                             <button class="save-button mar-0" v-on:click.stop="saveCustomBg"
                                     :disabled="!currentBgCustom.trim().length">Save List</button>
@@ -146,11 +147,11 @@
                                 <li class="inline-list-item">
                                     <span class="sub-heading">Clock format</span>
                                     <div class="right">
-                                        <input type="radio" v-model="settings.clock.showTwelveHour" id="clock12"
-                                               class="filled-in" value="true">
+                                        <input type="radio" v-model="settings.clock.type" id="clock12"
+                                               class="filled-in" value="twelve">
                                         <label for="clock12" class="inline-radio">12 Hour</label>
-                                        <input type="radio" v-model="settings.clock.showTwelveHour" id="clock24"
-                                               class="filled-in" value="false">
+                                        <input type="radio" v-model="settings.clock.type" id="clock24"
+                                               class="filled-in" value="twentyfour">
                                         <label for="clock24" class="inline-radio">24 Hour</label>
                                     </div>
                                 </li>
@@ -183,9 +184,12 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item flex overflow-hidden flex-center flex-justify-space-between">
-                                    <span class="sub-heading">Location</span>
+                                    <div>
+                                        <div class="sub-heading">City/Town/Village</div>
+                                        <span>Enter correct name and press save button.</span>
+                                    </div>
                                     <div class="right flex">
-                                        <input type="text" v-model="customLocation" class="mar-0"
+                                        <input placeholder="e.g. Mumbai" type="text" v-model="customLocation" class="mar-0"
                                                :disabled="settings.weather.location.type==='geo'" v-on:keydown.stop="">
                                         <button class="save-button" v-on:click.stop="updateCustomLocation"
                                                 :disabled="customLocation == settings.weather.location.name">Save</button>
@@ -243,13 +247,18 @@
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
                 activeTab: 'general',
-                customLocation: this.settings.weather.location.name,
+                customLocation: '',
                 currentBgCustom: '',
                 isCustomBgSaveMsg: ''
             };
         },
         mounted(){
+            // this is done for weather
+            this.customLocation = this.settings.weather.location.name ||
+                (storage.get(constants.STORAGE.WEATHER) && storage.get(constants.STORAGE.WEATHER)[4])
+            // this is done for backgrounds
             let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+
             if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]'
                 && bgCustom.length) {
                 this.currentBgCustom = bgCustom.join('\n');
@@ -264,9 +273,6 @@
             },
             closeCustomizeMenu(){
                 this.$emit('closeCustomizeMenu');
-            },
-            setBgInterval(value){
-                this.settings.background.changeInterval = value;
             },
             updateCustomLocation() {
                 if (this.customLocation !== this.settings.weather.location.name) {

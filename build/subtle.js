@@ -1,1 +1,626 @@
-!function(e){function t(a){if(n[a])return n[a].exports;var o=n[a]={i:a,l:!1,exports:{}};return e[a].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,t,n){Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:n})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="/build/",t(t.s=37)}({0:function(e,t,n){"use strict";var a=n(1),o={get:function(e){var t=localStorage.getItem(e);return JSON.parse(t)},set:function(e,t){if(a.a.SYNC.indexOf(e)>-1||e.indexOf("note-")>-1){var n={};n[e]=t,chrome.storage.sync.set(n)}localStorage.setItem(e,JSON.stringify(t))},setLocal:function(e,t){localStorage.setItem(e,JSON.stringify(t))},remove:function(e){return localStorage.removeItem(e)},increment:function(e){var t=this.get(e);"number"==typeof t&&this.set(e,t+1)},append:function(e,t){var n=this.get(e)||[];n.push(t),this.set(e,n)},getMap:function(e){var t=localStorage.getItem(e);return isNaN(t)?JSON.parse(t):t},setMap:function(e,t){return localStorage.setItem(e,JSON.stringify(t))},chromeSync:{get:function(e,t){try{chrome.storage.sync.get(e,function(e){t&&t(e)})}catch(e){console.log(e)}},set:function(e,t,n){try{var a={};a[e]=t,chrome.storage.sync.set(a,function(e){n&&n(e)})}catch(e){console.log(e)}}}};t.a=o},1:function(e,t,n){"use strict";t.a={THEME:{NATURE:"nature",ARCHITECTURE:"building",TRAVEL:"travel",NIGHT:"night"},STORAGE:{SHARED_DATA:"shared-data",WEATHER:"weather",BACKGROUND_SEEN_NIGHT:"bg-seen-night",BACKGROUND_SEEN_TRAVEL:"bg-seen-travel",BACKGROUND_SEEN_BUILDING:"bg-seen-building",BACKGROUND_SEEN_NATURE:"bg-seen-nature",BACKGROUND_CUSTOM:"bg-custom",BACKGROUND_SEEN_CUSTOM:"bg-seen-custom",CURRENT_PAGE:"current-page",SEEN_ONBOARDING:"seen-onboarding",NOTES_META:"notes_meta"},SYNC:["shared-data","bg-seen-nature","bg-seen-night","bg-seen-travel","bg-seen-building","current-page","nature","travel","building","night","notes_meta","notes-","bg-custom","bg-seen-custom"]}},2:function(e,t,n){"use strict";t.a={themes:[{id:1,lValue:"Nature",tags:"nature",value:"nature",imgUrl:"images/nature_thumbnail.png"},{id:2,lValue:"Architecture",tags:"building",value:"building",imgUrl:"images/architecture_thumbnail.png"},{id:3,lValue:"Travel",tags:"travel",value:"travel",imgUrl:"images/travel_thumbnail.png"},{id:4,lValue:"Night Life",tags:"night",value:"night",imgUrl:"images/night_thumbnail.png"}],stored:{1:{1:"./images/backgrounds/nature-1.jpg",2:"./images/backgrounds/nature-2.jpg",3:"./images/backgrounds/nature-3.jpg"},2:{4:"./images/backgrounds/building-1.jpg",5:"./images/backgrounds/building-2.jpg",6:"./images/backgrounds/building-3.jpg"},3:{7:"./images/backgrounds/travel-1.jpg",8:"./images/backgrounds/travel-2.jpg",9:"./images/backgrounds/travel-3.jpg"},4:{10:"./images/backgrounds/night-1.jpg",11:"./images/backgrounds/night-2.jpg",12:"./images/backgrounds/night-3.jpg"}},customBackgrounds:["https://subtletab.com/extras/1.jpg","https://subtletab.com/extras/2.jpg","https://subtletab.com/extras/3.jpg","https://subtletab.com/extras/4.jpg","https://subtletab.com/extras/5.jpg","https://subtletab.com/extras/6.jpg","https://subtletab.com/extras/7.jpg","https://subtletab.com/extras/7.jpg","https://subtletab.com/extras/8.jpg"]}},3:function(e,t,n){"use strict";var a={defaultCustomization:{showUtilities:{showWeather:!0,showClock:!0,showNotes:!0},clock:{showTwelveHour:!0,showDay:!0},weather:{unit:"c",location:{type:"geo",name:""}},background:{themeId:1,changeInterval:10,type:"predefined"}}};t.a=a},37:function(e,t,n){e.exports=n(5)},5:function(e,t,n){"use strict";function a(){return v!==b&&b}function o(e){b=e}function r(e){if(e&&e.photo){for(var t=Object.keys(e.photo),n=e.photo,a=m.a.get(d.a.STORAGE.BACKGROUND_SEEN)||[],o={},r=0;r<t.length;r++)a.indexOf(n[t[r]])===-1&&(o[t[r]]=n[t[r]]);return o}}function s(e){var t=new XMLHttpRequest,n="https://api.subtletab.com/weather/new";n+="custom"!==e.type?"?lat="+e.lat+"&long="+e.long+"&type=geo":"?location="+e.location+"&type=custom",t.open("GET",n),t.setRequestHeader("chrome-extension",btoa(chrome.runtime.id)),t.onreadystatechange=function(){if(4===t.readyState&&200===t.status){var e=JSON.parse(t.responseText),n=+new Date,a=[n,e.temp,e.alt.temp,e.code,e.city];m.a.set("weather",a)}},t.send()}function i(e){var t={};"custom"!==e.weather.type?navigator.geolocation.getCurrentPosition(function(e){t={lat:e.coords.latitude,long:e.coords.longitude,type:"geo"},s(t)},function(e){w(e)},{timeout:1e4}):(t={location:e.weather.location,type:"custom"},s(t))}function u(){var e=m.a.get(d.a.STORAGE.SHARED_DATA);e&&e.showUtilities.showWeather?C||(C=setInterval(function(){navigator.onLine?(e=m.a.get(d.a.STORAGE.SHARED_DATA),i(e)):c()},3e5)):c()}function c(){clearInterval(C)}function g(){var e=void 0;e=m.a.get(d.a.STORAGE.SHARED_DATA),e&&"object"===("undefined"==typeof e?"undefined":p(e))&&(e.weather&&!e.weather.location&&(e.weather.location=f.a.defaultCustomization.weather.location,e.weather.location.name=m.a.get(d.a.STORAGE.WEATHER)[4]||""),e.showUtilities&&!e.showUtilities.showNotes&&(e.showUtilities.showNotes=!0),e.background&&!e.background.type&&(e.background.type="predefined",m.a.set(d.a.STORAGE.BACKGROUND_CUSTOM,h.a.customBackgrounds))),m.a.set(d.a.STORAGE.SHARED_DATA,e)}function l(){chrome.runtime.setUninstallURL("https://goo.gl/forms/hMD1i4sXIUVwkKtD2"),chrome.storage.sync.get(null,function(e){for(var t in e)e.hasOwnProperty(t)&&m.a.setLocal(t,e[t])}),chrome.tabs.onCreated.addListener(function(){v=b,b++,2===b&&m.a.set(d.a.STORAGE.SEEN_ONBOARDING,!0)})}var m=n(0),d=n(1),f=n(3),h=n(2),p="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},b=0,v=0,y=void 0,E=!1;chrome.runtime.onMessage.addListener(function(e,t,n){return"getBackground"===e.query?N(e.theme,e.newPage):"getTabsCount"===e.query?n(a()):"setTabsCount"===e.query?(o(e.value),n(!0)):"loadNextBackground"===e.query?R(e.url):"loadCurrentBackground"===e.query?S(e.url,n):"log"===e.query?w(e.value):"startWeather"===e.query?u():"loadCurrentCustomBackground"===e.query?A(e.url,n):"loadNextCustomBackground"===e.query&&R(e.url),!0});var S=function(e,t){var n=!1,a=new Image;a.src=e,a.onload=function(){n||(clearTimeout(o),t(e))},a.onerror=function(){clearTimeout(o),n=!0,t(!1)};var o=setTimeout(function(){n=!0,t(!1)},2500)},A=function(e,t){var n=!1,a=new Image;a.src=e,a.onload=function(){n||(clearTimeout(o),t(e))},a.onerror=function(){clearTimeout(o),n=!0,t(!1)};var o=setTimeout(function(){n=!0,t(!1)},4e3)},N=function(e,t){return new Promise(function(n,a){var o=new XMLHttpRequest,s=m.a.get(d.a.STORAGE.CURRENT_PAGE)||{},i=s[e.value]||0;t&&i++;var u="https://api.subtletab.com/theme/";u+=e.tags+"/"+i,o.open("GET",u),o.setRequestHeader("chrome-extension",btoa(chrome.runtime.id)),o.onreadystatechange=function(){if(4===o.readyState&&200===o.status){var a=JSON.parse(o.responseText);y=r(a),i===a.pages&&(i=0),t&&m.a.set(d.a.STORAGE["BACKGROUND_SEEN_"+e.value.toUpperCase()],""),s[e.value]=i,m.a.set(d.a.STORAGE.CURRENT_PAGE,s),T(y,e),n()}},o.onerror=function(){a(o.status)},o.send()})},T=function(e,t){var n=m.a.get(d.a.THEME[t.value]);if(!n)return void m.a.set(t.value,e);var a=Object.keys(n),o=a[a.length],r=n[o],s={};s[o]=r,m.a.set(t.value,Object.assign({},s,e))},O=void 0,R=function(e){if(O=O||e,O!==e){w("BG: Load Next Background for",e),O=e;var t=new Image;t.src=e}},w=function(e){E&&console.log(e)};chrome.runtime.onInstalled.addListener(function(e){e&&e.reason&&"install"===e.reason?(m.a.chromeSync.get(null,function(e){var t=void 0;for(t in e)e.hasOwnProperty(t)&&m.a.setLocal(t,e[t])}),chrome.tabs.create({})):e&&e.reason&&"update"===e.reason&&g()}),chrome.browserAction.onClicked.addListener(function(e){chrome.tabs.create({})}),chrome.storage.onChanged.addListener(function(e,t){var n=void 0;for(n in e)e.hasOwnProperty(n)&&(w("Storage Changed"+JSON.stringify(e[n])),void 0!==p(e[n].newValue)?m.a.setLocal(n,e[n].newValue):m.a.remove(n))});var C=void 0;l()}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/build/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    THEME: {
+        NATURE: 'nature',
+        ARCHITECTURE: 'building',
+        TRAVEL: 'travel',
+        NIGHT: 'night'
+    },
+    STORAGE: {
+        SHARED_DATA: 'shared-data',
+        WEATHER: 'weather',
+
+        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
+        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
+        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
+        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
+        BACKGROUND_CUSTOM: 'bg-custom',
+        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+
+        CURRENT_PAGE: 'current-page',
+        SEEN_ONBOARDING: 'seen-onboarding',
+        NOTES_META: 'notes_meta'
+    },
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
+};
+
+/***/ },
+
+/***/ 1:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(0);
+
+
+var storage = {
+    get: function get(key) {
+        if (!key) {
+            return;
+        }
+        var value = localStorage.getItem(key);
+        return JSON.parse(value);
+    },
+    set: function set(key, value) {
+        if (!key || value === undefined || value === null) {
+            return;
+        }
+        if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
+            var obj = {};
+            obj[key] = value;
+            chrome.storage.sync.set(obj);
+        }
+        localStorage.setItem(key, JSON.stringify(value));
+    },
+    setLocal: function setLocal(key, value) {
+        if (!key || value === undefined || value === null) {
+            return;
+        }
+        localStorage.setItem(key, JSON.stringify(value));
+    },
+    remove: function remove(key) {
+        return localStorage.removeItem(key);
+    },
+    increment: function increment(key) {
+        var item = this.get(key);
+        if (typeof item === 'number') {
+            this.set(key, item + 1);
+        }
+    },
+    append: function append(key, value) {
+        var initialValue = this.get(key) || [];
+        initialValue.push(value);
+        this.set(key, initialValue);
+    },
+    getMap: function getMap(key) {
+        var value = localStorage.getItem(key);
+        return isNaN(value) ? JSON.parse(value) : value;
+    },
+    setMap: function setMap(key, data) {
+        return localStorage.setItem(key, JSON.stringify(data));
+    },
+
+    chromeSync: {
+        get: function get(key, callback) {
+            try {
+                chrome.storage.sync.get(key, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        set: function set(key, value, callback) {
+            try {
+                var obj = {};
+                obj[key] = value;
+                chrome.storage.sync.set(obj, function (details) {
+                    if (callback) {
+                        callback(details);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+
+};
+/* harmony default export */ exports["a"] = storage;
+
+/***/ },
+
+/***/ 2:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    themes: [{
+        id: 1,
+        lValue: 'Nature',
+        tags: 'nature',
+        value: 'nature',
+        imgUrl: 'images/nature_thumbnail.png'
+    }, {
+        id: 2,
+        lValue: 'Architecture',
+        tags: 'building',
+        value: 'building',
+        imgUrl: 'images/architecture_thumbnail.png'
+    }, {
+        id: 3,
+        lValue: 'Travel',
+        tags: 'travel',
+        value: 'travel',
+        imgUrl: 'images/travel_thumbnail.png'
+    }, {
+        id: 4,
+        lValue: 'Night Life',
+        tags: 'night',
+        value: 'night',
+        imgUrl: 'images/night_thumbnail.png'
+    }],
+    stored: {
+        1: {
+            1: './images/backgrounds/nature-1.jpg',
+            2: './images/backgrounds/nature-2.jpg',
+            3: './images/backgrounds/nature-3.jpg'
+        },
+        2: {
+            4: './images/backgrounds/building-1.jpg',
+            5: './images/backgrounds/building-2.jpg',
+            6: './images/backgrounds/building-3.jpg'
+        },
+        3: {
+            7: './images/backgrounds/travel-1.jpg',
+            8: './images/backgrounds/travel-2.jpg',
+            9: './images/backgrounds/travel-3.jpg'
+        },
+        4: {
+            10: './images/backgrounds/night-1.jpg',
+            11: './images/backgrounds/night-2.jpg',
+            12: './images/backgrounds/night-3.jpg'
+        }
+
+    },
+    customBackgrounds: ['https://subtletab.com/extras/1.jpg', 'https://subtletab.com/extras/2.jpg', 'https://subtletab.com/extras/3.jpg', 'https://subtletab.com/extras/4.jpg', 'https://subtletab.com/extras/5.jpg', 'https://subtletab.com/extras/6.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/8.jpg']
+};
+
+/***/ },
+
+/***/ 3:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+var config = {
+    defaultCustomization: {
+        showUtilities: {
+            showWeather: true,
+            showClock: true,
+            showNotes: true
+        },
+        clock: {
+            showTwelveHour: true,
+            showDay: true,
+            type: 'twelve'
+        },
+        weather: {
+            unit: 'c',
+            location: {
+                type: 'geo',
+                name: ''
+            }
+        },
+        background: {
+            themeId: 1,
+            changeInterval: 10,
+            type: 'predefined'
+        }
+    }
+};
+/* harmony default export */ exports["a"] = config;
+
+/***/ },
+
+/***/ 39:
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(5);
+
+
+/***/ },
+
+/***/ 5:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_config__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__ = __webpack_require__(2);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+
+
+
+
+
+var tabsCount = 0;
+var prevTabsCount = 0;
+var bgData = void 0;
+var DEBUG = false;
+
+function getTabsCount() {
+    return prevTabsCount === tabsCount ? false : tabsCount;
+}
+
+function setTabsCount(num) {
+    tabsCount = num;
+}
+
+function filterResponses(response) {
+    if (response && response.photo) {
+        var photoKeys = Object.keys(response.photo);
+        var photos = response.photo;
+        var storedSeenIds = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN) || [];
+        var result = {};
+        for (var i = 0; i < photoKeys.length; i++) {
+            if (storedSeenIds.indexOf(photos[photoKeys[i]]) === -1) {
+                result[photoKeys[i]] = photos[photoKeys[i]];
+            }
+        }
+        return result;
+    }
+}
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.query === 'getBackground') {
+        getBackground(request.theme, request.newPage);
+    } else if (request.query === 'getTabsCount') {
+        sendResponse(getTabsCount());
+    } else if (request.query === 'setTabsCount') {
+        setTabsCount(request.value);
+        sendResponse(true);
+    } else if (request.query === 'loadNextBackground') {
+        loadNextBackground(request.url);
+    } else if (request.query === 'loadCurrentBackground') {
+        loadCurrentBackground(request.url, sendResponse);
+    } else if (request.query === 'log') {
+        _console(request.value);
+    } else if (request.query === 'startWeather') {
+        startWeather();
+    } else if (request.query === 'loadCurrentCustomBackground') {
+        loadCurrentCustomBackground(request.url, sendResponse);
+    } else if (request.query === 'loadNextCustomBackground') {
+        loadNextBackground(request.url);
+    }
+    return true;
+});
+
+var loadCurrentBackground = function loadCurrentBackground(url, callback) {
+    var defaultImageLoaded = false;
+    var img = new Image();
+    img.src = url;
+    img.onload = function () {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    img.onerror = function () {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+
+    var defaultImageTimeout = setTimeout(function () {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 2500);
+};
+var loadCurrentCustomBackground = function loadCurrentCustomBackground(url, callback) {
+    var defaultImageLoaded = false;
+    var img = new Image();
+    img.src = url;
+    img.onload = function () {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    img.onerror = function () {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+    var defaultImageTimeout = setTimeout(function () {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 4000);
+};
+var getBackground = function getBackground(theme, changePage) {
+    return new Promise(function (resolve, reject) {
+        var xmlhttp = new XMLHttpRequest();
+        var currentPage = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE) || {};
+        var themePage = currentPage[theme.value] || 0;
+
+        if (changePage) {
+            themePage++;
+        }
+
+        var url = 'https://api.subtletab.com/theme/';
+        url += theme.tags + '/' + themePage;
+        xmlhttp.open('GET', url);
+        xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                var response = JSON.parse(xmlhttp.responseText);
+                //responses will be other than seen, having good views and sizes
+                bgData = filterResponses(response);
+                //If all pages are empty;
+                if (themePage === response.pages) {
+                    themePage = 0;
+                }
+
+                if (changePage) {
+                    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE['BACKGROUND_SEEN_' + theme.value.toUpperCase()], '');
+                }
+                currentPage[theme.value] = themePage;
+                __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE, currentPage);
+
+                updateThemeStorage(bgData, theme);
+                resolve();
+            }
+        };
+        xmlhttp.onerror = function () {
+            reject(xmlhttp.status);
+        };
+        xmlhttp.send();
+    });
+};
+
+var updateThemeStorage = function updateThemeStorage(bgData, theme) {
+    var themeLocalStorage = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].THEME[theme.value]);
+    if (!themeLocalStorage) {
+        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(theme.value, bgData);
+        return;
+    }
+    var allKeys = Object.keys(themeLocalStorage);
+    var lastURLKey = allKeys[allKeys.length];
+    var lastStoredURL = themeLocalStorage[lastURLKey];
+    // Storing last background url for next round;
+    var obj = {};
+    obj[lastURLKey] = lastStoredURL;
+    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(theme.value, Object.assign({}, obj, bgData));
+};
+
+var previousURL = void 0;
+var loadNextBackground = function loadNextBackground(url) {
+    previousURL = previousURL || url;
+    if (previousURL !== url) {
+        _console('BG: Load Next Background for', url);
+        previousURL = url;
+        var image = new Image();
+        image.src = url;
+    }
+};
+
+var _console = function _console(log) {
+    if (DEBUG) {
+        console.log(log);
+    }
+};
+
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details && details.reason && details.reason === 'install') {
+        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].chromeSync.get(null, function (details) {
+            var key = void 0;
+            for (key in details) {
+                if (!details.hasOwnProperty(key)) {
+                    continue;
+                }
+                __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, details[key]);
+            }
+        });
+
+        chrome.tabs.create({});
+    } else if (details && details.reason && details.reason === 'update') {
+        updateLocalStorage();
+    }
+});
+
+chrome.browserAction.onClicked.addListener(function (tab) {
+    chrome.tabs.create({});
+});
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+
+    var key = void 0;
+    for (key in changes) {
+        if (!changes.hasOwnProperty(key)) {
+            continue;
+        }
+        _console("Storage Changed" + JSON.stringify(changes[key]));
+        if (_typeof(changes[key].newValue) !== undefined) {
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, changes[key].newValue);
+        } else {
+            //To handle cases when no data is present
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].remove(key);
+        }
+    }
+});
+
+function getWeather(data) {
+    var xmlhttp = new XMLHttpRequest();
+
+    var url = 'https://api.subtletab.com/weather/new';
+
+    if (data.type !== 'custom') {
+        url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
+    } else {
+        url += '?location=' + data.location + '&type=custom';
+    }
+
+    xmlhttp.open('GET', url);
+    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            var weather = JSON.parse(xmlhttp.responseText);
+            var now = +new Date();
+            var localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set('weather', localWeather);
+        }
+    };
+    xmlhttp.send();
+}
+
+function loadWeather(settings) {
+    var options = {};
+    if (settings.weather.type !== 'custom') {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            options = {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+                type: 'geo'
+            };
+            getWeather(options);
+        }, function (error) {
+            _console(error);
+        }, { timeout: 10000 });
+    } else {
+        options = {
+            location: settings.weather.location,
+            type: 'custom'
+        };
+        getWeather(options);
+    }
+}
+var weatherInterval = void 0;
+
+function startWeather() {
+
+    var localSettings = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
+    if (localSettings && localSettings.showUtilities.showWeather) {
+        if (!weatherInterval) {
+            weatherInterval = setInterval(function () {
+                if (navigator.onLine) {
+                    localSettings = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
+                    loadWeather(localSettings);
+                } else {
+                    stopWeather();
+                }
+            }, 300000);
+        }
+    } else {
+        stopWeather();
+    }
+}
+
+function stopWeather() {
+    clearInterval(weatherInterval);
+}
+
+function updateLocalStorage() {
+    var sharedData = void 0;
+    // Show onboarding with latest features
+    //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+    sharedData = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
+    // Add feature of custom location in weather
+    if (sharedData && (typeof sharedData === 'undefined' ? 'undefined' : _typeof(sharedData)) === 'object') {
+        if (sharedData.weather && !sharedData.weather.location) {
+            sharedData.weather.location = __WEBPACK_IMPORTED_MODULE_2__utils_config__["a" /* default */].defaultCustomization.weather.location;
+            sharedData.weather.location.name = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4] || '';
+        }
+        if (sharedData.showUtilities && !sharedData.showUtilities.showNotes) {
+            sharedData.showUtilities.showNotes = true;
+        }
+        if (sharedData.background && !sharedData.background.type) {
+            sharedData.background.type = 'predefined';
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__["a" /* default */].customBackgrounds);
+        }
+        if (sharedData.clock && !sharedData.clock.type) {
+            sharedData.clock.type = sharedData.clock.showTwelveHour ? 'twelve' : 'twentyfour';
+        }
+    }
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA, sharedData);
+}
+function init() {
+
+    chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+
+    chrome.storage.sync.get(null, function (data) {
+        for (var key in data) {
+            if (!data.hasOwnProperty(key)) {
+                continue;
+            }
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, data[key]);
+        }
+    });
+
+    chrome.tabs.onCreated.addListener(function () {
+        prevTabsCount = tabsCount;
+        tabsCount++;
+        if (tabsCount === 2) {
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, true);
+        }
+    });
+}
+init();
+
+/***/ }
+
+/******/ });
+//# sourceMappingURL=subtle.js.map
