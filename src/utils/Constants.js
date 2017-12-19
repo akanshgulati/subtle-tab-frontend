@@ -18,9 +18,6 @@ export default {
 
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
-<<<<<<< Updated upstream
-        NOTES_META: 'notes_meta'
-=======
         NOTES_META: 'notes_meta',
         TODOS_META: 'todos_meta',
         TODO_LISTS_META: 'todo_lists_meta',
@@ -33,7 +30,6 @@ export default {
         W_TODOS: 'w-todos',
         W_TODO: 'w-todos-',
         W_TODOS_META: 'w-todos_meta',
->>>>>>> Stashed changes
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',

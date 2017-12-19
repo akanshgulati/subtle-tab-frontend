@@ -11,8 +11,6 @@
                     </div>
                     <div id="position--top-right">
                         <div class="flex flex-center">
-<<<<<<< Updated upstream
-=======
                             <div class="todo-widget relative" v-on:keydown.stop="">
                                 <div class="todo-icon pointer" v-on:click.stop="toggleTodos">
                                     <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8rem">
@@ -48,7 +46,6 @@
                                     <WTodos v-if="sharedData.todos.type === 'w'"/>
                                 </template>
                             </div>
->>>>>>> Stashed changes
                             <div class="notes-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showNotes">
                                 <div class="notes-icon pointer" v-on:click.stop="toggleNotes">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8rem" >
@@ -102,16 +99,12 @@
     export default {
         beforeCreate(){
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
-<<<<<<< Updated upstream
             this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
-=======
-            this.seenOnBoarding = storage.get('seen-onboarding') || false;
             if(this.sharedData && !this.sharedData.todos){
                 this.sharedData.todos = {
                     type: 'default'
                 }
             }
->>>>>>> Stashed changes
         },
         data () {
             return {
@@ -120,12 +113,8 @@
                 showCustomizeMenu: true,
                 showNotes: false,
                 isLoading: true,
-<<<<<<< Updated upstream
-                seenOnBoarding: this.seenOnBoarding
-=======
                 seenOnBoarding: this.seenOnBoarding,
                 showTodos: false
->>>>>>> Stashed changes
             }
         },
         mounted(){
@@ -152,13 +141,9 @@
         },
         methods: {
             toggleCustomizeMenu() {
-<<<<<<< Updated upstream
                 this.showCustomizeMenu = !this.showCustomizeMenu
-=======
-                this.showCustomizeMenu = !this.showCustomizeMenu;
                 this.showTodos = false;
                 this.showNotes = false;
->>>>>>> Stashed changes
             },
             toggleNotes() {
                 this.showNotes = !this.showNotes
@@ -184,15 +169,12 @@
                     bgCustom = bgData.customBackgrounds
                     storage.set(Constants.STORAGE.BACKGROUND_CUSTOM, bgCustom)
                 }
-<<<<<<< Updated upstream
-=======
             },
             toTitleCase(text) {
                 if(!text){
                     return
                 }
                 return text.charAt(0).toUpperCase() + text.slice(1)
->>>>>>> Stashed changes
             }
         },
         components: {

@@ -49,8 +49,6 @@
                                 <span>Weather</span>
                             </label>
                         </li>
-<<<<<<< Updated upstream
-=======
                         <li>
                             <input type="radio" v-model="activeTab" value="todo" id="tab5">
                             <label for="tab5" class="flex-center"  :class="{'active': activeTab === 'todo'}">
@@ -58,7 +56,6 @@
                                 <span>Todos</span>
                             </label>
                         </li>
->>>>>>> Stashed changes
                     </ul>
                 </div>
                 <div class="container">
@@ -222,8 +219,6 @@
                             </ul>
                         </div>
                     </section>
-<<<<<<< Updated upstream
-=======
                     <section v-if="activeTab === 'todo'">
                         <div>
                             <h4>Settings</h4>
@@ -252,7 +247,6 @@
                             <span v-html="saveMessage"></span>
                         </div>
                     </section>
->>>>>>> Stashed changes
                 </div>
             </div>
         <footer class="customize-footer">
@@ -287,13 +281,8 @@
                 selectedTheme: this.settings.background.themeId,
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
-<<<<<<< Updated upstream
                 activeTab: 'general',
                 customLocation: '',
-=======
-                activeTab: 'todo',
-                customLocation: this.settings.weather.location.name,
->>>>>>> Stashed changes
                 currentBgCustom: '',
                 isCustomBgSaveMsg: '',
                 todosType: this.settings.todos.type,
@@ -303,16 +292,12 @@
             };
         },
         mounted(){
-<<<<<<< Updated upstream
             // this is done for weather
             this.customLocation = this.settings.weather.location.name ||
                 (storage.get(constants.STORAGE.WEATHER) && storage.get(constants.STORAGE.WEATHER)[4])
             // this is done for backgrounds
             let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
 
-=======
-            let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM) ||  bgData.customBackgrounds;
->>>>>>> Stashed changes
             if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]'
                 && bgCustom.length) {
                 this.currentBgCustom = bgCustom.join('\n');
@@ -366,8 +351,6 @@
                 setTimeout(()=>{
                     this.isCustomBgSaveMsg = ''
                 }, 2000);
-<<<<<<< Updated upstream
-=======
             },
             todoTypeChange() {
                 if (this.todosType === 'w') {
@@ -406,7 +389,6 @@
                     this.settings.todos.type = 'default'
                     this.saveMessage = `<span class='error'>Invalid auth code</span>`
                 }
->>>>>>> Stashed changes
             }
         },
         props:['settings']
