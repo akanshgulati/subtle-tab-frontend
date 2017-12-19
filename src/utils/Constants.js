@@ -26,7 +26,10 @@ export default {
         CURRENT_TODO_LIST: 'current_todo_list',
         W_CURRENT_TODO_LIST: 'w-current_todo_list',
         W_ROOT_REVISION: 'w-root-revision',
-        W_LISTS: 'w-lists'
+        W_LISTS: 'w-lists',
+        W_TODOS: 'w-todos',
+        W_TODO: 'w-todos-',
+        W_TODOS_META: 'w-todos_meta',
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',

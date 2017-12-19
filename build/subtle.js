@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 42);
+/******/ 	return __webpack_require__(__webpack_require__.s = 45);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -76,7 +76,7 @@
 var storage = {
     get: function get(key) {
         var value = localStorage.getItem(key);
-        return isNaN(value) ? JSON.parse(value) : value;
+        return JSON.parse(value);
     },
     set: function set(key, value) {
         if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
@@ -162,10 +162,14 @@ var storage = {
     STORAGE: {
         SHARED_DATA: 'shared-data',
         WEATHER: 'weather',
+
         BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
         BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
         BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
         BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
+        BACKGROUND_CUSTOM: 'bg-custom',
+        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta',
@@ -173,27 +177,133 @@ var storage = {
         TODO_LISTS_META: 'todo_lists_meta',
         TODO_LIST: 'todo_list_',
         TODO: 'todo_',
-        CURRENT_TODO_LIST: 'current_todo_list'
+        CURRENT_TODO_LIST: 'current_todo_list',
+        W_CURRENT_TODO_LIST: 'w-current_todo_list',
+        W_ROOT_REVISION: 'w-root-revision',
+        W_LISTS: 'w-lists',
+        W_TODOS: 'w-todos',
+        W_TODO: 'w-todos-',
+        W_TODOS_META: 'w-todos_meta'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
 };
 
 /***/ },
 
-/***/ 42:
+/***/ 2:
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(5);
+"use strict";
+/* harmony default export */ exports["a"] = {
+    themes: [{
+        id: 1,
+        lValue: 'Nature',
+        tags: 'nature',
+        value: 'nature',
+        imgUrl: 'images/nature_thumbnail.png'
+    }, {
+        id: 2,
+        lValue: 'Architecture',
+        tags: 'building',
+        value: 'building',
+        imgUrl: 'images/architecture_thumbnail.png'
+    }, {
+        id: 3,
+        lValue: 'Travel',
+        tags: 'travel',
+        value: 'travel',
+        imgUrl: 'images/travel_thumbnail.png'
+    }, {
+        id: 4,
+        lValue: 'Night Life',
+        tags: 'night',
+        value: 'night',
+        imgUrl: 'images/night_thumbnail.png'
+    }],
+    stored: {
+        1: {
+            1: './images/backgrounds/nature-1.jpg',
+            2: './images/backgrounds/nature-2.jpg',
+            3: './images/backgrounds/nature-3.jpg'
+        },
+        2: {
+            4: './images/backgrounds/building-1.jpg',
+            5: './images/backgrounds/building-2.jpg',
+            6: './images/backgrounds/building-3.jpg'
+        },
+        3: {
+            7: './images/backgrounds/travel-1.jpg',
+            8: './images/backgrounds/travel-2.jpg',
+            9: './images/backgrounds/travel-3.jpg'
+        },
+        4: {
+            10: './images/backgrounds/night-1.jpg',
+            11: './images/backgrounds/night-2.jpg',
+            12: './images/backgrounds/night-3.jpg'
+        }
+
+    },
+    customBackgrounds: ['https://subtletab.com/extras/1.jpg', 'https://subtletab.com/extras/2.jpg', 'https://subtletab.com/extras/3.jpg', 'https://subtletab.com/extras/4.jpg', 'https://subtletab.com/extras/5.jpg', 'https://subtletab.com/extras/6.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/8.jpg']
+};
+
+/***/ },
+
+/***/ 3:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+var config = {
+    defaultCustomization: {
+        showUtilities: {
+            showWeather: true,
+            showClock: true,
+            showNotes: true
+        },
+        clock: {
+            showTwelveHour: true,
+            showDay: true
+        },
+        weather: {
+            unit: 'c',
+            location: {
+                type: 'geo',
+                name: ''
+            }
+        },
+        background: {
+            themeId: 1,
+            changeInterval: 10,
+            type: 'predefined'
+        },
+        todos: {
+            type: 'default'
+        }
+    }
+};
+/* harmony default export */ exports["a"] = config;
+
+/***/ },
+
+/***/ 45:
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(6);
 
 
 /***/ },
 
-/***/ 5:
+/***/ 6:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_config__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__ = __webpack_require__(2);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+
+
 
 
 
@@ -240,6 +350,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         _console(request.value);
     } else if (request.query === 'startWeather') {
         startWeather();
+    } else if (request.query === 'loadCurrentCustomBackground') {
+        loadCurrentCustomBackground(request.url, sendResponse);
+    } else if (request.query === 'loadNextCustomBackground') {
+        loadNextBackground(request.url);
     }
     return true;
 });
@@ -254,12 +368,37 @@ var loadCurrentBackground = function loadCurrentBackground(url, callback) {
             callback(url);
         }
     };
+    img.onerror = function () {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+
     var defaultImageTimeout = setTimeout(function () {
         defaultImageLoaded = true;
         callback(false);
     }, 2500);
 };
-
+var loadCurrentCustomBackground = function loadCurrentCustomBackground(url, callback) {
+    var defaultImageLoaded = false;
+    var img = new Image();
+    img.src = url;
+    img.onload = function () {
+        if (!defaultImageLoaded) {
+            clearTimeout(defaultImageTimeout);
+            callback(url);
+        }
+    };
+    img.onerror = function () {
+        clearTimeout(defaultImageTimeout);
+        defaultImageLoaded = true;
+        callback(false);
+    };
+    var defaultImageTimeout = setTimeout(function () {
+        defaultImageLoaded = true;
+        callback(false);
+    }, 4000);
+};
 var getBackground = function getBackground(theme, changePage) {
     return new Promise(function (resolve, reject) {
         var xmlhttp = new XMLHttpRequest();
@@ -270,7 +409,7 @@ var getBackground = function getBackground(theme, changePage) {
             themePage++;
         }
 
-        var url = 'http://api.subtletab.com/theme/';
+        var url = 'https://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
         xmlhttp.open('GET', url);
         xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -335,6 +474,8 @@ var _console = function _console(log) {
 
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details && details.reason && details.reason === 'install') {
+        var sharedData = void 0;
+
         __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].chromeSync.get(null, function (details) {
             var key = void 0;
             for (key in details) {
@@ -347,7 +488,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
         chrome.tabs.create({});
     } else if (details && details.reason && details.reason === 'update') {
-        __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING, false);
+        updateLocalStorage();
     }
 });
 
@@ -363,7 +504,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
             continue;
         }
         _console("Storage Changed" + JSON.stringify(changes[key]));
-        if (changes[key].newValue) {
+        if (_typeof(changes[key].newValue) !== undefined) {
             __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, changes[key].newValue);
         } else {
             //To handle cases when no data is present
@@ -372,11 +513,16 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
     }
 });
 
-function getWeather(lat, long) {
+function getWeather(data) {
     var xmlhttp = new XMLHttpRequest();
 
-    var url = 'http://api.subtletab.com/weather/';
-    url += '?lat=' + lat + '&long=' + long;
+    var url = 'https://api.subtletab.com/weather/new';
+
+    if (data.type !== 'custom') {
+        url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
+    } else {
+        url += '?location=' + data.location + '&type=custom';
+    }
 
     xmlhttp.open('GET', url);
     xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -391,14 +537,29 @@ function getWeather(lat, long) {
     xmlhttp.send();
 }
 
-function loadWeather() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        getWeather(position.coords.latitude, position.coords.longitude);
-    }, function (error) {
-        _console(error);
-    }, { timeout: 10000 });
+function loadWeather(settings) {
+    var options = {};
+    if (settings.weather.type !== 'custom') {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            options = {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+                type: 'geo'
+            };
+            getWeather(options);
+        }, function (error) {
+            _console(error);
+        }, { timeout: 10000 });
+    } else {
+        options = {
+            location: settings.weather.location,
+            type: 'custom'
+        };
+        getWeather(options);
+    }
 }
 var weatherInterval = void 0;
+
 function startWeather() {
 
     var localSettings = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
@@ -406,7 +567,8 @@ function startWeather() {
         if (!weatherInterval) {
             weatherInterval = setInterval(function () {
                 if (navigator.onLine) {
-                    loadWeather();
+                    localSettings = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
+                    loadWeather(localSettings);
                 } else {
                     stopWeather();
                 }
@@ -419,6 +581,29 @@ function startWeather() {
 
 function stopWeather() {
     clearInterval(weatherInterval);
+}
+
+function updateLocalStorage() {
+    var sharedData = void 0;
+    // Show onboarding with latest features
+    //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
+    sharedData = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA);
+    // Add feature of custom location in weather
+    if (sharedData && (typeof sharedData === 'undefined' ? 'undefined' : _typeof(sharedData)) === 'object') {
+        if (sharedData.weather && !sharedData.weather.location) {
+            sharedData.weather.location = __WEBPACK_IMPORTED_MODULE_2__utils_config__["a" /* default */].defaultCustomization.weather.location;
+            sharedData.weather.location.name = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4] || '';
+        }
+        if (sharedData.showUtilities && !sharedData.showUtilities.showNotes) {
+            sharedData.showUtilities.showNotes = true;
+        }
+        if (sharedData.background && !sharedData.background.type) {
+            sharedData.background.type = 'predefined';
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__["a" /* default */].customBackgrounds);
+        }
+    }
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA, sharedData);
 }
 function init() {
 

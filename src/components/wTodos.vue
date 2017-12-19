@@ -11,7 +11,7 @@
                     </g>
                 </g>
             </svg>
-            <h4 class="widget-heading mar-0">To-do (T) : {{currentList.title | uppercase}}</h4>
+            <h4 class="widget-heading mar-0">To-do (T) : {{ $parent.toTitleCase(currentList.title)}}</h4>
             <!--<div class="button-section flex flex-center">
                 <svg v-show="currentListId != 'inbox' && currentListId != 'today'" v-on:click.stop="deleteList" class="pointer" width="1.3rem" height="1.3rem" viewBox="0 0 30 36" version="1.1"
                      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -35,8 +35,8 @@
                     <transition-group name="flip-list" tag="ul" class="todo-lists pad-0 flex flex-flow-column flex-center">
                         <li v-for="list in todoLists" v-bind:key="list.id" class="flex flex-flow-column pointer todo-list"
                             :class="[currentListId == list.id? 'active':'']"
-                            v-on:click="setActiveList(list.id); showSidebar = false;">
-                            <a class="todo-list-title" :title="list.title">{{list.title | uppercase}}</a>
+                            v-on:click="setActiveList(list); showSidebar = false;">
+                            <a class="todo-list-title" :title="list.title">{{ $parent.toTitleCase(list.title)}}</a>
                         </li>
                     </transition-group>
                     <!--<div class="flex todo-list relative pointer">
@@ -108,40 +108,44 @@
     import constants from '../utils/Constants'
     import timeUtil from '../utils/timeUtil'
 
+    let syncWunderlist;
     export default {
-        beforeCreate() {
-            //this.todosMeta = storage.get(constants.STORAGE.TODOS_META) || {count: 1, deletedTodos: [], createdTodos: []};
+        beforeMount(){
+          this.authCode = storage.get('w-auth-code');
         },
         data() {
             return {
-                input: '',
                 todos: [],
                 todoLists: [],
-                allTodos: [],
                 currentTodo: '',
-                currentTodoContent: '',
-                todosMeta: this.todosMeta,
-                errorMessage: null,
                 showSidebar: false,
-                showSettingsDropDown: false,
                 showTodoManager: false,
-                listTitle: '',
                 newTodo: {},
                 currentListId: '',
                 currentList: '',
                 isLoadingTodos: true,
-                wunderlistUrl: 'https://a.wunderlist.com/api/v1/tasks'
+                wunderlistUrl: 'https://a.wunderlist.com/api/v1/tasks',
+                syncTime: ''
             }
         },
+
         mounted() {
+            if(!this.authCode){
+                return;
+            }
             this.$parent.isolateScroll('todos-list');
             this.$parent.isolateScroll('todo-sidebar');
-            this.getTodosFromServer()
-            this.sync()
+            //this.getTodosFromServer()
+            this.currentList = storage.get(constants.STORAGE.W_CURRENT_TODO_LIST) || {}
+            this.init()
+            syncWunderlist = setInterval(this.sync, 5000)
         },
         computed: {
             sortedTodos(){
                 return this.sortTodos();
+            },
+            currentListId(){
+                return this.currentList.id
             }
         },
         methods: {
@@ -151,7 +155,7 @@
                     method = method || 'GET'
                     xmlhttp.open(method, url)
                     xmlhttp.setRequestHeader('X-Client-ID', 'd63bcf15740b10b6790a');
-                    xmlhttp.setRequestHeader('X-Access-Token', '4a3d58379ba5d71e80f87029becfda03d1d6acafccb06e2b1e143ed7dff8');
+                    xmlhttp.setRequestHeader('X-Access-Token', this.authCode);
                     xmlhttp.setRequestHeader("Content-type","application/json");
                     xmlhttp.onreadystatechange = function () {
                         if (xmlhttp.readyState === 4) {
@@ -168,65 +172,144 @@
             toggle(field) {
                 this[field] = !this[field];
             },
-            getCurrentList() {
-                this.getTodoLists();
-                this.currentList = this.todoLists.filter(list => list.id === this.currentListId)[0];
-            },
-            getTodosFromServer() {
-                this.isLoadingTodos = true
-                this.getRoot()
-                    .then(response => {
-                        let rootRevisions = storage.get('w-root-revisions') || -1
-                        if (true || response.revision > rootRevisions) {
-                            this.getTodoLists().then(_lists => {
-                                this.currentListId = _lists[0].id
-                            })
-                        } else {
-                            this.currentListId = storage.get(constants.STORAGE.W_CURRENT_TODO_LIST)
+            init(){
+                // If local list is present
+                if (this.currentList && this.currentList.id) {
+
+                    // check for revisions
+                    this.getTodoLists(this.currentList.id).then((_list) => {
+                        if (!_list) {
+                            this.resetTodos()
+                            return
                         }
+                        if (_list.revision > this.currentList.revision) {
+                            this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+                            return
+                        }
+                        let localTodos = this.getLocalTodos()
+                        if (!localTodos) {
+                            this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+                            return
+                        }
+                       this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+
+                    }, () => {
+                        this.resetTodos()
                     })
+                    return
+                }
+                /*this.getDefaultCurrentList().then(() => {
+                    this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+                })*/
+                this.resetTodos()
             },
-            getRoot() {
-                let url = 'https://a.wunderlist.com/api/v1/root'
-                return this.http(url).then((response) => {
-                    storage.set('w-root-revisions', response.revision)
-                    return response
+            sync() {
+                if (!this.currentList || !this.currentList.id) {
+                    return
+                }
+                // check for revisions
+                this.getTodoLists(this.currentList.id).then((_list) => {
+                    if(!_list){
+                        this.resetTodos()
+                        return
+                    }
+                    let currentRevision = this.currentList.revision
+                    if (_list.revision > currentRevision) {
+                        this.currentList = _list
+                        this.getTodos(this.currentList.id, true).then(todos => this.todos = todos)
+                    }
+                }, () => {
+                    this.resetTodos()
                 })
             },
-            getTodoLists() {
+            getLocalTodos(){
+                let localMetaArr = storage.get(constants.STORAGE.W_TODOS_META)
+                if(!localMetaArr){
+                    return
+                }
+                return localMetaArr.map(localTodoId => {
+                    return storage.get(constants.STORAGE.W_TODO + localTodoId)
+                })
+            },
+            setLocalTodos(todos){
+                this.unsetLocalTodos()
+                let todosArr = [];
+                todos.forEach(todo => {
+                    todosArr.push(todo.id)
+                    storage.set(constants.STORAGE.W_TODO + todo.id, todo)
+                })
+                storage.set(constants.STORAGE.W_TODOS_META, todosArr)
+            },
+            unsetLocalTodos() {
+                let localMetaArr = storage.get(constants.STORAGE.W_TODOS_META)
+                if(!localMetaArr){
+                    return
+                }
+                localMetaArr.map(localTodoId => {
+                    return storage.remove(constants.STORAGE.W_TODO + localTodoId)
+                })
+            },
+            resetTodos() {
+                this.getTodoLists().then((_lists) => {
+                    this.currentList = _lists[0]
+                    this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+                })
+            },
+            getTodoLists(id) {
                 let url = 'https://a.wunderlist.com/api/v1/lists'
                 return this.http(url).then((data) => {
-                    this.todoLists = data.map((list) => {
-                        return {
-                            id: list.id,
-                            title: list.title,
-                            revision: list.revision
+                        // Update lists
+                        this.todoLists = data.map(list => {
+                            return {
+                                id: list.id,
+                                title: list.title,
+                                revision: list.revision
+                            }
+                        })
+
+                        if (id) {
+                            let list = (data.filter(list => list.id === id))[0]
+                            if (!list) {
+                                return false
+                            }
+                            return {
+                                id: list.id,
+                                title: list.title,
+                                revision: list.revision
+                            }
                         }
+                        return this.todoLists
                     })
-                    console.log(data)
-                    storage.set('w-lists', this.todoLists)
-                    return data
+            },
+            getTodoList(id) {
+                let url = 'https://a.wunderlist.com/api/v1/lists/' + id
+                return this.http(url).then((list) => {
+                    return {
+                        id: list.id,
+                        title: list.title,
+                        revision: list.revision
+                    }
                 })
             },
-            getTodos(listId){
+            getTodos(listId, notShowLoading){
                 if (!listId) {
                     return
                 }
                 let url = 'https://a.wunderlist.com/api/v1/tasks?list_id=' + listId
                 let url_completed = 'https://a.wunderlist.com/api/v1/tasks?completed=true&list_id=' + listId
-                this.todos = [];
-                this.http(url_completed).then(data => {
-                    let completedTodos = data.map(todo => this.filterTodoResponse(todo))
-                    this.todos = this.todos.concat(completedTodos)
-                    console.log('c', this.todos, completedTodos)
-                    storage.set('w-todos', this.todos)
-                })
-                return this.http(url).then(data => {
-                    let todos = data.map(todo => this.filterTodoResponse(todo))
-                    this.todos = this.todos.concat(todos);
-                    console.log('uc', this.todos, todos)
-                    storage.set('w-todos', this.todos)
-                    return data
+
+                let todos;
+                let p1 = this.http(url_completed);
+                let p2 = this.http(url);
+                if(!notShowLoading) {
+                    this.isLoadingTodos = true
+                }
+                return Promise.all([p1, p2]).then((data)=>{
+                    todos = data[0].concat(data[1])
+                    todos = todos.map(todo => this.filterTodoResponse(todo))
+                    this.setLocalTodos(todos)
+                    this.isLoadingTodos = false
+                    return todos
                 })
             },
             filterTodoResponse(todo) {
@@ -245,15 +328,16 @@
                 if (!this.newTodo.title) {
                     return
                 }
+
+                let newTodo = this.newTodo
+                this.newTodo = {}
                 let todo = {
-                    title: this.newTodo.title,
+                    title: newTodo.title,
                     list_id: this.currentListId,
-                    due_date: this.newTodo.dueOn
+                    due_date: newTodo.dueOn
                 }
-                delete this.newTodo.title
                 this.http(this.wunderlistUrl, 'POST', todo).then((_todo) => {
-                    debugger
-                    this.todos.unshift(_todo)
+                    this.todos.unshift(this.filterTodoResponse(_todo))
                 })
             },
             checkedTodo(todo) {
@@ -273,10 +357,10 @@
                     return b.updatedOn - a.updatedOn;
                 });
             },
-            setActiveList(id) {
-                console.log('setActiveList', id);
-                storage.set(constants.STORAGE.W_CURRENT_TODO_LIST, id);
-                this.currentListId = id;
+            setActiveList(list) {
+                this.isLoadingTodos = true
+                this.currentList = list
+                this.init()
             },
             deleteTodo(todo) {
                 if (!confirm('Are you sure you want to delete this todo?')) {
@@ -309,24 +393,28 @@
                     this.$set(this.todos, this.currentTodoIndex, this.filterTodoResponse(_todo))
                     this.showTodoManager = false;
                 })
-            },
-            sync(){
-
             }
         },
         watch: {
-            currentListId: {
+            todos: {
                 handler: function (newValue, oldValue) {
-                    if (newValue && newValue !== oldValue) {
-                        console.log("CurrentListId Watcher", this.currentListId)
-                        this.isLoadingTodos = true
-                        this.getCurrentList();
-                        this.getTodos(newValue).then(() => {
-                            this.isLoadingTodos = false
-                        })
+                    if (newValue && newValue.length) {
+                        this.setLocalTodos(newValue)
                     }
+                },
+                deep: true
+            },
+            currentList: {
+                handler: function (newValue) {
+                    if (!newValue || !newValue.id) {
+                        return
+                    }
+                    storage.set(constants.STORAGE.W_CURRENT_TODO_LIST, this.currentList)
                 }
             }
+        },
+        beforeDestroy(){
+            clearInterval(syncWunderlist);
         }
     };
 </script>

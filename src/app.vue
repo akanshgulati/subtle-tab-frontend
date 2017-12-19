@@ -42,8 +42,10 @@
                                         </g>
                                     </svg>-->
                                 </div>
-                                <!--<todos :class="{'fade_in': showTodos}" v-if="showTodos"></todos>-->
-                                <WTodos :class="{'fade_in': showTodos}" v-if="showTodos"/>
+                                <template :class="{'fade_in': showTodos}" v-if="showTodos">
+                                    <todos v-if="sharedData.todos.type === 'default'"></todos>
+                                    <WTodos v-if="sharedData.todos.type === 'w'"/>
+                                </template>
                             </div>
                             <div class="notes-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showNotes">
                                 <div class="notes-icon pointer" v-on:click.stop="toggleNotes">
@@ -101,17 +103,22 @@
     export default {
         beforeCreate() {
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
-            this.seenOnBoarding = storage.get('seen-onboarding') || false;
+            this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
+            if(this.sharedData && !this.sharedData.todos){
+                this.sharedData.todos = {
+                    type: 'default'
+                }
+            }
         },
         data() {
             return {
                 sharedData: this.sharedData,
                 componentsData: JSON.parse(JSON.stringify(this.sharedData)),
-                showCustomizeMenu: false,
+                showCustomizeMenu: true,
                 showNotes: false,
                 isLoading: true,
                 seenOnBoarding: this.seenOnBoarding,
-                showTodos: true
+                showTodos: false
             }
         },
         mounted() {
@@ -137,7 +144,9 @@
         },
         methods: {
             toggleCustomizeMenu() {
-                this.showCustomizeMenu = !this.showCustomizeMenu;
+                this.showCustomizeMenu = !this.showCustomizeMenu
+                this.showTodos = false;
+                this.showNotes = false;
             },
             toggleNotes() {
                 this.showTodos = false;
@@ -181,6 +190,12 @@
                     e.returnValue = false;
                 }
             },
+            toTitleCase(text) {
+                if(!text){
+                    return
+                }
+                return text.charAt(0).toUpperCase() + text.slice(1)
+            }
         },
         components: {
             Background,

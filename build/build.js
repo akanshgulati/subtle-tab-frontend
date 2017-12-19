@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 41);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -75,7 +75,7 @@
 var storage = {
     get: function get(key) {
         var value = localStorage.getItem(key);
-        return isNaN(value) ? JSON.parse(value) : value;
+        return JSON.parse(value);
     },
     set: function set(key, value) {
         if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
@@ -160,10 +160,14 @@ var storage = {
     STORAGE: {
         SHARED_DATA: 'shared-data',
         WEATHER: 'weather',
+
         BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
         BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
         BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
         BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
+        BACKGROUND_CUSTOM: 'bg-custom',
+        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta',
@@ -171,9 +175,15 @@ var storage = {
         TODO_LISTS_META: 'todo_lists_meta',
         TODO_LIST: 'todo_list_',
         TODO: 'todo_',
-        CURRENT_TODO_LIST: 'current_todo_list'
+        CURRENT_TODO_LIST: 'current_todo_list',
+        W_CURRENT_TODO_LIST: 'w-current_todo_list',
+        W_ROOT_REVISION: 'w-root-revision',
+        W_LISTS: 'w-lists',
+        W_TODOS: 'w-todos',
+        W_TODO: 'w-todos-',
+        W_TODOS_META: 'w-todos_meta'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
 };
 
 /***/ },
@@ -229,7 +239,8 @@ var storage = {
             12: './images/backgrounds/night-3.jpg'
         }
 
-    }
+    },
+    customBackgrounds: ['https://subtletab.com/extras/1.jpg', 'https://subtletab.com/extras/2.jpg', 'https://subtletab.com/extras/3.jpg', 'https://subtletab.com/extras/4.jpg', 'https://subtletab.com/extras/5.jpg', 'https://subtletab.com/extras/6.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/8.jpg']
 };
 
 /***/ },
@@ -241,18 +252,27 @@ var config = {
     defaultCustomization: {
         showUtilities: {
             showWeather: true,
-            showClock: true
+            showClock: true,
+            showNotes: true
         },
         clock: {
             showTwelveHour: true,
             showDay: true
         },
         weather: {
-            unit: 'c'
+            unit: 'c',
+            location: {
+                type: 'geo',
+                name: ''
+            }
         },
         background: {
             themeId: 1,
-            changeInterval: 10
+            changeInterval: 10,
+            type: 'predefined'
+        },
+        todos: {
+            type: 'default'
         }
     }
 };
@@ -263,9 +283,34 @@ var config = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(39);
+/* harmony default export */ exports["a"] = {
+    isTodayDate: function isTodayDate(timeStamp) {
+        if (!timeStamp) {
+            return false;
+        }
+        timeStamp = +new Date(timeStamp);
+        // This will be according to user time zone
+        var now = new Date();
+        var minTime = +now.setHours(0, 0, 0, 0);
+        var maxTime = +now.setHours(23, 59, 59, 59);
+        return minTime <= timeStamp && timeStamp <= maxTime;
+    },
+    getEndOfDay: function getEndOfDay(days) {
+        var now = new Date().setHours(23, 59, 59, 59);
+        days = days ? days : 0;
+        now = new Date(+now + 86400000 * days);
+        return now.toISOString().substring(0, 10);
+    }
+};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_vue__);
 
 
@@ -278,28 +323,30 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 });
 
 /***/ },
-/* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_clock_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_background_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_customize_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_weather_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notes_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_todos_vue__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_todos_vue__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_todos_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_todos_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_onboarding_vue__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_onboarding_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_WTodos_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_WTodos_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_WTodos_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_onboarding_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__components_onboarding_vue__);
 //
 //
 //
@@ -386,6 +433,10 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -401,17 +452,22 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
         this.sharedData = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA) || __WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* default */].defaultCustomization;
-        this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('seen-onboarding') || false;
+        this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING) || false;
+        if (this.sharedData && !this.sharedData.todos) {
+            this.sharedData.todos = {
+                type: 'default'
+            };
+        }
     },
     data: function data() {
         return {
             sharedData: this.sharedData,
             componentsData: JSON.parse(JSON.stringify(this.sharedData)),
-            showCustomizeMenu: false,
+            showCustomizeMenu: true,
             showNotes: false,
             isLoading: true,
             seenOnBoarding: this.seenOnBoarding,
-            showTodos: true
+            showTodos: false
         };
     },
     mounted: function mounted() {
@@ -439,6 +495,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     methods: {
         toggleCustomizeMenu: function toggleCustomizeMenu() {
             this.showCustomizeMenu = !this.showCustomizeMenu;
+            this.showTodos = false;
+            this.showNotes = false;
         },
         toggleNotes: function toggleNotes() {
             this.showTodos = false;
@@ -481,6 +539,12 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 if (e.preventDefault) e.preventDefault();
                 e.returnValue = false;
             };
+        },
+        toTitleCase: function toTitleCase(text) {
+            if (!text) {
+                return;
+            }
+            return text.charAt(0).toUpperCase() + text.slice(1);
         }
     },
     components: {
@@ -488,18 +552,480 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         Clock: __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default.a,
         Customize: __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default.a,
         Weather: __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default.a,
-        Onboarding: __WEBPACK_IMPORTED_MODULE_9__components_onboarding_vue___default.a,
+        Onboarding: __WEBPACK_IMPORTED_MODULE_10__components_onboarding_vue___default.a,
         Notes: __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default.a,
-        Todos: __WEBPACK_IMPORTED_MODULE_8__components_todos_vue___default.a
+        Todos: __WEBPACK_IMPORTED_MODULE_8__components_todos_vue___default.a,
+        WTodos: __WEBPACK_IMPORTED_MODULE_9__components_WTodos_vue___default.a
     }
 };
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_timeUtil__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+var syncWunderlist = void 0;
+/* harmony default export */ exports["default"] = {
+    beforeMount: function beforeMount() {
+        this.authCode = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get('w-auth-code');
+    },
+    data: function data() {
+        return {
+            todos: [],
+            todoLists: [],
+            currentTodo: '',
+            showSidebar: false,
+            showTodoManager: false,
+            newTodo: {},
+            currentListId: '',
+            currentList: '',
+            isLoadingTodos: true,
+            wunderlistUrl: 'https://a.wunderlist.com/api/v1/tasks',
+            syncTime: ''
+        };
+    },
+    mounted: function mounted() {
+        if (!this.authCode) {
+            return;
+        }
+        this.$parent.isolateScroll('todos-list');
+        this.$parent.isolateScroll('todo-sidebar');
+        //this.getTodosFromServer()
+        this.currentList = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_CURRENT_TODO_LIST) || {};
+        this.init();
+        syncWunderlist = setInterval(this.sync, 5000);
+    },
+
+    computed: {
+        sortedTodos: function sortedTodos() {
+            return this.sortTodos();
+        },
+        currentListId: function currentListId() {
+            return this.currentList.id;
+        }
+    },
+    methods: {
+        http: function http(url, method, data) {
+            var _this = this;
+
+            return new Promise(function (resolve, reject) {
+                var xmlhttp = new XMLHttpRequest();
+                method = method || 'GET';
+                xmlhttp.open(method, url);
+                xmlhttp.setRequestHeader('X-Client-ID', 'd63bcf15740b10b6790a');
+                xmlhttp.setRequestHeader('X-Access-Token', _this.authCode);
+                xmlhttp.setRequestHeader("Content-type", "application/json");
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState === 4) {
+                        resolve(JSON.parse(xmlhttp.responseText));
+                    }
+                };
+                xmlhttp.onerror = function () {
+                    reject(xmlhttp.status);
+                    console.error(xmlhttp.status);
+                };
+                xmlhttp.send(JSON.stringify(data));
+            });
+        },
+        toggle: function toggle(field) {
+            this[field] = !this[field];
+        },
+        init: function init() {
+            var _this2 = this;
+
+            // If local list is present
+            if (this.currentList && this.currentList.id) {
+
+                // check for revisions
+                this.getTodoLists(this.currentList.id).then(function (_list) {
+                    if (!_list) {
+                        _this2.resetTodos();
+                        return;
+                    }
+                    if (_list.revision > _this2.currentList.revision) {
+                        _this2.getTodos(_this2.currentList.id).then(function (todos) {
+                            return _this2.todos = todos;
+                        });
+                        return;
+                    }
+                    var localTodos = _this2.getLocalTodos();
+                    if (!localTodos) {
+                        _this2.getTodos(_this2.currentList.id).then(function (todos) {
+                            return _this2.todos = todos;
+                        });
+                        return;
+                    }
+                    _this2.getTodos(_this2.currentList.id).then(function (todos) {
+                        return _this2.todos = todos;
+                    });
+                }, function () {
+                    _this2.resetTodos();
+                });
+                return;
+            }
+            /*this.getDefaultCurrentList().then(() => {
+                this.getTodos(this.currentList.id).then(todos => this.todos = todos)
+            })*/
+            this.resetTodos();
+        },
+        sync: function sync() {
+            var _this3 = this;
+
+            if (!this.currentList || !this.currentList.id) {
+                return;
+            }
+            // check for revisions
+            this.getTodoLists(this.currentList.id).then(function (_list) {
+                if (!_list) {
+                    _this3.resetTodos();
+                    return;
+                }
+                var currentRevision = _this3.currentList.revision;
+                if (_list.revision > currentRevision) {
+                    _this3.currentList = _list;
+                    _this3.getTodos(_this3.currentList.id, true).then(function (todos) {
+                        return _this3.todos = todos;
+                    });
+                }
+            }, function () {
+                _this3.resetTodos();
+            });
+        },
+        getLocalTodos: function getLocalTodos() {
+            var localMetaArr = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODOS_META);
+            if (!localMetaArr) {
+                return;
+            }
+            return localMetaArr.map(function (localTodoId) {
+                return __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODO + localTodoId);
+            });
+        },
+        setLocalTodos: function setLocalTodos(todos) {
+            this.unsetLocalTodos();
+            var todosArr = [];
+            todos.forEach(function (todo) {
+                todosArr.push(todo.id);
+                __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODO + todo.id, todo);
+            });
+            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODOS_META, todosArr);
+        },
+        unsetLocalTodos: function unsetLocalTodos() {
+            var localMetaArr = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODOS_META);
+            if (!localMetaArr) {
+                return;
+            }
+            localMetaArr.map(function (localTodoId) {
+                return __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].remove(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_TODO + localTodoId);
+            });
+        },
+        resetTodos: function resetTodos() {
+            var _this4 = this;
+
+            this.getTodoLists().then(function (_lists) {
+                _this4.currentList = _lists[0];
+                _this4.getTodos(_this4.currentList.id).then(function (todos) {
+                    return _this4.todos = todos;
+                });
+            });
+        },
+        getTodoLists: function getTodoLists(id) {
+            var _this5 = this;
+
+            var url = 'https://a.wunderlist.com/api/v1/lists';
+            return this.http(url).then(function (data) {
+                // Update lists
+                _this5.todoLists = data.map(function (list) {
+                    return {
+                        id: list.id,
+                        title: list.title,
+                        revision: list.revision
+                    };
+                });
+
+                if (id) {
+                    var list = data.filter(function (list) {
+                        return list.id === id;
+                    })[0];
+                    if (!list) {
+                        return false;
+                    }
+                    return {
+                        id: list.id,
+                        title: list.title,
+                        revision: list.revision
+                    };
+                }
+                return _this5.todoLists;
+            });
+        },
+        getTodoList: function getTodoList(id) {
+            var url = 'https://a.wunderlist.com/api/v1/lists/' + id;
+            return this.http(url).then(function (list) {
+                return {
+                    id: list.id,
+                    title: list.title,
+                    revision: list.revision
+                };
+            });
+        },
+        getTodos: function getTodos(listId, notShowLoading) {
+            var _this6 = this;
+
+            if (!listId) {
+                return;
+            }
+            var url = 'https://a.wunderlist.com/api/v1/tasks?list_id=' + listId;
+            var url_completed = 'https://a.wunderlist.com/api/v1/tasks?completed=true&list_id=' + listId;
+
+            var todos = void 0;
+            var p1 = this.http(url_completed);
+            var p2 = this.http(url);
+            if (!notShowLoading) {
+                this.isLoadingTodos = true;
+            }
+            return Promise.all([p1, p2]).then(function (data) {
+                todos = data[0].concat(data[1]);
+                todos = todos.map(function (todo) {
+                    return _this6.filterTodoResponse(todo);
+                });
+                _this6.setLocalTodos(todos);
+                _this6.isLoadingTodos = false;
+                return todos;
+            });
+        },
+        filterTodoResponse: function filterTodoResponse(todo) {
+            return {
+                id: todo.id,
+                title: todo.title,
+                revision: todo.revision,
+                completed: todo.completed,
+                starred: todo.starred,
+                listId: todo.list_id,
+                dueOn: todo.due_date,
+                updatedOn: +new Date()
+            };
+        },
+        createTodo: function createTodo() {
+            var _this7 = this;
+
+            if (!this.newTodo.title) {
+                return;
+            }
+
+            var newTodo = this.newTodo;
+            this.newTodo = {};
+            var todo = {
+                title: newTodo.title,
+                list_id: this.currentListId,
+                due_date: newTodo.dueOn
+            };
+            this.http(this.wunderlistUrl, 'POST', todo).then(function (_todo) {
+                _this7.todos.unshift(_this7.filterTodoResponse(_todo));
+            });
+        },
+        checkedTodo: function checkedTodo(todo) {
+            var _this8 = this;
+
+            this.patchTodo(todo.id, { completed: todo.completed, revision: todo.revision }).then(function (_todo) {
+                _this8.$set(_this8.todos, _this8.todos.indexOf(todo), _this8.filterTodoResponse(_todo));
+            });
+        },
+        sortTodos: function sortTodos() {
+            return this.todos.sort(function (a, b) {
+                var n = void 0;
+                a.completed = +a.completed;
+                b.completed = +b.completed;
+                n = a.completed - b.completed;
+                if (n !== 0) {
+                    return n;
+                }
+                return b.updatedOn - a.updatedOn;
+            });
+        },
+        setActiveList: function setActiveList(list) {
+            this.isLoadingTodos = true;
+            this.currentList = list;
+            this.init();
+        },
+        deleteTodo: function deleteTodo(todo) {
+            var _this9 = this;
+
+            if (!confirm('Are you sure you want to delete this todo?')) {
+                return;
+            }
+            var url = this.wunderlistUrl + '/' + todo.id;
+            this.http(url, 'DELETE', { revision: todo.revision }).then(function () {
+                _this9.todos.splice(_this9.todos.indexOf(todo), 1);
+                _this9.sortTodos();
+            });
+        },
+        patchTodo: function patchTodo(id, data) {
+            var url = this.wunderlistUrl + '/' + id;
+            return this.http(url, 'PATCH', data);
+        },
+        editTodo: function editTodo(todo) {
+            if (this.showSidebar) {
+                return;
+            }
+            this.showTodoManager = true;
+            this.currentTodoIndex = this.todos.indexOf(todo);
+            this.currentTodo = Object.assign({}, todo);
+        },
+        updateTodo: function updateTodo() {
+            var _this10 = this;
+
+            this.patchTodo(this.currentTodo.id, {
+                title: this.currentTodo.title,
+                due_date: this.currentTodo.dueOn,
+                revision: this.currentTodo.revision
+            }).then(function (_todo) {
+                _this10.$set(_this10.todos, _this10.currentTodoIndex, _this10.filterTodoResponse(_todo));
+                _this10.showTodoManager = false;
+            });
+        }
+    },
+    watch: {
+        todos: {
+            handler: function handler(newValue, oldValue) {
+                if (newValue && newValue.length) {
+                    this.setLocalTodos(newValue);
+                }
+            },
+            deep: true
+        },
+        currentList: {
+            handler: function handler(newValue) {
+                if (!newValue || !newValue.id) {
+                    return;
+                }
+                __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_1__utils_Constants__["a" /* default */].STORAGE.W_CURRENT_TODO_LIST, this.currentList);
+            }
+        }
+    },
+    beforeDestroy: function beforeDestroy() {
+        clearInterval(syncWunderlist);
+    }
+};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Constants__ = __webpack_require__(1);
@@ -532,14 +1058,15 @@ var backgroundVue = {
             bgIndex: 0,
             allBackgrounds: null,
             bgKeys: null,
-            themeVal: ''
+            themeVal: '',
+            backgroundType: this.settings.type || 'predefined'
         };
     },
 
     props: ['settings'],
     mounted: function mounted() {
         bgElement = document.getElementById('background');
-        this.getBackground();
+        this.getBg();
     },
 
     methods: {
@@ -549,9 +1076,17 @@ var backgroundVue = {
             var storedBg = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[theme.id];
             return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
         },
+        getBg: function getBg(reset) {
+            if (this.settings && this.settings.type !== 'custom') {
+                this.getBackground(reset);
+            } else {
+                this.loadCustomBackground(reset);
+            }
+            this.backgroundType = this.settings.type;
+        },
 
         getBackground: function getBackground(reset) {
-            if (reset && this.themeId === this.settings.themeId) {
+            if (reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type) {
                 return;
             }
             var theme = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].getCurrentTheme(this.settings.themeId);
@@ -589,8 +1124,62 @@ var backgroundVue = {
                 this.$emit('stopLoading');
             }
         },
-        loadBackground: function loadBackground() {
+        loadCustomBackground: function loadCustomBackground(reset) {
             var _this = this;
+
+            // this check is required to make sure to not change custom wallpaper when type is not changed
+            if (reset && this.backgroundType === this.settings.type) {
+                return;
+            }
+            var customBackgrounds = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
+            var customSeenBgIndex = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN_CUSTOM);
+            // because customSeenBgIndex can be 0 , so strict checking
+            customSeenBgIndex = customSeenBgIndex === null ? -1 : customSeenBgIndex;
+            this.isLoading();
+            this.defaultImageLoaded = false;
+
+            if (!customBackgrounds || customBackgrounds.length < 1) {
+                // console.log("no custom backgrounds");
+                this.defaultImageLoaded = true;
+                bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
+                this.$emit('stopLoading');
+                this.markCustomBgSeen(customSeenBgIndex);
+                return;
+            }
+
+            // to increment index from stored index value or default value
+            if (customSeenBgIndex === customBackgrounds.length - 1) {
+                customSeenBgIndex = 0;
+            } else {
+                customSeenBgIndex++;
+            }
+
+            var currentUrl = customBackgrounds[customSeenBgIndex];
+
+            chrome.runtime.sendMessage({
+                query: 'loadCurrentCustomBackground',
+                url: currentUrl
+            }, function (responseURL) {
+                if (responseURL) {
+                    // console.log("background loaded in time");
+                    _this.defaultImageLoaded = false;
+                    bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
+                    if (customBackgrounds.length > 1) {
+                        var nextUrlIndex = customSeenBgIndex === customBackgrounds.length - 1 ? 0 : customSeenBgIndex + 1;
+                        var nextUrl = customBackgrounds[nextUrlIndex];
+                        chrome.runtime.sendMessage({ query: 'loadNextBackground', url: nextUrl });
+                    }
+                } else {
+                    // console.log("background not loaded in time");
+                    _this.defaultImageLoaded = true;
+                    bgElement.style.backgroundImage = 'url(' + _this.getDefaultBg() + ')';
+                }
+                _this.$emit('stopLoading');
+                _this.markCustomBgSeen(customSeenBgIndex);
+            });
+        },
+        loadBackground: function loadBackground() {
+            var _this2 = this;
 
             chrome.runtime.sendMessage({ query: 'log', value: 'Load Background Called' });
             this.isLoading();
@@ -599,42 +1188,42 @@ var backgroundVue = {
             var currentUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
             chrome.runtime.sendMessage({ query: 'loadCurrentBackground', url: currentUrl }, function (responseURL) {
                 if (responseURL) {
-                    _this.defaultImageLoaded = false;
+                    _this2.defaultImageLoaded = false;
                     bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
                     chrome.runtime.sendMessage({ query: 'log', value: 'Current URL ' + currentUrl });
-                    _this.$emit('stopLoading');
-                    var nextUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(_this.allBackgrounds[_this.bgKeys[i + 1]], _this.bgKeys[i + 1]);
+                    _this2.$emit('stopLoading');
+                    var nextUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(_this2.allBackgrounds[_this2.bgKeys[i + 1]], _this2.bgKeys[i + 1]);
                     chrome.runtime.sendMessage({ query: 'log', value: 'Next URL ' + nextUrl });
                     chrome.runtime.sendMessage({ query: 'loadNextBackground', url: nextUrl });
                 } else {
-                    _this.defaultImageLoaded = true;
-                    bgElement.style.backgroundImage = 'url(' + _this.getDefaultBg() + ')';
-                    chrome.runtime.sendMessage({ query: 'log', value: 'Default URL' + _this.settings.themeId });
-                    _this.$emit('stopLoading');
+                    _this2.defaultImageLoaded = true;
+                    bgElement.style.backgroundImage = 'url(' + _this2.getDefaultBg() + ')';
+                    chrome.runtime.sendMessage({ query: 'log', value: 'Default URL' + _this2.settings.themeId });
+                    _this2.$emit('stopLoading');
                     chrome.runtime.sendMessage({ query: 'setTabsCount', value: 'decrement' });
                 }
-                _this.markBgSeen(_this.bgKeys[i]);
+                _this2.markBgSeen(_this2.bgKeys[i]);
             });
         },
         resetBackgroundTheme: function resetBackgroundTheme() {
-            this.getBackground(true);
+            this.getBg(true);
             chrome.runtime.sendMessage({ query: 'setTabsCount', value: 0 });
         },
         isLoading: function isLoading() {
             this.$emit('startLoading');
         },
         markBgSeen: function markBgSeen(id) {
-            var _this2 = this;
+            var _this3 = this;
 
             chrome.runtime.sendMessage({ query: 'getTabsCount' }, function (tabs) {
                 // to prevent change on refresh;
                 if (!tabs) {
                     return;
                 }
-                if (tabs % _this2.settings.changeInterval === 0 && !_this2.defaultImageLoaded) {
-                    _this2.bgSeen.push(id);
-                    __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].set('bg-seen-' + _this2.themeVal, _this2.bgSeen);
-                } else if (_this2.defaultImageLoaded) {
+                if (tabs % _this3.settings.changeInterval === 0 && !_this3.defaultImageLoaded) {
+                    _this3.bgSeen.push(id);
+                    __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].set('bg-seen-' + _this3.themeVal, _this3.bgSeen);
+                } else if (_this3.defaultImageLoaded) {
                     chrome.runtime.sendMessage({ query: 'setTabsCount', value: parseInt(tabs) - 1 });
                 }
             });
@@ -646,6 +1235,21 @@ var backgroundVue = {
             counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
             chrome.runtime.sendMessage({ query: 'log', value: 'getDefaultBg Called with counter, ' + counter });
             return __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[themeId][1 + (themeId - 1) * 3 + counter];
+        },
+        markCustomBgSeen: function markCustomBgSeen(index) {
+            var _this4 = this;
+
+            chrome.runtime.sendMessage({ query: 'getTabsCount' }, function (tabs) {
+                // to prevent change on refresh;
+                if (!tabs) {
+                    return;
+                }
+                if (tabs % _this4.settings.changeInterval === 0 && !_this4.defaultImageLoaded) {
+                    __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN_CUSTOM, index);
+                } else if (_this4.defaultImageLoaded) {
+                    chrome.runtime.sendMessage({ query: 'setTabsCount', value: parseInt(tabs) - 1 });
+                }
+            });
         }
     },
     watch: {
@@ -661,7 +1265,7 @@ var backgroundVue = {
 /* harmony default export */ exports["default"] = backgroundVue;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -718,12 +1322,13 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 };
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
 //
 //
 //
@@ -840,6 +1445,159 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -849,9 +1607,28 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         return {
             selectedTheme: this.settings.background.themeId,
             themes: __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__["a" /* default */].themes,
-            version: chrome.runtime.getManifest().version
+            version: chrome.runtime.getManifest().version,
+            activeTab: 'general',
+            customLocation: '',
+            currentBgCustom: '',
+            isCustomBgSaveMsg: '',
+            todosType: this.settings.todos.type,
+            authCode: __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('w-auth-code'),
+            saveMessage: '',
+            isAuthCodeVisible: false
         };
     },
+    mounted: function mounted() {
+        // this is done for weather
+        this.customLocation = this.settings.weather.location.name || __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER) && __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4];
+        // this is done for backgrounds
+        var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
+
+        if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]' && bgCustom.length) {
+            this.currentBgCustom = bgCustom.join('\n');
+        }
+    },
+
     methods: {
         isActiveTheme: function isActiveTheme(index) {
             return this.settings.background.themeId === index + 1;
@@ -864,18 +1641,97 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
         },
         setBgInterval: function setBgInterval(value) {
             this.settings.background.changeInterval = value;
+        },
+        updateCustomLocation: function updateCustomLocation() {
+            if (this.customLocation !== this.settings.weather.location.name) {
+                this.settings.weather.location.name = this.customLocation;
+            }
+        },
+        saveCustomBg: function saveCustomBg() {
+            var _this = this;
+
+            var validateImgUrls = function validateImgUrls(backgrounds) {
+                for (var i = 0; i < backgrounds.length; i++) {
+                    if (backgrounds[i].match(/^(http?|https):\/\/.*(jpeg|png|gif|bmp|jpg)/g) === null) {
+                        _this.isCustomBgSaveMsg = '<span class=\'error\'>Wallpapers links are not in correct format.</span>';
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            var cleanUrls = function cleanUrls(backgrounds) {
+                return backgrounds.reduce(function (filtered, background) {
+                    if (typeof background === 'string' && background.length > 5) {
+                        filtered.push(background.trim());
+                    }
+                    return filtered;
+                }, []);
+            };
+
+            if (this.currentBgCustom) {
+                var backgrounds = this.currentBgCustom.split('\n');
+                if (backgrounds && backgrounds.length && validateImgUrls(backgrounds)) {
+                    backgrounds = cleanUrls(backgrounds);
+                    __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, backgrounds);
+                    this.isCustomBgSaveMsg = '<span class=\'success\'>Wallpapers saved successfully.</span>';
+                }
+            } else {
+                this.isCustomBgSaveMsg = '<span class=\'error\'>Wallpapers not saved</span>';
+            }
+            setTimeout(function () {
+                _this.isCustomBgSaveMsg = '';
+            }, 2000);
+        },
+        todoTypeChange: function todoTypeChange() {
+            if (this.todosType === 'w') {
+                this.getPermission();
+            } else {
+                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].remove('w-auth-code');
+                this.settings.todos.type = this.todosType = 'default';
+                chrome.permissions.remove({ origins: ['http://*.wunderlist.com/*'] }, function (removed) {
+                    if (removed) {
+                        console.log('removed');
+                    }
+                });
+            }
+        },
+        getPermission: function getPermission() {
+            var _this2 = this;
+
+            var self = this;
+            chrome.permissions.request({ origins: ['http://*.wunderlist.com/*'] }, function (granted) {
+                // The callback argument will be true if the user granted the permissions.
+                if (granted) {
+                    console.log('granted');
+                    _this2.isAuthCodeVisible = true;
+                    //self.settings.todos.type = self.todosType = 'w'
+                } else {
+                    console.log('notgranted' + chrome.runtime.lastError.message);
+                    self.settings.todos.type = 'default';
+                }
+            });
+        },
+        saveAuthCode: function saveAuthCode(type) {
+            if (type === 'w' && this.authCode && this.authCode.length === 60) {
+                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set('w-auth-code', this.authCode);
+                this.settings.todos.type = 'w';
+                this.saveMessage = '<span class=\'success\'>Wunderlist Integrated</span>';
+            } else {
+                this.settings.todos.type = 'default';
+                this.saveMessage = '<span class=\'error\'>Invalid auth code</span>';
+            }
         }
     },
-    props: ['settings'],
-    computed: {}
+    props: ['settings']
 };
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_debounce__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
@@ -1178,7 +2034,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1250,13 +2106,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_timeUtil__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_timeUtil__ = __webpack_require__(4);
 //
 //
 //
@@ -1605,12 +2461,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__ = __webpack_require__(18);
 //
 //
 //
@@ -1654,37 +2510,33 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
 
     methods: {
-        checkWeather: function checkWeather() {
+        checkWeather: function checkWeather(forceUpdate) {
             if (!navigator.onLine) {
                 this.weatherCity = 'Offline';
                 return;
             }
-            var self = this;
             var now = +new Date();
             var oneHourTime = 900000;
+
+            if (!this.localWeather || forceUpdate) {
+                this.prepareWeatherCall();
+                return;
+            }
             if (this.localWeather) {
-                if (now - this.localWeather[0] > oneHourTime) {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        self.loadWeather(position.coords.latitude, position.coords.longitude);
-                    }, function (error) {
-                        console.log(error);
-                    }, { timeout: 10000 });
-                } else {
+                // Check if local weather is not more than an hour old and also
+                // checks if local city
+                if (now - this.localWeather[0] < oneHourTime) {
                     this.temp = this.settings.unit === 'f' ? this.localWeather[2] : this.localWeather[1];
                     this.weatherCode = this.localWeather[3];
                     this.weatherClass = __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__["a" /* default */][this.localWeather[3]];
                     this.weatherCity = this.localWeather[4];
                     this.isLoading = false;
+                } else {
+                    this.prepareWeatherCall();
                 }
-            } else {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    self.loadWeather(position.coords.latitude, position.coords.longitude);
-                }, function (error) {
-                    console.log(error);
-                }, { timeout: 10000 });
             }
         },
-        loadWeather: function loadWeather(lat, long) {
+        getWeather: function getWeather(data) {
             var _this = this;
 
             var self = this;
@@ -1695,8 +2547,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
                 var xmlhttp = new XMLHttpRequest();
 
-                var url = 'http://api.subtletab.com/weather/';
-                url += '?lat=' + lat + '&long=' + long;
+                var url = 'https://api.subtletab.com/weather/new';
+                if (data.type !== 'custom') {
+                    url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
+                } else {
+                    url += '?location=' + data.location + '&type=custom';
+                }
 
                 xmlhttp.open('GET', url);
                 xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
@@ -1720,12 +2576,35 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 };
                 xmlhttp.send();
             });
+        },
+        prepareWeatherCall: function prepareWeatherCall() {
+            var _this2 = this;
+
+            var options = void 0;
+            if (this.settings.location.type !== 'custom') {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    options = {
+                        lat: position.coords.latitude,
+                        long: position.coords.longitude,
+                        type: 'geo'
+                    };
+                    _this2.getWeather(options);
+                }, function (error) {
+                    console.log(error);
+                }, { timeout: 10000 });
+            } else {
+                options = {
+                    location: this.settings.location.name,
+                    type: 'custom'
+                };
+                this.getWeather(options);
+            }
         }
     },
     watch: {
         settings: {
             handler: function handler(newValue) {
-                this.checkWeather();
+                this.checkWeather(true);
             },
             deep: true
         }
@@ -1733,7 +2612,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 };
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1803,7 +2682,7 @@ var bgUtil = {
 /* harmony default export */ exports["a"] = bgUtil;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports) {
 
 var _ = function _(obj) {
@@ -1849,32 +2728,7 @@ module.exports = function (func, wait, options) {
 };
 
 /***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    isTodayDate: function isTodayDate(timeStamp) {
-        if (!timeStamp) {
-            return false;
-        }
-        timeStamp = +new Date(timeStamp);
-        // This will be according to user time zone
-        var now = new Date();
-        var minTime = +now.setHours(0, 0, 0, 0);
-        var maxTime = +now.setHours(23, 59, 59, 59);
-        return minTime <= timeStamp && timeStamp <= maxTime;
-    },
-    getEndOfDay: function getEndOfDay(days) {
-        var now = new Date().setHours(23, 59, 59, 59);
-        days = days ? days : 0;
-        now = new Date(+now + 86400000 * days);
-        return now.toISOString().substring(0, 10);
-    }
-};
-
-/***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1930,21 +2784,21 @@ module.exports = function (func, wait, options) {
 };
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(19)();
+exports = module.exports = __webpack_require__(20)();
 // imports
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
 
 // exports
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 /*
@@ -2000,7 +2854,7 @@ module.exports = function() {
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 // shim for using process in browser
@@ -2186,17 +3040,17 @@ process.umask = function() { return 0; };
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(6)
+__vue_exports__ = __webpack_require__(7)
 
 /* template */
-var __vue_template__ = __webpack_require__(36)
+var __vue_template__ = __webpack_require__(39)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2230,20 +3084,64 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 22 */
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* script */
+__vue_exports__ = __webpack_require__(8)
+
+/* template */
+var __vue_template__ = __webpack_require__(34)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/WTodos.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-237afab9", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-237afab9", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] WTodos.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* styles */
-__webpack_require__(38)
+__webpack_require__(41)
 
 /* script */
-__vue_exports__ = __webpack_require__(7)
+__vue_exports__ = __webpack_require__(9)
 
 /* template */
-var __vue_template__ = __webpack_require__(31)
+var __vue_template__ = __webpack_require__(33)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2277,17 +3175,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(8)
+__vue_exports__ = __webpack_require__(10)
 
 /* template */
-var __vue_template__ = __webpack_require__(34)
+var __vue_template__ = __webpack_require__(37)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2321,17 +3219,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(9)
+__vue_exports__ = __webpack_require__(11)
 
 /* template */
-var __vue_template__ = __webpack_require__(35)
+var __vue_template__ = __webpack_require__(38)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2365,17 +3263,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(10)
+__vue_exports__ = __webpack_require__(12)
 
 /* template */
-var __vue_template__ = __webpack_require__(30)
+var __vue_template__ = __webpack_require__(32)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2409,17 +3307,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(11)
+__vue_exports__ = __webpack_require__(13)
 
 /* template */
-var __vue_template__ = __webpack_require__(33)
+var __vue_template__ = __webpack_require__(36)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2453,17 +3351,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(12)
+__vue_exports__ = __webpack_require__(14)
 
 /* template */
-var __vue_template__ = __webpack_require__(32)
+var __vue_template__ = __webpack_require__(35)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2497,17 +3395,17 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
 /* script */
-__vue_exports__ = __webpack_require__(13)
+__vue_exports__ = __webpack_require__(15)
 
 /* template */
-var __vue_template__ = __webpack_require__(29)
+var __vue_template__ = __webpack_require__(31)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -2541,7 +3439,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2580,7 +3478,7 @@ if (false) {
 }
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2820,7 +3718,7 @@ if (false) {
 }
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2843,7 +3741,7 @@ if (false) {
 }
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -2859,6 +3757,372 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, [_h('header', {
     staticClass: "flex widget-header flex-center"
+  }, [_h('svg', {
+    staticClass: "pointer flex-no-shrink",
+    attrs: {
+      "width": "1.3rem",
+      "height": "1rem",
+      "viewBox": "0 0 23 21",
+      "version": "1.1"
+    },
+    on: {
+      "click": function($event) {
+        _vm.toggle('showSidebar');
+        _vm.showTodoManager = false;
+      }
+    }
+  }, [_h('g', {
+    attrs: {
+      "stroke": "none",
+      "stroke-width": "1",
+      "fill": "none",
+      "fill-rule": "evenodd"
+    }
+  }, [_h('g', {
+    attrs: {
+      "id": "hamburger",
+      "transform": "translate(0.000000, 2.000000)",
+      "stroke": "#7d7d7d",
+      "stroke-width": "4"
+    }
+  }, [_h('path', {
+    attrs: {
+      "d": "M0.132183908,0 L22.8678161,0",
+      "id": "XMLID_6_"
+    }
+  }), " ", _h('polyline', {
+    attrs: {
+      "id": "XMLID_9_",
+      "points": "0.132183908 16.8 20.0697663 16.8 22.8678161 16.8"
+    }
+  }), " ", _h('path', {
+    attrs: {
+      "d": "M0.132183908,8.4 L22.8678161,8.4",
+      "id": "XMLID_8_"
+    }
+  })])])]), " ", _h('h4', {
+    staticClass: "widget-heading mar-0"
+  }, ["To-do (T) : " + _vm._s(_vm.$parent.toTitleCase(_vm.currentList.title))]), " "]), " ", _h('section', {
+    staticClass: "flex relative todo-section flex-flow-column"
+  }, [_h('div', {
+    staticClass: "sidebar flex-flow-column flex",
+    class: {
+      'show-sidebar': _vm.showSidebar
+    },
+    attrs: {
+      "id": "todo-sidebar"
+    }
+  }, [_h('div', {
+    staticClass: "sidebar-container"
+  }, [_h('transition-group', {
+    staticClass: "todo-lists pad-0 flex flex-flow-column flex-center",
+    attrs: {
+      "name": "flip-list",
+      "tag": "ul"
+    }
+  }, [_vm._l((_vm.todoLists), function(list) {
+    return _h('li', {
+      key: list.id,
+      staticClass: "flex flex-flow-column pointer todo-list",
+      class: [_vm.currentListId == list.id ? 'active' : ''],
+      on: {
+        "click": function($event) {
+          _vm.setActiveList(list);
+          _vm.showSidebar = false;
+        }
+      }
+    }, [_h('a', {
+      staticClass: "todo-list-title",
+      attrs: {
+        "title": list.title
+      }
+    }, [_vm._s(_vm.$parent.toTitleCase(list.title))])])
+  })]), " "])]), " ", _h('div', {
+    staticClass: "sidebar-right flex-flow-column flex",
+    class: {
+      'show-right-sidebar': _vm.showTodoManager
+    },
+    attrs: {
+      "id": "todo-manager-sidebar"
+    }
+  }, [_h('div', {
+    staticClass: "sidebar-container"
+  }, [_h('div', [_h('p', {
+    staticClass: "sidebar-heading"
+  }, ["Todo Title"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currentTodo.title),
+      expression: "currentTodo.title"
+    }],
+    staticClass: "input-todo-title no-focus",
+    attrs: {
+      "type": "text",
+      "placeholder": ""
+    },
+    domProps: {
+      "value": _vm._s(_vm.currentTodo.title)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currentTodo.title = $event.target.value
+      }
+    }
+  })]), " ", _h('div', [_h('p', {
+    staticClass: "sidebar-heading"
+  }, ["Due Date"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currentTodo.dueOn),
+      expression: "currentTodo.dueOn"
+    }],
+    staticClass: "input-todo-date no-focus",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": _vm._s(_vm.currentTodo.dueOn)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currentTodo.dueOn = $event.target.value
+      }
+    }
+  })]), " ", _h('div', [_h('button', {
+    staticClass: "btn",
+    on: {
+      "click": _vm.updateTodo
+    }
+  }, ["Done"])])])]), " ", _h('div', {
+    staticClass: "flex flex-flow-column",
+    class: {
+      'flex-justify-center': _vm.isLoadingTodos
+    },
+    attrs: {
+      "id": "todo"
+    },
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.showSidebar = false;
+        _vm.showTodoManager = false
+      }
+    }
+  }, [(_vm.isLoadingTodos) ? _h('div', {
+    staticClass: "flex flex-flow-column flex-justify-center flex-center",
+    attrs: {
+      "id": "loading-todo"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "/images/loading.gif",
+      "alt": "No Todo"
+    }
+  })]) : _vm._e(), " ", _h('transition-group', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.isLoadingTodos && _vm.todos.length),
+      expression: "!isLoadingTodos && todos.length"
+    }],
+    staticClass: "todos",
+    attrs: {
+      "name": "flip-list",
+      "tag": "ul",
+      "id": "todos-list"
+    }
+  }, [_vm._l((_vm.sortedTodos), function(todo) {
+    return _h('li', {
+      key: todo.id,
+      staticClass: "todo flex"
+    }, [_h('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: (todo.completed),
+        expression: "todo.completed"
+      }],
+      staticClass: "browser-default todo--checkbox filled-in",
+      attrs: {
+        "type": "checkbox",
+        "id": todo.id
+      },
+      domProps: {
+        "checked": Array.isArray(todo.completed) ? _vm._i(todo.completed, null) > -1 : _vm._q(todo.completed, true)
+      },
+      on: {
+        "change": [function($event) {
+          var $$a = todo.completed,
+            $$el = $event.target,
+            $$c = $$el.checked ? (true) : (false);
+          if (Array.isArray($$a)) {
+            var $$v = null,
+              $$i = _vm._i($$a, $$v);
+            if ($$c) {
+              $$i < 0 && (todo.completed = $$a.concat($$v))
+            } else {
+              $$i > -1 && (todo.completed = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+            }
+          } else {
+            todo.completed = $$c
+          }
+        }, function($event) {
+          _vm.checkedTodo(todo)
+        }]
+      }
+    }), " ", _h('label', {
+      staticClass: "todo--name",
+      attrs: {
+        "for": todo.id
+      }
+    }, [" " + _vm._s(todo.title)]), " ", _h('div', {
+      staticClass: "todo-btn"
+    }, [_h('svg', {
+      staticClass: "pointer",
+      attrs: {
+        "height": "10",
+        "width": "10",
+        "version": "1.1",
+        "viewBox": "0 0 21.9 21.9",
+        "enable-background": "new 0 0 21.9 21.9"
+      },
+      on: {
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.deleteTodo(todo)
+        }
+      }
+    }, [_h('path', {
+      attrs: {
+        "d": "M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"
+      }
+    })]), " ", _h('svg', {
+      staticClass: "pointer",
+      staticStyle: {
+        "enable-background": "new 0 0 60 60"
+      },
+      attrs: {
+        "height": "16",
+        "width": "16",
+        "version": "1.1",
+        "x": "0px",
+        "y": "0px",
+        "viewBox": "0 0 60 60",
+        "xml:space": "preserve"
+      },
+      on: {
+        "click": function($event) {
+          $event.stopPropagation();
+          _vm.editTodo(todo)
+        }
+      }
+    }, [_h('g', {
+      attrs: {
+        "fill": "#a7a7a7"
+      }
+    }, [_h('path', {
+      attrs: {
+        "d": "M30,16c4.411,0,8-3.589,8-8s-3.589-8-8-8s-8,3.589-8,8S25.589,16,30,16z"
+      }
+    }), " ", _h('path', {
+      attrs: {
+        "d": "M30,44c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,44,30,44z"
+      }
+    }), " ", _h('path', {
+      attrs: {
+        "d": "M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"
+      }
+    })])])])])
+  })]), " ", (!_vm.isLoadingTodos && !_vm.todos.length) ? _h('div', {
+    staticClass: "flex flex-flow-column flex-justify-center flex-center",
+    attrs: {
+      "id": "no-todo"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "/images/no-to-do.png",
+      "alt": "No Todo",
+      "width": "134px"
+    }
+  }), " ", _h('em', ["No tasks to do in " + _vm._s(_vm.currentList.title) + " list! ", _h('br'), "Create your first to-do"])]) : _vm._e(), " ", (!_vm.isLoadingTodos) ? _h('div', {
+    staticClass: "input-todo flex"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTodo.title),
+      expression: "newTodo.title"
+    }],
+    staticClass: "input-todo-title no-focus",
+    attrs: {
+      "type": "text",
+      "placeholder": "+ Create a new to-do"
+    },
+    domProps: {
+      "value": _vm._s(_vm.newTodo.title)
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "enter", 13)) { return; }
+        _vm.createTodo($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTodo.title = $event.target.value
+      }
+    }
+  }), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTodo.dueOn),
+      expression: "newTodo.dueOn"
+    }],
+    staticClass: "input-todo-date no-focus",
+    attrs: {
+      "type": "date",
+      "value": ""
+    },
+    domProps: {
+      "value": _vm._s(_vm.newTodo.dueOn)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTodo.dueOn = $event.target.value
+      }
+    }
+  })]) : _vm._e()])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-237afab9", module.exports)
+  }
+}
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "todos-arrow_box relative flex-flow-column flex",
+    attrs: {
+      "id": "todos"
+    },
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+      }
+    }
+  }, [_h('header', {
+    staticClass: "flex widget-header flex-center flex-space-between"
   }, [_h('svg', {
     staticClass: "pointer flex-no-shrink",
     attrs: {
@@ -3306,7 +4570,7 @@ if (false) {
 }
 
 /***/ },
-/* 33 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -3376,7 +4640,7 @@ if (false) {
 }
 
 /***/ },
-/* 34 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -3402,13 +4666,17 @@ if (false) {
 }
 
 /***/ },
-/* 35 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
+    staticClass: "flex flex-flow-column",
     on: {
       "click": function($event) {
+        $event.stopPropagation();
+      },
+      "keydown": function($event) {
         $event.stopPropagation();
       }
     }
@@ -3450,195 +4718,179 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "d": "M8.24007692,3.75992308 C8.14984615,3.66969231 8.004,3.66969231 7.91376923,3.75992308 L6,5.67369231 L4.08623077,3.75992308 C3.996,3.66969231 3.85015385,3.66969231 3.75992308,3.75992308 C3.66969231,3.85015385 3.66969231,3.996 3.75992308,4.08623077 L5.67369231,6 L3.75992308,7.91376923 C3.66969231,8.004 3.66969231,8.14984615 3.75992308,8.24007692 C3.80492308,8.28507692 3.864,8.30769231 3.92307692,8.30769231 C3.98215385,8.30769231 4.04123077,8.28507692 4.08623077,8.24007692 L6,6.32630769 L7.91376923,8.24007692 C7.95876923,8.28507692 8.01784615,8.30769231 8.07692308,8.30769231 C8.136,8.30769231 8.19507692,8.28507692 8.24007692,8.24007692 C8.33030769,8.14984615 8.33030769,8.004 8.24007692,7.91376923 L6.32630769,6 L8.24007692,4.08623077 C8.33030769,3.996 8.33030769,3.85015385 8.24007692,3.75992308 Z",
       "id": "Shape"
     }
-  })])])])])]), " ", _h('span', ["Customize (C)"])]), " ", _h('ul', [_h('li', [_h('h4', ["Wallpaper Category"]), " ", _h('ul', {
-    staticClass: "thumbnails"
-  }, [_vm._l((_vm.themes), function(theme, index) {
-    return _h('li', {
-      staticClass: "thumbnail",
-      class: {
-        active: _vm.isActiveTheme(index)
-      }
-    }, [_h('div', {
-      staticClass: "thumbnail-image",
-      style: ({
-        'background-image': 'url(' + theme.imgUrl + ')'
-      }),
-      on: {
-        "click": function($event) {
-          _vm.selectActive(index)
-        }
-      }
-    }), " ", _h('p', {
-      staticClass: "thumbnail-name font-center"
-    }, [_vm._s(theme.lValue)])])
-  })])]), " ", _h('li', {
-    staticClass: "flex flex-center"
-  }, [_h('h4', {
-    staticClass: "btn-group-header"
-  }, ["Change wallpaper after"]), " ", _h('div', {
-    staticClass: "btn-group"
+  })])])])])]), " ", _h('span', ["Customize (C)"])]), " ", _h('div', {
+    staticClass: "flex-grow-1 flex"
   }, [_h('div', {
-    staticClass: "btn-inner",
-    class: {
-      'active': _vm.settings.background.changeInterval === 5
-    },
-    on: {
-      "click": function($event) {
-        _vm.setBgInterval(5)
-      }
-    }
-  }, ["5 Tabs"]), " ", _h('div', {
-    staticClass: "btn-inner",
-    class: {
-      'active': _vm.settings.background.changeInterval === 10
-    },
-    on: {
-      "click": function($event) {
-        _vm.setBgInterval(10)
-      }
-    }
-  }, ["10 Tabs"]), " ", _h('div', {
-    staticClass: "btn-inner",
-    class: {
-      'active': _vm.settings.background.changeInterval === 15
-    },
-    on: {
-      "click": function($event) {
-        _vm.setBgInterval(15)
-      }
-    }
-  }, ["15 Tabs"]), " ", _h('div', {
-    staticClass: "btn-inner",
-    class: {
-      'active': _vm.settings.background.changeInterval === 20
-    },
-    on: {
-      "click": function($event) {
-        _vm.setBgInterval(20)
-      }
-    }
-  }, ["20 Tabs"])])]), " ", _h('li', {
-    staticClass: "flex flex-center"
-  }, [_h('div', {
-    staticClass: "flex-grow-1 flex flex-flow-column"
-  }, [_h('div', {
-    staticClass: "flex flex-center"
-  }, [_h('h4', ["Clock"]), " ", _h('div', {
-    staticClass: "switch"
-  }, [_h('label', [_h('input', {
+    staticClass: "csidebar"
+  }, [_h('ul', [_h('li', [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.settings.showUtilities.showClock),
-      expression: "settings.showUtilities.showClock"
+      value: (_vm.activeTab),
+      expression: "activeTab"
     }],
     attrs: {
-      "type": "checkbox"
+      "type": "radio",
+      "value": "general",
+      "id": "tab4"
     },
     domProps: {
-      "checked": Array.isArray(_vm.settings.showUtilities.showClock) ? _vm._i(_vm.settings.showUtilities.showClock, null) > -1 : _vm._q(_vm.settings.showUtilities.showClock, true)
+      "checked": _vm._q(_vm.activeTab, "general")
     },
     on: {
       "change": function($event) {
-        var $$a = _vm.settings.showUtilities.showClock,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.settings.showUtilities.showClock = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.showUtilities.showClock = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.showUtilities.showClock = $$c
-        }
-      }
-    }
-  }), " ", _h('span', {
-    staticClass: "lever"
-  })])])]), " ", _h('ul', [_h('li', [_h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.settings.clock.showTwelveHour),
-      expression: "settings.clock.showTwelveHour"
-    }],
-    staticClass: "filled-in",
-    attrs: {
-      "type": "checkbox",
-      "id": "clock-twelveHour",
-      "disabled": !_vm.settings.showUtilities.showClock
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.settings.clock.showTwelveHour) ? _vm._i(_vm.settings.clock.showTwelveHour, null) > -1 : _vm._q(_vm.settings.clock.showTwelveHour, true)
-    },
-    on: {
-      "change": function($event) {
-        var $$a = _vm.settings.clock.showTwelveHour,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.settings.clock.showTwelveHour = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.clock.showTwelveHour = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.clock.showTwelveHour = $$c
-        }
+        _vm.activeTab = "general"
       }
     }
   }), " ", _h('label', {
+    staticClass: "flex-center",
+    class: {
+      'active': _vm.activeTab === 'general'
+    },
     attrs: {
-      "for": "clock-twelveHour"
+      "for": "tab4"
     }
-  }, ["12 Hour Format"])]), " ", _h('li', [_h('input', {
+  }, [_h('img', {
+    attrs: {
+      "src": "images/icons/general-icon.png"
+    }
+  }), " ", _h('span', ["General"])])]), " ", _h('li', [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.settings.clock.showDay),
-      expression: "settings.clock.showDay"
+      value: (_vm.activeTab),
+      expression: "activeTab"
     }],
-    staticClass: "filled-in",
     attrs: {
-      "type": "checkbox",
-      "id": "clock-day",
-      "disabled": !_vm.settings.showUtilities.showClock
+      "type": "radio",
+      "value": "background",
+      "id": "tab1"
     },
     domProps: {
-      "checked": Array.isArray(_vm.settings.clock.showDay) ? _vm._i(_vm.settings.clock.showDay, null) > -1 : _vm._q(_vm.settings.clock.showDay, true)
+      "checked": _vm._q(_vm.activeTab, "background")
     },
     on: {
       "change": function($event) {
-        var $$a = _vm.settings.clock.showDay,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.settings.clock.showDay = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.clock.showDay = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.clock.showDay = $$c
-        }
+        _vm.activeTab = "background"
       }
     }
   }), " ", _h('label', {
+    staticClass: "flex-center",
+    class: {
+      'active': _vm.activeTab === 'background'
+    },
     attrs: {
-      "for": "clock-day"
+      "for": "tab1"
     }
-  }, ["Show Day"])])])]), " ", _h('div', {
-    staticClass: "flex-grow-1 flex flex-flow-column"
-  }, [_h('div', {
-    staticClass: "flex flex-center"
-  }, [_h('h4', ["Weather"]), " ", _h('div', {
+  }, [_h('img', {
+    attrs: {
+      "src": "images/icons/wallpaper-icon.png"
+    }
+  }), " ", _h('span', ["Wallpaper"])])]), " ", _h('li', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.activeTab),
+      expression: "activeTab"
+    }],
+    attrs: {
+      "type": "radio",
+      "value": "clock",
+      "id": "tab2"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.activeTab, "clock")
+    },
+    on: {
+      "change": function($event) {
+        _vm.activeTab = "clock"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "flex-center",
+    class: {
+      'active': _vm.activeTab === 'clock'
+    },
+    attrs: {
+      "for": "tab2"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "images/icons/clock-icon.png"
+    }
+  }), " ", _h('span', ["Clock"])])]), " ", _h('li', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.activeTab),
+      expression: "activeTab"
+    }],
+    attrs: {
+      "type": "radio",
+      "value": "weather",
+      "id": "tab3"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.activeTab, "weather")
+    },
+    on: {
+      "change": function($event) {
+        _vm.activeTab = "weather"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "flex-center",
+    class: {
+      'active': _vm.activeTab === 'weather'
+    },
+    attrs: {
+      "for": "tab3"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "images/icons/weather-icon.png"
+    }
+  }), " ", _h('span', ["Weather"])])]), " ", _h('li', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.activeTab),
+      expression: "activeTab"
+    }],
+    attrs: {
+      "type": "radio",
+      "value": "todo",
+      "id": "tab5"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.activeTab, "todo")
+    },
+    on: {
+      "change": function($event) {
+        _vm.activeTab = "todo"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "flex-center",
+    class: {
+      'active': _vm.activeTab === 'todo'
+    },
+    attrs: {
+      "for": "tab5"
+    }
+  }, [_h('img', {
+    attrs: {
+      "src": "images/icons/todo-icon.png"
+    }
+  }), " ", _h('span', ["Todos"])])])])]), " ", _h('div', {
+    staticClass: "container"
+  }, [(_vm.activeTab === 'general') ? _h('section', [_h('div', [_h('h4', ["Features"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Clock"]), " ", _h('div', {
     staticClass: "switch"
   }, [_h('label', [_h('input', {
     directives: [{
@@ -3672,8 +4924,525 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }
     }
   }), " ", _h('span', {
-    staticClass: "lever"
-  })])])]), " ", _h('ul', [_h('li', [_h('input', {
+    staticClass: "lever mar-0"
+  })])])]), " ", _h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Date & Time"]), " ", _h('div', {
+    staticClass: "switch"
+  }, [_h('label', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.showUtilities.showClock),
+      expression: "settings.showUtilities.showClock"
+    }],
+    attrs: {
+      "type": "checkbox"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.settings.showUtilities.showClock) ? _vm._i(_vm.settings.showUtilities.showClock, null) > -1 : _vm._q(_vm.settings.showUtilities.showClock, true)
+    },
+    on: {
+      "change": function($event) {
+        var $$a = _vm.settings.showUtilities.showClock,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.settings.showUtilities.showClock = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.settings.showUtilities.showClock = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.settings.showUtilities.showClock = $$c
+        }
+      }
+    }
+  }), " ", _h('span', {
+    staticClass: "lever mar-0"
+  })])])]), " ", _h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Notes"]), " ", _h('div', {
+    staticClass: "switch"
+  }, [_h('label', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.showUtilities.showNotes),
+      expression: "settings.showUtilities.showNotes"
+    }],
+    attrs: {
+      "type": "checkbox"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.settings.showUtilities.showNotes) ? _vm._i(_vm.settings.showUtilities.showNotes, null) > -1 : _vm._q(_vm.settings.showUtilities.showNotes, true)
+    },
+    on: {
+      "change": function($event) {
+        var $$a = _vm.settings.showUtilities.showNotes,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.settings.showUtilities.showNotes = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.settings.showUtilities.showNotes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.settings.showUtilities.showNotes = $$c
+        }
+      }
+    }
+  }), " ", _h('span', {
+    staticClass: "lever mar-0"
+  })])])])])])]) : _vm._e(), " ", (_vm.activeTab === 'background') ? _h('section', [_h('div', [_h('h4', ["Settings"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Change Interval (tabs)"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.background.changeInterval),
+      expression: "settings.background.changeInterval"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "bgInterval5",
+      "value": "5"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.background.changeInterval, "5")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.background.changeInterval = "5"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "bgInterval5"
+    }
+  }, ["5"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.background.changeInterval),
+      expression: "settings.background.changeInterval"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "bgInterval10",
+      "value": "10"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.background.changeInterval, "10")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.background.changeInterval = "10"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "bgInterval10"
+    }
+  }, ["10"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.background.changeInterval),
+      expression: "settings.background.changeInterval"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "bgInterval15",
+      "value": "15"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.background.changeInterval, "15")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.background.changeInterval = "15"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "bgInterval15"
+    }
+  }, ["15"])])]), " ", _h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Wallpaper Type"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.background.type),
+      expression: "settings.background.type"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "wallpaperType1",
+      "value": "custom"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.background.type, "custom")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.background.type = "custom"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "wallpaperType1"
+    }
+  }, ["Custom"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.background.type),
+      expression: "settings.background.type"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "wallpaperType2",
+      "value": "predefined"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.background.type, "predefined")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.background.type = "predefined"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "wallpaperType2"
+    }
+  }, ["Default"])])])])]), " ", (_vm.settings.background.type !== 'custom') ? _h('div', {
+    class: {
+      'fade_in': _vm.settings.background.type !== 'custom'
+    }
+  }, [_h('h4', ["Default Category"]), " ", _h('ul', {
+    staticClass: "flex"
+  }, [_vm._l((_vm.themes), function(theme, index) {
+    return _h('li', {
+      staticClass: "thumbnail",
+      class: {
+        active: _vm.isActiveTheme(index)
+      }
+    }, [_h('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: (_vm.settings.background.themeId),
+        expression: "settings.background.themeId"
+      }],
+      staticClass: "hide",
+      attrs: {
+        "type": "radio",
+        "id": theme.value
+      },
+      domProps: {
+        "value": theme.id,
+        "checked": _vm._q(_vm.settings.background.themeId, theme.id)
+      },
+      on: {
+        "change": function($event) {
+          _vm.settings.background.themeId = theme.id
+        }
+      }
+    }), " ", _h('div', {
+      staticClass: "thumbnail-image",
+      style: ({
+        'background-image': 'url(' + theme.imgUrl + ')'
+      }),
+      on: {
+        "click": function($event) {
+          _vm.selectActive(index)
+        }
+      }
+    }), " ", _h('p', {
+      staticClass: "thumbnail-name font-center"
+    }, [_vm._s(theme.lValue)])])
+  })])]) : _vm._e(), " ", (_vm.settings.background.type === 'custom') ? _h('div', {
+    class: {
+      'fade_in': _vm.settings.background.type === 'custom'
+    }
+  }, [_h('h4', ["Custom List"]), " ", _h('textarea', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.currentBgCustom),
+      expression: "currentBgCustom"
+    }],
+    attrs: {
+      "name": "",
+      "id": "",
+      "cols": "30",
+      "rows": "15"
+    },
+    domProps: {
+      "value": _vm._s(_vm.currentBgCustom)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.currentBgCustom = $event.target.value
+      }
+    }
+  }), " ", _h('button', {
+    staticClass: "save-button mar-0",
+    attrs: {
+      "disabled": !_vm.currentBgCustom.trim().length
+    },
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.saveCustomBg($event)
+      }
+    }
+  }, ["Save List"]), " ", _h('span', {
+    domProps: {
+      "innerHTML": _vm._s(_vm.isCustomBgSaveMsg)
+    }
+  })]) : _vm._e()]) : _vm._e(), " ", (_vm.activeTab === 'clock') ? _h('section', [_h('div', [_h('h4', ["Options"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Clock format"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.clock.showTwelveHour),
+      expression: "settings.clock.showTwelveHour"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "clock12",
+      "value": "true"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.clock.showTwelveHour, "true")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.clock.showTwelveHour = "true"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "clock12"
+    }
+  }, ["12 Hour"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.clock.showTwelveHour),
+      expression: "settings.clock.showTwelveHour"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "clock24",
+      "value": "false"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.clock.showTwelveHour, "false")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.clock.showTwelveHour = "false"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "clock24"
+    }
+  }, ["24 Hour"])])]), " ", _h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Show Date"]), " ", _h('div', {
+    staticClass: "switch"
+  }, [_h('label', [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.clock.showDay),
+      expression: "settings.clock.showDay"
+    }],
+    attrs: {
+      "type": "checkbox"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.settings.clock.showDay) ? _vm._i(_vm.settings.clock.showDay, null) > -1 : _vm._q(_vm.settings.clock.showDay, true)
+    },
+    on: {
+      "change": function($event) {
+        var $$a = _vm.settings.clock.showDay,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.settings.clock.showDay = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.settings.clock.showDay = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.settings.clock.showDay = $$c
+        }
+      }
+    }
+  }), " ", _h('span', {
+    staticClass: "lever mar-0"
+  })])])])])])]) : _vm._e(), " ", (_vm.activeTab === 'weather') ? _h('section', [_h('div', [_h('h4', ["Weather location"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Type"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.weather.location.type),
+      expression: "settings.weather.location.type"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "weather-geo",
+      "value": "geo"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.weather.location.type, "geo")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.weather.location.type = "geo"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "weather-geo"
+    }
+  }, ["Geolocation"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.settings.weather.location.type),
+      expression: "settings.weather.location.type"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "weather-custom",
+      "value": "custom"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.settings.weather.location.type, "custom")
+    },
+    on: {
+      "change": function($event) {
+        _vm.settings.weather.location.type = "custom"
+      }
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "weather-custom"
+    }
+  }, ["Custom"])])]), " ", _h('li', {
+    staticClass: "inline-list-item flex overflow-hidden flex-center flex-justify-space-between"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Location"]), " ", _h('div', {
+    staticClass: "right flex"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.customLocation),
+      expression: "customLocation"
+    }],
+    staticClass: "mar-0",
+    attrs: {
+      "type": "text",
+      "disabled": _vm.settings.weather.location.type === 'geo'
+    },
+    domProps: {
+      "value": _vm._s(_vm.customLocation)
+    },
+    on: {
+      "keydown": function($event) {
+        $event.stopPropagation();
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.customLocation = $event.target.value
+      }
+    }
+  }), " ", _h('button', {
+    staticClass: "save-button",
+    attrs: {
+      "disabled": _vm.customLocation == _vm.settings.weather.location.name
+    },
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.updateCustomLocation($event)
+      }
+    }
+  }, ["Save"])])])]), " ", _h('h4', ["Miscellaneous Options"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Temperature Unit"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3684,8 +5453,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "type": "radio",
       "id": "weather-celcius",
-      "value": "c",
-      "disabled": !_vm.settings.showUtilities.showWeather
+      "value": "c"
     },
     domProps: {
       "checked": _vm._q(_vm.settings.weather.unit, "c")
@@ -3696,10 +5464,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }
     }
   }), " ", _h('label', {
+    staticClass: "inline-radio",
     attrs: {
       "for": "weather-celcius"
     }
-  }, ["Celsius"])]), " ", _h('li', [_h('input', {
+  }, ["Celsius"]), " ", _h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3710,8 +5479,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "type": "radio",
       "id": "weather-fehren",
-      "value": "f",
-      "disabled": !_vm.settings.showUtilities.showWeather
+      "value": "f"
     },
     domProps: {
       "checked": _vm._q(_vm.settings.weather.unit, "f")
@@ -3722,10 +5490,112 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }
     }
   }), " ", _h('label', {
+    staticClass: "inline-radio",
     attrs: {
       "for": "weather-fehren"
     }
-  }, ["Fahrenheit"])])])])]), " ", _vm._m(0)]), " ", _h('div', {
+  }, ["Fahrenheit"])])])])])]) : _vm._e(), " ", (_vm.activeTab === 'todo') ? _h('section', [_h('div', [_h('h4', ["Settings"]), " ", _h('ul', {
+    staticClass: "inline-list"
+  }, [_h('li', {
+    staticClass: "inline-list-item"
+  }, [_h('span', {
+    staticClass: "sub-heading"
+  }, ["Type"]), " ", _h('div', {
+    staticClass: "right"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.todosType),
+      expression: "todosType"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "defaultTodo",
+      "value": "default"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.todosType, "default")
+    },
+    on: {
+      "change": [function($event) {
+        _vm.todosType = "default"
+      }, _vm.todoTypeChange]
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "defaultTodo"
+    }
+  }, ["Default"]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.todosType),
+      expression: "todosType"
+    }],
+    staticClass: "filled-in",
+    attrs: {
+      "type": "radio",
+      "id": "wTodos",
+      "value": "w"
+    },
+    domProps: {
+      "checked": _vm._q(_vm.todosType, "w")
+    },
+    on: {
+      "change": [function($event) {
+        _vm.todosType = "w"
+      }, _vm.todoTypeChange]
+    }
+  }), " ", _h('label', {
+    staticClass: "inline-radio",
+    attrs: {
+      "for": "wTodos"
+    }
+  }, ["Wunderlist"])])])])]), " ", (_vm.isAuthCodeVisible || _vm.settings.todos.type == 'w') ? _h('div', {
+    class: {
+      'fade_in': _vm.settings.todos.type === 'w'
+    }
+  }, [_h('h4', ["Setup Wunderlist"]), " ", _h('a', {
+    attrs: {
+      "href": "https://www.subtletab.com/verify/wunderlist.php",
+      "target": "_blank"
+    }
+  }, ["\n                            Click here to setup\n                        "]), " ", _h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.authCode),
+      expression: "authCode"
+    }],
+    attrs: {
+      "type": "text",
+      "placeholder": "Paste authentication code..."
+    },
+    domProps: {
+      "value": _vm._s(_vm.authCode)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.authCode = $event.target.value
+      }
+    }
+  }), " ", _h('button', {
+    staticClass: "save-button mar-0",
+    on: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.saveAuthCode('w')
+      }
+    }
+  }, ["Save"]), " ", _h('span', {
+    domProps: {
+      "innerHTML": _vm._s(_vm.saveMessage)
+    }
+  })]) : _vm._e()]) : _vm._e()])]), " ", _h('footer', {
     staticClass: "customize-footer"
   }, [_h('div', {
     staticClass: "flex"
@@ -3735,14 +5605,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticStyle: {
       "margin": "0 0.5rem"
     }
-  }, ["|"]), " ", _vm._m(1)]), " ", _vm._m(2)])])
+  }, ["|"]), " ", _vm._m(0)]), " ", _vm._m(1)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('li', {
-    staticClass: "flex flex-center"
-  }, [_h('div', [_h('div', {
-    staticClass: "flex flex-center"
-  })])])
-},function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
     staticClass: "flex"
   }, [_h('span', {
@@ -3780,7 +5644,7 @@ if (false) {
 }
 
 /***/ },
-/* 36 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -3904,11 +5768,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "y": "393.8",
       "height": "20.7"
     }
-  })])])]), " "]), " ", (_vm.showTodos) ? _h('todos', {
-    class: {
-      'fade_in': _vm.showTodos
-    }
-  }) : _vm._e()]), " ", _h('div', {
+  })])])]), " "]), " ", (_vm.showTodos) ? [(_vm.sharedData.todos.type === 'default') ? _h('todos') : _vm._e(), " ", (_vm.sharedData.todos.type === 'w') ? _h('WTodos') : _vm._e()] : _vm._e()]), " ", (_vm.sharedData.showUtilities.showNotes) ? _h('div', {
     staticClass: "notes-widget relative",
     on: {
       "keydown": function($event) {
@@ -3985,7 +5845,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     class: {
       'fade_in': _vm.showNotes
     }
-  }) : _vm._e()]), " ", _h('div', {
+  }) : _vm._e()]) : _vm._e(), " ", _h('div', {
     staticClass: "pointer nav-bar-opener",
     class: {
       'fade_in': !_vm.showCustomizeMenu
@@ -4055,7 +5915,7 @@ if (false) {
 }
 
 /***/ },
-/* 37 */
+/* 40 */
 /***/ function(module, exports) {
 
 /*
@@ -4277,16 +6137,16 @@ function applyToTag(styleElement, obj) {
 
 
 /***/ },
-/* 38 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(37)(content, {});
+var update = __webpack_require__(40)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -4303,7 +6163,7 @@ if(false) {
 }
 
 /***/ },
-/* 39 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10245,10 +12105,10 @@ setTimeout(function () {
 
 module.exports = Vue$2;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20), __webpack_require__(40)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(43)))
 
 /***/ },
-/* 40 */
+/* 43 */
 /***/ function(module, exports) {
 
 var g;
@@ -10273,10 +12133,10 @@ module.exports = g;
 
 
 /***/ },
-/* 41 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4);
+module.exports = __webpack_require__(5);
 
 
 /***/ }

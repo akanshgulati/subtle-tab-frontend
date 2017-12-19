@@ -52,8 +52,8 @@
                         <li>
                             <input type="radio" v-model="activeTab" value="todo" id="tab5">
                             <label for="tab5" class="flex-center"  :class="{'active': activeTab === 'todo'}">
-                                <img src="images/icons/weather-icon.png">
-                                <span>Todo</span>
+                                <img src="images/icons/todo-icon.png">
+                                <span>Todos</span>
                             </label>
                         </li>
                     </ul>
@@ -217,15 +217,30 @@
                     </section>
                     <section v-if="activeTab === 'todo'">
                         <div>
-                            <h4>Todo</h4>
+                            <h4>Settings</h4>
                             <ul class="inline-list">
                                 <li class="inline-list-item">
                                     <span class="sub-heading">Type</span>
                                     <div class="right">
-                                        <button v-on:click="getPermission">Get Perm</button>
+                                        <input type="radio" v-model="todosType" @change="todoTypeChange" id="defaultTodo"
+                                               class="filled-in" value="default"/>
+                                        <label for="defaultTodo" class="inline-radio">Default</label>
+                                        <input type="radio" v-model="todosType" @change="todoTypeChange" id="wTodos"
+                                               class="filled-in" value="w"/>
+                                        <label for="wTodos" class="inline-radio">Wunderlist</label>
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                        <div v-if="isAuthCodeVisible || settings.todos.type == 'w'"
+                             :class="{'fade_in': settings.todos.type === 'w'}">
+                            <h4>Setup Wunderlist</h4>
+                            <a href="https://www.subtletab.com/verify/wunderlist.php" target="_blank">
+                                Click here to setup
+                            </a>
+                            <input type="text" v-model="authCode" placeholder="Paste authentication code...">
+                            <button class="save-button mar-0" v-on:click.stop="saveAuthCode('w')">Save</button>
+                            <span v-html="saveMessage"></span>
                         </div>
                     </section>
                 </div>
@@ -263,13 +278,22 @@
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
                 activeTab: 'general',
-                customLocation: this.settings.weather.location.name,
+                customLocation: '',
                 currentBgCustom: '',
-                isCustomBgSaveMsg: ''
+                isCustomBgSaveMsg: '',
+                todosType: this.settings.todos.type,
+                authCode: storage.get('w-auth-code'),
+                saveMessage: '',
+                isAuthCodeVisible : false
             };
         },
         mounted(){
+            // this is done for weather
+            this.customLocation = this.settings.weather.location.name ||
+                (storage.get(constants.STORAGE.WEATHER) && storage.get(constants.STORAGE.WEATHER)[4])
+            // this is done for backgrounds
             let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+
             if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]'
                 && bgCustom.length) {
                 this.currentBgCustom = bgCustom.join('\n');
@@ -327,23 +351,45 @@
                     this.isCustomBgSaveMsg = ''
                 }, 2000);
             },
+            todoTypeChange() {
+                if (this.todosType === 'w') {
+                    this.getPermission()
+                } else {
+                    storage.remove('w-auth-code')
+                    this.settings.todos.type = this.todosType = 'default'
+                    chrome.permissions.remove({origins: ['http://*.wunderlist.com/*']}, (removed) => {
+                        if (removed) {
+                            console.log('removed')
+
+                        }
+                    })
+                }
+            },
             getPermission(){
-                chrome.permissions.request({
-                    origins: ['http://*.wunderlist.com/*']
-                }, function(granted) {
+                let self = this;
+                chrome.permissions.request({origins: ['http://*.wunderlist.com/*']}, (granted) =>{
                     // The callback argument will be true if the user granted the permissions.
                     if (granted) {
-                        console.log('granted');
+                        console.log('granted')
+                        this.isAuthCodeVisible = true
+                        //self.settings.todos.type = self.todosType = 'w'
                     } else {
-                        debugger;
                         console.log('notgranted' + 	chrome.runtime.lastError.message);
+                        self.settings.todos.type = 'default'
                     }
                 });
+            },
+            saveAuthCode(type) {
+                if (type === 'w' && this.authCode && this.authCode.length === 60) {
+                    storage.set('w-auth-code', this.authCode)
+                    this.settings.todos.type = 'w'
+                    this.saveMessage = `<span class='success'>Wunderlist Integrated</span>`
+                } else {
+                    this.settings.todos.type = 'default'
+                    this.saveMessage = `<span class='error'>Invalid auth code</span>`
+                }
             }
         },
-        props:['settings'],
-        computed: {
-
-        }
+        props:['settings']
     }
 </script>
