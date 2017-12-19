@@ -61,11 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-<<<<<<< Updated upstream
-/******/ 	return __webpack_require__(__webpack_require__.s = 38);
-=======
 /******/ 	return __webpack_require__(__webpack_require__.s = 44);
->>>>>>> Stashed changes
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,51 +69,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ exports["a"] = {
-    THEME: {
-        NATURE: 'nature',
-        ARCHITECTURE: 'building',
-        TRAVEL: 'travel',
-        NIGHT: 'night'
-    },
-    STORAGE: {
-        SHARED_DATA: 'shared-data',
-        WEATHER: 'weather',
-
-        BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
-        BACKGROUND_SEEN_TRAVEL: 'bg-seen-travel',
-        BACKGROUND_SEEN_BUILDING: 'bg-seen-building',
-        BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
-        BACKGROUND_CUSTOM: 'bg-custom',
-        BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
-
-        CURRENT_PAGE: 'current-page',
-        SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
-    },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
-};
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Constants__ = __webpack_require__(1);
 
 
 var storage = {
     get: function get(key) {
-        if (!key) {
-            return;
-        }
         var value = localStorage.getItem(key);
         return JSON.parse(value);
     },
     set: function set(key, value) {
-        if (!key || value === undefined || value === null) {
-            return;
-        }
         if (__WEBPACK_IMPORTED_MODULE_0__Constants__["a" /* default */].SYNC.indexOf(key) > -1 || key.indexOf('note-') > -1) {
             var obj = {};
             obj[key] = value;
@@ -126,9 +86,6 @@ var storage = {
         localStorage.setItem(key, JSON.stringify(value));
     },
     setLocal: function setLocal(key, value) {
-        if (!key || value === undefined || value === null) {
-            return;
-        }
         localStorage.setItem(key, JSON.stringify(value));
     },
     remove: function remove(key) {
@@ -143,6 +100,11 @@ var storage = {
     append: function append(key, value) {
         var initialValue = this.get(key) || [];
         initialValue.push(value);
+        this.set(key, initialValue);
+    },
+    prepend: function prepend(key, value) {
+        var initialValue = this.get(key) || [];
+        initialValue.unshift(value);
         this.set(key, initialValue);
     },
     getMap: function getMap(key) {
@@ -184,8 +146,6 @@ var storage = {
 /* harmony default export */ exports["a"] = storage;
 
 /***/ },
-<<<<<<< Updated upstream
-=======
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -227,7 +187,6 @@ var storage = {
 };
 
 /***/ },
->>>>>>> Stashed changes
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -298,8 +257,7 @@ var config = {
         },
         clock: {
             showTwelveHour: true,
-            showDay: true,
-            type: 'twelve'
+            showDay: true
         },
         weather: {
             unit: 'c',
@@ -312,12 +270,9 @@ var config = {
             themeId: 1,
             changeInterval: 10,
             type: 'predefined'
-<<<<<<< Updated upstream
-=======
         },
         todos: {
             type: 'default'
->>>>>>> Stashed changes
         }
     }
 };
@@ -328,11 +283,6 @@ var config = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-<<<<<<< Updated upstream
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(20);
-=======
 /* harmony default export */ exports["a"] = {
     isTodayDate: function isTodayDate(timeStamp) {
         if (!timeStamp) {
@@ -361,7 +311,6 @@ var config = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue__ = __webpack_require__(22);
->>>>>>> Stashed changes
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__app_vue__);
 
 
@@ -380,23 +329,6 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(3);
-<<<<<<< Updated upstream
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_clock_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_background_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_background_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_customize_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_weather_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_notes_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__utils_backgroundData__ = __webpack_require__(2);
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_clock_vue__ = __webpack_require__(25);
@@ -450,7 +382,6 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 //
 //
 //
->>>>>>> Stashed changes
 //
 //
 //
@@ -521,16 +452,12 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 /* harmony default export */ exports["default"] = {
     beforeCreate: function beforeCreate() {
         this.sharedData = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SHARED_DATA) || __WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* default */].defaultCustomization;
-<<<<<<< Updated upstream
-        this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.SEEN_ONBOARDING) || false;
-=======
         this.seenOnBoarding = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('seen-onboarding') || false;
         if (this.sharedData && !this.sharedData.todos) {
             this.sharedData.todos = {
                 type: 'default'
             };
         }
->>>>>>> Stashed changes
     },
     data: function data() {
         return {
@@ -539,12 +466,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             showCustomizeMenu: true,
             showNotes: false,
             isLoading: true,
-<<<<<<< Updated upstream
-            seenOnBoarding: this.seenOnBoarding
-=======
             seenOnBoarding: this.seenOnBoarding,
             showTodos: false
->>>>>>> Stashed changes
         };
     },
     mounted: function mounted() {
@@ -558,7 +481,6 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 self.closeWindows();
             }
         });
-        this.init();
     },
 
     watch: {
@@ -577,7 +499,12 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             this.showNotes = false;
         },
         toggleNotes: function toggleNotes() {
+            this.showTodos = false;
             this.showNotes = !this.showNotes;
+        },
+        toggleTodos: function toggleTodos() {
+            this.showNotes = false;
+            this.showTodos = !this.showTodos;
         },
         stopLoad: function stopLoad() {
             this.isLoading = false;
@@ -591,17 +518,21 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         },
         closeWindows: function closeWindows() {
             this.showNotes = false;
+            this.showTodos = false;
             this.showCustomizeMenu = false;
         },
-        init: function init() {
-            // this is done for backgrounds
-            var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
-            if (!bgCustom) {
-                bgCustom = __WEBPACK_IMPORTED_MODULE_9__utils_backgroundData__["a" /* default */].customBackgrounds;
-                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, bgCustom);
+        generateId: function generateId() {
+            return 'xxxxxxxx3-0xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0,
+                    v = c === 'x' ? r : r & 0x3 | 0x8;
+                return v.toString(16);
+            });
+        },
+        isolateScroll: function isolateScroll(elementId) {
+            var el = document.getElementById(elementId);
+            if (!el) {
+                return;
             }
-<<<<<<< Updated upstream
-=======
             el.onmousewheel = function (e) {
                 el.scrollTop -= e.wheelDeltaY;
                 e = e || window.event;
@@ -614,7 +545,6 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 return;
             }
             return text.charAt(0).toUpperCase() + text.slice(1);
->>>>>>> Stashed changes
         }
     },
     components: {
@@ -622,258 +552,10 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         Clock: __WEBPACK_IMPORTED_MODULE_3__components_clock_vue___default.a,
         Customize: __WEBPACK_IMPORTED_MODULE_5__components_customize_vue___default.a,
         Weather: __WEBPACK_IMPORTED_MODULE_6__components_weather_vue___default.a,
-<<<<<<< Updated upstream
-        Onboarding: __WEBPACK_IMPORTED_MODULE_8__components_onboarding_vue___default.a,
-        Notes: __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default.a
-    }
-};
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Constants__ = __webpack_require__(0);
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-var bgElement = void 0;
-
-var backgroundVue = {
-    beforeCreate: function beforeCreate() {
-        //this.bgSeen = storage.get('bg-seen') || [];
-    },
-    data: function data() {
-        return {
-            showBackground: false,
-            bgSeen: '',
-            tabsCount: '',
-            themeId: '',
-            defaultImageLoaded: false,
-            bgIndex: 0,
-            allBackgrounds: null,
-            bgKeys: null,
-            themeVal: '',
-            backgroundType: this.settings.type || 'predefined'
-        };
-    },
-
-    props: ['settings'],
-    mounted: function mounted() {
-        bgElement = document.getElementById('background');
-        this.getBg();
-    },
-
-    methods: {
-        getAllBackgrounds: function getAllBackgrounds(theme) {
-            var currentPage = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.CURRENT_PAGE);
-            var localBgData = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
-            var storedBg = __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[theme.id];
-            return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
-        },
-        getBg: function getBg(reset) {
-            if (this.settings && this.settings.type !== 'custom') {
-                this.getBackground(reset);
-            } else {
-                this.loadCustomBackground(reset);
-            }
-            this.backgroundType = this.settings.type;
-        },
-
-        getBackground: function getBackground(reset) {
-            if (reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type) {
-                return;
-            }
-            var theme = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].getCurrentTheme(this.settings.themeId);
-            this.themeVal = theme.value;
-            var localBgData = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(theme.value);
-            this.bgSeen = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get('bg-seen-' + theme.value) || [];
-            var allBackgrounds = this.getAllBackgrounds(theme);
-            var bgKeys = Object.keys(allBackgrounds);
-            this.allBackgrounds = allBackgrounds;
-            this.bgKeys = bgKeys;
-            this.themeId = theme.id;
-
-            if (navigator.onLine) {
-                chrome.runtime.sendMessage({ query: 'log', value: 'GetBackgorund Called ' + theme.id });
-                var i = 0;
-                for (; i < bgKeys.length; i++) {
-                    if (this.bgSeen.indexOf(bgKeys[i]) === -1) {
-                        this.bgIndex = i;
-                        this.loadBackground();
-                        break;
-                    }
-                }
-
-                if (!localBgData || i >= bgKeys.length - 2) {
-                    chrome.runtime.sendMessage({ query: 'log', value: 'No Local Storage Found for theme ' + theme.id });
-                    chrome.runtime.sendMessage({ query: 'getBackground', theme: theme, newPage: true });
-                }
-
-                if (i >= bgKeys.length) {
-                    bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
-                    this.$emit('stopLoading');
-                }
-            } else {
-                bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
-                this.$emit('stopLoading');
-            }
-        },
-        loadCustomBackground: function loadCustomBackground(reset) {
-            var _this = this;
-
-            // this check is required to make sure to not change custom wallpaper when type is not changed
-            if (reset && this.backgroundType === this.settings.type) {
-                return;
-            }
-            var customBackgrounds = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
-            var customSeenBgIndex = __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN_CUSTOM);
-            // because customSeenBgIndex can be 0 , so strict checking
-            customSeenBgIndex = customSeenBgIndex === null ? -1 : customSeenBgIndex;
-            this.isLoading();
-            this.defaultImageLoaded = false;
-
-            if (!customBackgrounds || customBackgrounds.length < 1) {
-                // console.log("no custom backgrounds");
-                this.defaultImageLoaded = true;
-                bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
-                this.$emit('stopLoading');
-                this.markCustomBgSeen(customSeenBgIndex);
-                return;
-            }
-
-            // to increment index from stored index value or default value
-            if (customSeenBgIndex === customBackgrounds.length - 1) {
-                customSeenBgIndex = 0;
-            } else {
-                customSeenBgIndex++;
-            }
-
-            var currentUrl = customBackgrounds[customSeenBgIndex];
-
-            chrome.runtime.sendMessage({
-                query: 'loadCurrentCustomBackground',
-                url: currentUrl
-            }, function (responseURL) {
-                if (responseURL) {
-                    // console.log("background loaded in time");
-                    _this.defaultImageLoaded = false;
-                    bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
-                    if (customBackgrounds.length > 1) {
-                        var nextUrlIndex = customSeenBgIndex === customBackgrounds.length - 1 ? 0 : customSeenBgIndex + 1;
-                        var nextUrl = customBackgrounds[nextUrlIndex];
-                        chrome.runtime.sendMessage({ query: 'loadNextBackground', url: nextUrl });
-                    }
-                } else {
-                    // console.log("background not loaded in time");
-                    _this.defaultImageLoaded = true;
-                    bgElement.style.backgroundImage = 'url(' + _this.getDefaultBg() + ')';
-                }
-                _this.$emit('stopLoading');
-                _this.markCustomBgSeen(customSeenBgIndex);
-            });
-        },
-        loadBackground: function loadBackground() {
-            var _this2 = this;
-
-            chrome.runtime.sendMessage({ query: 'log', value: 'Load Background Called' });
-            this.isLoading();
-            this.defaultImageLoaded = false;
-            var i = this.bgIndex;
-            var currentUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
-            chrome.runtime.sendMessage({ query: 'loadCurrentBackground', url: currentUrl }, function (responseURL) {
-                if (responseURL) {
-                    _this2.defaultImageLoaded = false;
-                    bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
-                    chrome.runtime.sendMessage({ query: 'log', value: 'Current URL ' + currentUrl });
-                    _this2.$emit('stopLoading');
-                    var nextUrl = __WEBPACK_IMPORTED_MODULE_0__utils_bgUtil__["a" /* default */].formImgURL(_this2.allBackgrounds[_this2.bgKeys[i + 1]], _this2.bgKeys[i + 1]);
-                    chrome.runtime.sendMessage({ query: 'log', value: 'Next URL ' + nextUrl });
-                    chrome.runtime.sendMessage({ query: 'loadNextBackground', url: nextUrl });
-                } else {
-                    _this2.defaultImageLoaded = true;
-                    bgElement.style.backgroundImage = 'url(' + _this2.getDefaultBg() + ')';
-                    chrome.runtime.sendMessage({ query: 'log', value: 'Default URL' + _this2.settings.themeId });
-                    _this2.$emit('stopLoading');
-                    chrome.runtime.sendMessage({ query: 'setTabsCount', value: 'decrement' });
-                }
-                _this2.markBgSeen(_this2.bgKeys[i]);
-            });
-        },
-        resetBackgroundTheme: function resetBackgroundTheme() {
-            this.getBg(true);
-            chrome.runtime.sendMessage({ query: 'setTabsCount', value: 0 });
-        },
-        isLoading: function isLoading() {
-            this.$emit('startLoading');
-        },
-        markBgSeen: function markBgSeen(id) {
-            var _this3 = this;
-
-            chrome.runtime.sendMessage({ query: 'getTabsCount' }, function (tabs) {
-                // to prevent change on refresh;
-                if (!tabs) {
-                    return;
-                }
-                if (tabs % _this3.settings.changeInterval === 0 && !_this3.defaultImageLoaded) {
-                    _this3.bgSeen.push(id);
-                    __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].set('bg-seen-' + _this3.themeVal, _this3.bgSeen);
-                } else if (_this3.defaultImageLoaded) {
-                    chrome.runtime.sendMessage({ query: 'setTabsCount', value: parseInt(tabs) - 1 });
-                }
-            });
-        },
-        getDefaultBg: function getDefaultBg() {
-            var counter = 0;
-            var value = Math.random();
-            var themeId = this.settings.themeId;
-            counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
-            chrome.runtime.sendMessage({ query: 'log', value: 'getDefaultBg Called with counter, ' + counter });
-            return __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__["a" /* default */].stored[themeId][1 + (themeId - 1) * 3 + counter];
-        },
-        markCustomBgSeen: function markCustomBgSeen(index) {
-            var _this4 = this;
-
-            chrome.runtime.sendMessage({ query: 'getTabsCount' }, function (tabs) {
-                // to prevent change on refresh;
-                if (!tabs) {
-                    return;
-                }
-                if (tabs % _this4.settings.changeInterval === 0 && !_this4.defaultImageLoaded) {
-                    __WEBPACK_IMPORTED_MODULE_2__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_3__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_SEEN_CUSTOM, index);
-                } else if (_this4.defaultImageLoaded) {
-                    chrome.runtime.sendMessage({ query: 'setTabsCount', value: parseInt(tabs) - 1 });
-                }
-            });
-        }
-    },
-    watch: {
-        settings: {
-            handler: function handler() {
-                chrome.runtime.sendMessage({ query: 'log', value: 'Reset Called' });
-                this.resetBackgroundTheme();
-            },
-            deep: true
-        }
-=======
         Onboarding: __WEBPACK_IMPORTED_MODULE_10__components_onboarding_vue___default.a,
         Notes: __WEBPACK_IMPORTED_MODULE_7__components_notes_vue___default.a,
         Todos: __WEBPACK_IMPORTED_MODULE_8__components_todos_vue___default.a,
         WTodos: __WEBPACK_IMPORTED_MODULE_9__components_WTodos_vue___default.a
->>>>>>> Stashed changes
     }
 };
 
@@ -882,84 +564,9 @@ var backgroundVue = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-<<<<<<< Updated upstream
-//
-//
-//
-//
-//
-//
-//
-
-var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-/* harmony default export */ exports["default"] = {
-    data: function data() {
-        return {
-            hrs: '',
-            min: '',
-            day: '',
-            date: '',
-            month: ''
-        };
-    },
-
-    props: ['settings'],
-    created: function created() {
-        this.updateDateTime();
-    },
-    mounted: function mounted() {
-        setInterval(this.updateDateTime, 1000);
-    },
-
-    methods: {
-        updateDateTime: function updateDateTime() {
-            var current = new Date();
-            this.hrs = current.getHours();
-            if (this.settings.type === 'twelve') {
-                this.hrs = this.hrs !== 0 && this.hrs !== 12 ? this.hrs % 12 : 12;
-            }
-            this.min = this.getZeroPad(current.getMinutes());
-            this.day = dayArr[current.getDay()];
-            this.date = current.getDate();
-            this.month = monthArr[current.getMonth()];
-        },
-        getZeroPad: function getZeroPad(n) {
-            return (parseInt(n, 10) >= 10 ? '' : '0') + n;
-        },
-        concatAMPM: function concatAMPM() {
-            if (this.settings.type === 'twelve') {
-                return this.hrs >= 12 ? 'PM' : 'AM';
-            }
-        }
-    }
-};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_timeUtil__ = __webpack_require__(4);
->>>>>>> Stashed changes
 //
 //
 //
@@ -1065,80 +672,12 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
-<<<<<<< Updated upstream
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-=======
 
 
 
 
 var syncWunderlist = void 0;
 /* harmony default export */ exports["default"] = {
-    beforeMount: function beforeMount() {
-        this.authCode = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get('w-auth-code');
-    },
     data: function data() {
         return {
             todos: [],
@@ -1155,9 +694,6 @@ var syncWunderlist = void 0;
         };
     },
     mounted: function mounted() {
-        if (!this.authCode) {
-            return;
-        }
         this.$parent.isolateScroll('todos-list');
         this.$parent.isolateScroll('todo-sidebar');
         //this.getTodosFromServer()
@@ -1176,14 +712,12 @@ var syncWunderlist = void 0;
     },
     methods: {
         http: function http(url, method, data) {
-            var _this = this;
-
             return new Promise(function (resolve, reject) {
                 var xmlhttp = new XMLHttpRequest();
                 method = method || 'GET';
                 xmlhttp.open(method, url);
                 xmlhttp.setRequestHeader('X-Client-ID', 'd63bcf15740b10b6790a');
-                xmlhttp.setRequestHeader('X-Access-Token', _this.authCode);
+                xmlhttp.setRequestHeader('X-Access-Token', '4a3d58379ba5d71e80f87029becfda03d1d6acafccb06e2b1e143ed7dff8');
                 xmlhttp.setRequestHeader("Content-type", "application/json");
                 xmlhttp.onreadystatechange = function () {
                     if (xmlhttp.readyState === 4) {
@@ -1201,7 +735,7 @@ var syncWunderlist = void 0;
             this[field] = !this[field];
         },
         init: function init() {
-            var _this2 = this;
+            var _this = this;
 
             // If local list is present
             if (this.currentList && this.currentList.id) {
@@ -1209,27 +743,27 @@ var syncWunderlist = void 0;
                 // check for revisions
                 this.getTodoLists(this.currentList.id).then(function (_list) {
                     if (!_list) {
-                        _this2.resetTodos();
+                        _this.resetTodos();
                         return;
                     }
-                    if (_list.revision > _this2.currentList.revision) {
-                        _this2.getTodos(_this2.currentList.id).then(function (todos) {
-                            return _this2.todos = todos;
+                    if (_list.revision > _this.currentList.revision) {
+                        _this.getTodos(_this.currentList.id).then(function (todos) {
+                            return _this.todos = todos;
                         });
                         return;
                     }
-                    var localTodos = _this2.getLocalTodos();
+                    var localTodos = _this.getLocalTodos();
                     if (!localTodos) {
-                        _this2.getTodos(_this2.currentList.id).then(function (todos) {
-                            return _this2.todos = todos;
+                        _this.getTodos(_this.currentList.id).then(function (todos) {
+                            return _this.todos = todos;
                         });
                         return;
                     }
-                    _this2.getTodos(_this2.currentList.id).then(function (todos) {
-                        return _this2.todos = todos;
+                    _this.getTodos(_this.currentList.id).then(function (todos) {
+                        return _this.todos = todos;
                     });
                 }, function () {
-                    _this2.resetTodos();
+                    _this.resetTodos();
                 });
                 return;
             }
@@ -1239,7 +773,7 @@ var syncWunderlist = void 0;
             this.resetTodos();
         },
         sync: function sync() {
-            var _this3 = this;
+            var _this2 = this;
 
             if (!this.currentList || !this.currentList.id) {
                 return;
@@ -1247,18 +781,18 @@ var syncWunderlist = void 0;
             // check for revisions
             this.getTodoLists(this.currentList.id).then(function (_list) {
                 if (!_list) {
-                    _this3.resetTodos();
+                    _this2.resetTodos();
                     return;
                 }
-                var currentRevision = _this3.currentList.revision;
+                var currentRevision = _this2.currentList.revision;
                 if (_list.revision > currentRevision) {
-                    _this3.currentList = _list;
-                    _this3.getTodos(_this3.currentList.id, true).then(function (todos) {
-                        return _this3.todos = todos;
+                    _this2.currentList = _list;
+                    _this2.getTodos(_this2.currentList.id, true).then(function (todos) {
+                        return _this2.todos = todos;
                     });
                 }
             }, function () {
-                _this3.resetTodos();
+                _this2.resetTodos();
             });
         },
         getLocalTodos: function getLocalTodos() {
@@ -1289,22 +823,22 @@ var syncWunderlist = void 0;
             });
         },
         resetTodos: function resetTodos() {
-            var _this4 = this;
+            var _this3 = this;
 
             this.getTodoLists().then(function (_lists) {
-                _this4.currentList = _lists[0];
-                _this4.getTodos(_this4.currentList.id).then(function (todos) {
-                    return _this4.todos = todos;
+                _this3.currentList = _lists[0];
+                _this3.getTodos(_this3.currentList.id).then(function (todos) {
+                    return _this3.todos = todos;
                 });
             });
         },
         getTodoLists: function getTodoLists(id) {
-            var _this5 = this;
+            var _this4 = this;
 
             var url = 'https://a.wunderlist.com/api/v1/lists';
             return this.http(url).then(function (data) {
                 // Update lists
-                _this5.todoLists = data.map(function (list) {
+                _this4.todoLists = data.map(function (list) {
                     return {
                         id: list.id,
                         title: list.title,
@@ -1325,7 +859,7 @@ var syncWunderlist = void 0;
                         revision: list.revision
                     };
                 }
-                return _this5.todoLists;
+                return _this4.todoLists;
             });
         },
         getTodoList: function getTodoList(id) {
@@ -1339,7 +873,7 @@ var syncWunderlist = void 0;
             });
         },
         getTodos: function getTodos(listId, notShowLoading) {
-            var _this6 = this;
+            var _this5 = this;
 
             if (!listId) {
                 return;
@@ -1355,10 +889,10 @@ var syncWunderlist = void 0;
             return Promise.all([p1, p2]).then(function (data) {
                 todos = data[0].concat(data[1]);
                 todos = todos.map(function (todo) {
-                    return _this6.filterTodoResponse(todo);
+                    return _this5.filterTodoResponse(todo);
                 });
-                _this6.setLocalTodos(todos);
-                _this6.isLoadingTodos = false;
+                _this5.setLocalTodos(todos);
+                _this5.isLoadingTodos = false;
                 return todos;
             });
         },
@@ -1375,7 +909,7 @@ var syncWunderlist = void 0;
             };
         },
         createTodo: function createTodo() {
-            var _this7 = this;
+            var _this6 = this;
 
             if (!this.newTodo.title) {
                 return;
@@ -1388,14 +922,14 @@ var syncWunderlist = void 0;
                 due_date: newTodo.dueOn
             };
             this.http(this.wunderlistUrl, 'POST', todo).then(function (_todo) {
-                _this7.todos.unshift(_this7.filterTodoResponse(_todo));
+                _this6.todos.unshift(_this6.filterTodoResponse(_todo));
             });
         },
         checkedTodo: function checkedTodo(todo) {
-            var _this8 = this;
+            var _this7 = this;
 
             this.patchTodo(todo.id, { completed: todo.completed, revision: todo.revision }).then(function (_todo) {
-                _this8.$set(_this8.todos, _this8.todos.indexOf(todo), _this8.filterTodoResponse(_todo));
+                _this7.$set(_this7.todos, _this7.todos.indexOf(todo), _this7.filterTodoResponse(_todo));
             });
         },
         sortTodos: function sortTodos() {
@@ -1416,15 +950,15 @@ var syncWunderlist = void 0;
             this.init();
         },
         deleteTodo: function deleteTodo(todo) {
-            var _this9 = this;
+            var _this8 = this;
 
             if (!confirm('Are you sure you want to delete this todo?')) {
                 return;
             }
             var url = this.wunderlistUrl + '/' + todo.id;
             this.http(url, 'DELETE', { revision: todo.revision }).then(function () {
-                _this9.todos.splice(_this9.todos.indexOf(todo), 1);
-                _this9.sortTodos();
+                _this8.todos.splice(_this8.todos.indexOf(todo), 1);
+                _this8.sortTodos();
             });
         },
         patchTodo: function patchTodo(id, data) {
@@ -1440,15 +974,15 @@ var syncWunderlist = void 0;
             this.currentTodo = Object.assign({}, todo);
         },
         updateTodo: function updateTodo() {
-            var _this10 = this;
+            var _this9 = this;
 
             this.patchTodo(this.currentTodo.id, {
                 title: this.currentTodo.title,
                 due_date: this.currentTodo.dueOn,
                 revision: this.currentTodo.revision
             }).then(function (_todo) {
-                _this10.$set(_this10.todos, _this10.currentTodoIndex, _this10.filterTodoResponse(_todo));
-                _this10.showTodoManager = false;
+                _this9.$set(_this9.todos, _this9.currentTodoIndex, _this9.filterTodoResponse(_todo));
+                _this9.showTodoManager = false;
             });
         }
     },
@@ -1484,56 +1018,6 @@ var syncWunderlist = void 0;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_backgroundData__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_Constants__ = __webpack_require__(1);
->>>>>>> Stashed changes
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -1546,19 +1030,6 @@ var syncWunderlist = void 0;
 
 
 
-
-<<<<<<< Updated upstream
-/* harmony default export */ exports["default"] = {
-    data: function data() {
-        return {
-            selectedTheme: this.settings.background.themeId,
-            themes: __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__["a" /* default */].themes,
-            version: chrome.runtime.getManifest().version,
-            activeTab: 'general',
-            customLocation: '',
-            currentBgCustom: '',
-            isCustomBgSaveMsg: ''
-=======
 
 var bgElement = void 0;
 
@@ -1578,191 +1049,13 @@ var backgroundVue = {
             bgKeys: null,
             themeVal: '',
             backgroundType: this.settings.type || 'predefined'
->>>>>>> Stashed changes
         };
     },
 
     props: ['settings'],
     mounted: function mounted() {
-<<<<<<< Updated upstream
-        // this is done for weather
-        this.customLocation = this.settings.weather.location.name || __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER) && __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER)[4];
-        // this is done for backgrounds
-        var bgCustom = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM);
-
-        if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]' && bgCustom.length) {
-            this.currentBgCustom = bgCustom.join('\n');
-        }
-    },
-
-    methods: {
-        isActiveTheme: function isActiveTheme(index) {
-            return this.settings.background.themeId === index + 1;
-        },
-        selectActive: function selectActive(index) {
-            this.settings.background.themeId = index + 1;
-        },
-        closeCustomizeMenu: function closeCustomizeMenu() {
-            this.$emit('closeCustomizeMenu');
-        },
-        updateCustomLocation: function updateCustomLocation() {
-            if (this.customLocation !== this.settings.weather.location.name) {
-                this.settings.weather.location.name = this.customLocation;
-            }
-        },
-        saveCustomBg: function saveCustomBg() {
-            var _this = this;
-
-            var validateImgUrls = function validateImgUrls(backgrounds) {
-                for (var i = 0; i < backgrounds.length; i++) {
-                    if (backgrounds[i].match(/^(http?|https):\/\/.*(jpeg|png|gif|bmp|jpg)/g) === null) {
-                        _this.isCustomBgSaveMsg = '<span class=\'error\'>Wallpapers links are not in correct format.</span>';
-                        return false;
-                    }
-                }
-                return true;
-            };
-
-            var cleanUrls = function cleanUrls(backgrounds) {
-                return backgrounds.reduce(function (filtered, background) {
-                    if (typeof background === 'string' && background.length > 5) {
-                        filtered.push(background.trim());
-                    }
-                    return filtered;
-                }, []);
-            };
-
-            if (this.currentBgCustom) {
-                var backgrounds = this.currentBgCustom.split('\n');
-                if (backgrounds && backgrounds.length && validateImgUrls(backgrounds)) {
-                    backgrounds = cleanUrls(backgrounds);
-                    __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.BACKGROUND_CUSTOM, backgrounds);
-                    this.isCustomBgSaveMsg = '<span class=\'success\'>Wallpapers saved successfully.</span>';
-                }
-            } else {
-                this.isCustomBgSaveMsg = '<span class=\'error\'>Wallpapers not saved</span>';
-            }
-            setTimeout(function () {
-                _this.isCustomBgSaveMsg = '';
-            }, 2000);
-        }
-    },
-    props: ['settings'],
-    computed: {}
-};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_debounce__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ exports["default"] = {
-    beforeCreate: function beforeCreate() {
-        this.notesMeta = __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.NOTES_META) || { count: 0, deletedNotes: [], createdNotes: [] };
-    },
-    data: function data() {
-        return {
-            input: '',
-            notes: [],
-            currentNote: '',
-            currentNoteContent: '',
-            notesMeta: this.notesMeta,
-            errorMessage: null,
-            showSidebar: false
-        };
-    },
-    mounted: function mounted() {
-        this.isolateScroll('note');
-        this.isolateScroll('note-list');
-        document.execCommand("DefaultParagraphSeparator", false, "p");
-        this.populateNotes();
-        this.addNoteLimit('note');
-=======
         bgElement = document.getElementById('background');
         this.getBg();
->>>>>>> Stashed changes
     },
 
     methods: {
@@ -2022,9 +1315,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-<<<<<<< Updated upstream
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_backgroundData__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_storage__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(1);
@@ -2134,7 +1424,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
->>>>>>> Stashed changes
 //
 //
 //
@@ -2171,47 +1460,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
-<<<<<<< Updated upstream
-
-
-/* harmony default export */ exports["default"] = {
-    data: function data() {
-        return {
-            version: chrome.runtime.getManifest().version
-        };
-    },
-    mounted: function mounted() {
-        if (__WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get('sync')) {
-            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].chromeSync.get(null, function (details) {
-                var key = void 0;
-                for (key in details) {
-                    if (!details.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].setLocal(key, details[key]);
-                }
-            });
-        }
-    },
-
-    props: ['settings'],
-    methods: {
-        closeOnboarding: function closeOnboarding() {
-            this.$emit('stopOnboarding');
-        }
-    }
-};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_Constants__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_common__ = __webpack_require__(14);
-=======
 //
 //
 //
@@ -2321,7 +1569,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
->>>>>>> Stashed changes
 //
 //
 //
@@ -2339,33 +1586,12 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 //
 //
 //
-
 
 
 
 
 
 /* harmony default export */ exports["default"] = {
-<<<<<<< Updated upstream
-    beforeCreate: function beforeCreate() {
-        this.localWeather = __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].get(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER);
-    },
-
-    props: ['settings'],
-    mounted: function mounted() {
-        this.checkWeather();
-    },
-    data: function data() {
-        return {
-            weatherCode: null,
-            weatherClass: null,
-            weatherCity: null,
-            temp: null,
-            localWeather: this.localWeather,
-            error: null,
-            isLoading: false,
-            localSettings: Object.assign({}, this.settings)
-=======
     data: function data() {
         return {
             selectedTheme: this.settings.background.themeId,
@@ -2376,7 +1602,7 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             currentBgCustom: '',
             isCustomBgSaveMsg: '',
             todosType: this.settings.todos.type,
-            authCode: __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].get('w-auth-code'),
+            authCode: '',
             saveMessage: '',
             isAuthCodeVisible: false
         };
@@ -2446,7 +1672,6 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
             if (this.todosType === 'w') {
                 this.getPermission();
             } else {
-                __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].remove('w-auth-code');
                 this.settings.todos.type = this.todosType = 'default';
                 chrome.permissions.remove({ origins: ['http://*.wunderlist.com/*'] }, function (removed) {
                     if (removed) {
@@ -2467,19 +1692,24 @@ var dayArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
                     //self.settings.todos.type = self.todosType = 'w'
                 } else {
                     console.log('notgranted' + chrome.runtime.lastError.message);
-                    self.settings.todos.type = 'default';
+                    self.settings.todos.type = self.todosType = 'default';
                 }
             });
         },
         saveAuthCode: function saveAuthCode(type) {
+            var _this3 = this;
+
             if (type === 'w' && this.authCode && this.authCode.length === 60) {
                 __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set('w-auth-code', this.authCode);
                 this.settings.todos.type = 'w';
                 this.saveMessage = '<span class=\'success\'>Wunderlist Integrated</span>';
             } else {
-                this.settings.todos.type = 'default';
+                this.settings.todos.type = this.todosType = 'default';
                 this.saveMessage = '<span class=\'error\'>Invalid auth code</span>';
             }
+            setTimeout(function () {
+                _this3.isCustomBgSaveMsg = '';
+            }, 2000);
         }
     },
     props: ['settings']
@@ -2584,7 +1814,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             notesMeta: this.notesMeta,
             errorMessage: null,
             showSidebar: false
->>>>>>> Stashed changes
         };
     },
     mounted: function mounted() {
@@ -2605,31 +1834,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
     },
     methods: {
-<<<<<<< Updated upstream
-        checkWeather: function checkWeather(forceUpdate) {
-
-            if (!navigator.onLine) {
-                this.weatherCity = 'Offline';
-                return;
-            }
-
-            var now = +new Date();
-            var oneHourTime = 900000;
-
-            if (!this.localWeather || forceUpdate) {
-                this.prepareWeatherCall();
-                return;
-            }
-            if (this.localWeather) {
-                // Check if local weather is not more than an hour old and also
-                // checks if local city
-                if (now - this.localWeather[0] < oneHourTime) {
-                    this.showWeather(this.localWeather);
-                    this.isLoading = false;
-                } else {
-                    this.prepareWeatherCall();
-                }
-=======
         handler: function handler(e) {
             this.debouncedInput(e, this);
             this.debouncedInputSync(this);
@@ -2681,7 +1885,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 this.notesMeta.deletedNotes.splice(this.notesMeta.deletedNotes.indexOf(id), 1);
             } else {
                 id = this.notesMeta.createdNotes.length + 1;
->>>>>>> Stashed changes
             }
             return {
                 id: id,
@@ -2695,70 +1898,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return b.updatedOn - a.updatedOn;
             });
         },
-<<<<<<< Updated upstream
-        getWeather: function getWeather(data) {
-            var _this = this;
-
-            this.isLoading = true;
-            chrome.runtime.sendMessage({ query: 'startWeather' });
-
-            var url = 'https://api.subtletab.com/weather/new';
-            if (data.type !== 'custom') {
-                url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
-            } else {
-                url += '?location=' + data.location + '&type=custom';
-            }
-
-            return __WEBPACK_IMPORTED_MODULE_3__utils_common__["a" /* default */].http(url).then(function (_resp) {
-                var weather = _resp;
-                _this.isLoading = false;
-                _this.updateLocalWeather(weather);
-                _this.showWeather(_this.localWeather);
-            });
-        },
-        prepareWeatherCall: function prepareWeatherCall() {
-            var _this2 = this;
-
-            var options = void 0;
-            if (this.settings.location.type !== 'custom') {
-                // adding loading because below call takes time
-                this.isLoading = true;
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    options = {
-                        lat: position.coords.latitude,
-                        long: position.coords.longitude,
-                        type: 'geo'
-                    };
-                    _this2.getWeather(options);
-                }, function (error) {
-                    console.log(error);
-                }, {
-                    timeout: 10000
-                });
-            } else {
-                if (this.settings.location && this.settings.location.name) {
-                    options = {
-                        location: this.settings.location.name,
-                        type: 'custom'
-                    };
-                    this.getWeather(options);
-                }
-            }
-        },
-        showWeather: function showWeather(weatherArr) {
-            this.temp = this.settings.unit === 'f' ? weatherArr[2] : weatherArr[1];
-            this.weatherCode = weatherArr[3];
-            this.weatherClass = __WEBPACK_IMPORTED_MODULE_1__utils_weatherUtil__["a" /* default */][weatherArr[3]];
-            this.weatherCity = weatherArr[4];
-        },
-        updateLocalWeather: function updateLocalWeather(weatherObj) {
-            if (Object.keys(weatherObj).length !== 4) {
-                return;
-            }
-            var now = +new Date();
-            this.localWeather = [now, weatherObj.temp, weatherObj.alt.temp, weatherObj.code, weatherObj.city];
-            __WEBPACK_IMPORTED_MODULE_0__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.WEATHER, this.localWeather);
-=======
 
         isActiveNote: function isActiveNote(id) {
             return this.currentNote.id === id;
@@ -2861,22 +2000,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             setTimeout(function () {
                 self.isolateScroll('note');
             }, 100);
->>>>>>> Stashed changes
         }
     },
     watch: {
         notesMeta: {
             handler: function handler(newValue) {
-<<<<<<< Updated upstream
-                if (this.localSettings.unit !== newValue.unit) {
-                    this.checkWeather();
-                } else if (this.localSettings.location.name !== newValue.location.name || this.localSettings.location.type !== newValue.location.type) {
-                    this.checkWeather(true);
-                }
-                this.localSettings = JSON.parse(JSON.stringify(newValue));
-=======
                 __WEBPACK_IMPORTED_MODULE_1__utils_storage__["a" /* default */].set(__WEBPACK_IMPORTED_MODULE_2__utils_Constants__["a" /* default */].STORAGE.NOTES_META, newValue);
->>>>>>> Stashed changes
             },
             deep: true
         }
@@ -2898,14 +2027,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-<<<<<<< Updated upstream
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__storage__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backgroundData__ = __webpack_require__(2);
-
-
-
-=======
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(0);
 //
 //
@@ -2943,7 +2064,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
->>>>>>> Stashed changes
 
 
 /* harmony default export */ exports["default"] = {
@@ -2965,186 +2085,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             });
         }
     },
-<<<<<<< Updated upstream
-    getCurrentTheme: function getCurrentTheme(id) {
-        var themes = __WEBPACK_IMPORTED_MODULE_2__backgroundData__["a" /* default */].themes;
-        for (var i = 0; i < themes.length; i++) {
-            if (themes[i].id === id) {
-                return themes[i];
-            }
-        }
-    }
-};
-
-/* harmony default export */ exports["a"] = bgUtil;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    http: function http(url, method, data) {
-        return new Promise(function (resolve, reject) {
-            var xmlhttp = new XMLHttpRequest();
-            method = method || 'GET';
-            xmlhttp.open(method, url);
-            xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState === 4) {
-                    resolve(JSON.parse(xmlhttp.responseText));
-                }
-            };
-            xmlhttp.onerror = function () {
-                reject(xmlhttp.status);
-            };
-            xmlhttp.send(JSON.stringify(data));
-        });
-    }
-};
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-var _ = function _(obj) {
-    if (obj instanceof _) return obj;
-    if (!(this instanceof _)) return new _(obj);
-    this._wrapped = obj;
-};
-
-_.now = Date.now || function () {
-    return new Date().getTime();
-};
-
-module.exports = function (func, wait, options) {
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    if (!options) options = {};
-    var later = function later() {
-        previous = options.leading === false ? 0 : _.now();
-        timeout = null;
-        result = func.apply(context, args);
-        if (!timeout) context = args = null;
-    };
-    return function () {
-        var now = _.now();
-        if (!previous && options.leading === false) previous = now;
-        var remaining = wait - (now - previous);
-        context = this;
-        args = arguments;
-        if (remaining <= 0 || remaining > wait) {
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-            }
-            previous = now;
-            result = func.apply(context, args);
-            if (!timeout) context = args = null;
-        } else if (!timeout && options.trailing !== false) {
-            timeout = setTimeout(later, remaining);
-        }
-        return result;
-    };
-};
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    "0": "tornado",
-    "1": "day-storm-showers",
-    "2": "hurricane",
-    "3": "thunderstorm",
-    "4": "thunderstorm",
-    "5": "snow",
-    "6": "sleet",
-    "7": "rain-mix",
-    "8": "rain",
-    "9": "rain",
-    "10": "snow-wind",
-    "11": "showers",
-    "12": "showers",
-    "13": "snowflake-cold",
-    "14": "snow",
-    "15": "snow-wind",
-    "16": "snow",
-    "17": "hail",
-    "18": "sleet",
-    "19": "dust",
-    "20": "fog",
-    "21": "haze",
-    "22": "smoke",
-    "23": "strong-wind",
-    "24": "windy",
-    "25": "snowflake-cold",
-    "26": "cloudy",
-    "27": "night-cloudy",
-    "28": "day-cloudy",
-    "29": "night-cloudy",
-    "30": "day-cloudy",
-    "31": "night-clear",
-    "32": "day-sunny",
-    "33": "night-clear",
-    "34": "day-sunny",
-    "35": "hail",
-    "36": "hot",
-    "37": "thunderstorm",
-    "38": "thunderstorm",
-    "39": "thunderstorm",
-    "40": "storm-showers",
-    "41": "snowflake-cold",
-    "42": "snow",
-    "43": "snow",
-    "44": "cloudy",
-    "45": "storm-showers",
-    "46": "snow-wind",
-    "47": "thunderstorm"
-};
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(18)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
-
-// exports
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-=======
 
     props: ['settings'],
     methods: {
@@ -3288,16 +2228,9 @@ module.exports = function() {
 //
 //
 //
->>>>>>> Stashed changes
 
 
 
-<<<<<<< Updated upstream
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-=======
->>>>>>> Stashed changes
 
 
 /* harmony default export */ exports["default"] = {
@@ -3668,11 +2601,7 @@ module.exports = function() {
 };
 
 /***/ },
-<<<<<<< Updated upstream
-/* 20 */
-=======
 /* 16 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3681,25 +2610,6 @@ module.exports = function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backgroundData__ = __webpack_require__(2);
 
 
-<<<<<<< Updated upstream
-/* template */
-var __vue_template__ = __webpack_require__(33)
-__vue_options__ = __vue_exports__ = __vue_exports__ || {}
-if (
-  typeof __vue_exports__.default === "object" ||
-  typeof __vue_exports__.default === "function"
-) {
-if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
-__vue_options__ = __vue_exports__ = __vue_exports__.default
-}
-if (typeof __vue_options__ === "function") {
-  __vue_options__ = __vue_options__.options
-}
-__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/app.vue"
-__vue_options__.render = __vue_template__.render
-__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-=======
->>>>>>> Stashed changes
 
 
 var bgUtil = {
@@ -3761,16 +2671,6 @@ var bgUtil = {
 /* harmony default export */ exports["a"] = bgUtil;
 
 /***/ },
-<<<<<<< Updated upstream
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-var __vue_exports__, __vue_options__
-var __vue_styles__ = {}
-
-/* styles */
-__webpack_require__(35)
-=======
 /* 17 */
 /***/ function(module, exports) {
 
@@ -3779,44 +2679,11 @@ var _ = function _(obj) {
     if (!(this instanceof _)) return new _(obj);
     this._wrapped = obj;
 };
->>>>>>> Stashed changes
 
 _.now = Date.now || function () {
     return new Date().getTime();
 };
 
-<<<<<<< Updated upstream
-/* template */
-var __vue_template__ = __webpack_require__(29)
-__vue_options__ = __vue_exports__ = __vue_exports__ || {}
-if (
-  typeof __vue_exports__.default === "object" ||
-  typeof __vue_exports__.default === "function"
-) {
-if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
-__vue_options__ = __vue_exports__ = __vue_exports__.default
-}
-if (typeof __vue_options__ === "function") {
-  __vue_options__ = __vue_options__.options
-}
-__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/background.vue"
-__vue_options__.render = __vue_template__.render
-__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1385f791", __vue_options__)
-  } else {
-    hotAPI.reload("data-v-1385f791", __vue_options__)
-  }
-})()}
-if (__vue_options__.functional) {console.error("[vue-loader] background.vue: functional components are not supported and should be defined in plain js files using render functions.")}
-=======
 module.exports = function (func, wait, options) {
     var context, args, result;
     var timeout = null;
@@ -3848,7 +2715,6 @@ module.exports = function (func, wait, options) {
         return result;
     };
 };
->>>>>>> Stashed changes
 
 /***/ },
 /* 18 */
@@ -3907,35 +2773,12 @@ module.exports = function (func, wait, options) {
 };
 
 /***/ },
-<<<<<<< Updated upstream
-/* 22 */
-=======
 /* 19 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(20)();
 // imports
 
-<<<<<<< Updated upstream
-/* template */
-var __vue_template__ = __webpack_require__(31)
-__vue_options__ = __vue_exports__ = __vue_exports__ || {}
-if (
-  typeof __vue_exports__.default === "object" ||
-  typeof __vue_exports__.default === "function"
-) {
-if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
-__vue_options__ = __vue_exports__ = __vue_exports__.default
-}
-if (typeof __vue_options__ === "function") {
-  __vue_options__ = __vue_options__.options
-}
-__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/clock.vue"
-__vue_options__.render = __vue_template__.render
-__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-=======
->>>>>>> Stashed changes
 
 // module
 exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"background.vue","sourceRoot":""}]);
@@ -3944,33 +2787,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-var __vue_exports__, __vue_options__
-var __vue_styles__ = {}
-
-/* script */
-__vue_exports__ = __webpack_require__(9)
-
-/* template */
-var __vue_template__ = __webpack_require__(32)
-__vue_options__ = __vue_exports__ = __vue_exports__ || {}
-if (
-  typeof __vue_exports__.default === "object" ||
-  typeof __vue_exports__.default === "function"
-) {
-if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
-__vue_options__ = __vue_exports__ = __vue_exports__.default
-}
-if (typeof __vue_options__ === "function") {
-  __vue_options__ = __vue_options__.options
-}
-__vue_options__.__file = "/Users/wingify/Projects/vue-example/src/components/customize.vue"
-__vue_options__.render = __vue_template__.render
-__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
-=======
 /* 20 */
 /***/ function(module, exports) {
 
@@ -3981,7 +2797,6 @@ __vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 // css base code, injected by the css-loader
 module.exports = function() {
 	var list = [];
->>>>>>> Stashed changes
 
 	// return the list of modules as css string
 	list.toString = function toString() {
@@ -4028,13 +2843,8 @@ module.exports = function() {
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-=======
 /* 21 */
 /***/ function(module, exports) {
->>>>>>> Stashed changes
 
 // shim for using process in browser
 var process = module.exports = {};
@@ -4229,11 +3039,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(7)
 
 /* template */
-<<<<<<< Updated upstream
-var __vue_template__ = __webpack_require__(28)
-=======
 var __vue_template__ = __webpack_require__(39)
->>>>>>> Stashed changes
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4267,11 +3073,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 25 */
-=======
 /* 23 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -4281,11 +3083,7 @@ var __vue_styles__ = {}
 __vue_exports__ = __webpack_require__(8)
 
 /* template */
-<<<<<<< Updated upstream
-var __vue_template__ = __webpack_require__(30)
-=======
 var __vue_template__ = __webpack_require__(34)
->>>>>>> Stashed changes
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4319,11 +3117,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 26 */
-=======
 /* 24 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -4336,9 +3130,6 @@ __webpack_require__(41)
 __vue_exports__ = __webpack_require__(9)
 
 /* template */
-<<<<<<< Updated upstream
-var __vue_template__ = __webpack_require__(27)
-=======
 var __vue_template__ = __webpack_require__(33)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
@@ -4384,7 +3175,6 @@ __vue_exports__ = __webpack_require__(10)
 
 /* template */
 var __vue_template__ = __webpack_require__(37)
->>>>>>> Stashed changes
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -4418,11 +3208,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 27 */
-=======
 /* 26 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
@@ -5310,11 +4096,7 @@ if (false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 28 */
-=======
 /* 35 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -5331,7 +4113,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('header', {
     staticClass: "flex widget-header flex-center flex-space-between"
   }, [_h('svg', {
-    staticClass: "pointer",
+    staticClass: "pointer flex-no-shrink",
     attrs: {
       "width": "1.3rem",
       "height": "1rem",
@@ -5344,7 +4126,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.showTodoManager = false;
       }
     }
-  }, [_h('defs'), " ", _h('g', {
+  }, [_h('g', {
     attrs: {
       "stroke": "none",
       "stroke-width": "1",
@@ -5847,11 +4629,7 @@ if (false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 29 */
-=======
 /* 37 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -5877,134 +4655,7 @@ if (false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 30 */
-=======
 /* 38 */
->>>>>>> Stashed changes
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
-<<<<<<< Updated upstream
-    staticClass: "flex flex-end"
-  }, [_h('div', {
-    staticClass: "container"
-  }, [_h('div', {
-    staticClass: "row onboarding-message flex"
-  }, [_vm._m(0), " ", _h('div', {
-    staticClass: "col s6 flex flex-flow-column flex-justify-center"
-  }, [_h('h1', ["Hi, Thank you for ", _h('br'), " choosing\n                    ", _h('span', {
-    staticClass: "italics semi-bold relative"
-  }, ["Subtle", _h('span', {
-    staticClass: "version"
-  }, ["v" + _vm._s(_vm.version)])])]), " ", _h('div', {
-    staticClass: "onboarding-btn",
-    on: {
-      "click": _vm.closeOnboarding
-=======
-    staticClass: "flex flex-flow-column",
-    on: {
-      "click": function($event) {
-        $event.stopPropagation();
-      },
-      "keydown": function($event) {
-        $event.stopPropagation();
-      }
-    }
-  }, [_h('header', [_h('div', {
-    staticClass: "flex flex-center right"
-  }, [_h('div', {
-    staticClass: "close-btn",
-    on: {
-      "click": _vm.closeCustomizeMenu
-    }
-  }, [_h('svg', {
-    attrs: {
-      "width": "1.5rem",
-      "height": "1.5rem",
-      "viewBox": "0 0 12 12",
-      "version": "1.1",
-      "xmlns": "http://www.w3.org/2000/svg"
->>>>>>> Stashed changes
-    }
-  }, ["Let's Start"])])]), " ", _vm._m(1)])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
-    staticClass: "col s6"
-  }, [_h('img', {
-    attrs: {
-      "src": "images/welcome_mockup.png",
-      "alt": "Desktop Mockup",
-      "width": "90%"
-    }
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
-    staticClass: "row change-row"
-  }, [_h('div', {
-    staticClass: "col s3 center"
-  }, [_h('div', {
-    staticClass: "change-heading"
-  }, ["Inspiring Wallpapers"]), " ", _h('div', {
-    staticClass: "change-description"
-  }, ["Refreshing wallpapers ", _h('br'), " of various category"])]), " ", _h('div', {
-    staticClass: "col s3 center"
-  }, [_h('div', {
-    staticClass: "change-heading"
-  }, ["Keeps you updated"]), " ", _h('div', {
-    staticClass: "change-description"
-  }, ["Latest weather updates ", _h('br'), "with date and time"])]), " ", _h('div', {
-    staticClass: "col s3 center"
-  }, [_h('div', {
-    staticClass: "change-heading"
-  }, ["Notes Widget"]), " ", _h('div', {
-    staticClass: "change-description"
-  }, ["Sticky notes to ", _h('br'), " keep important content.  "])]), " ", _h('div', {
-    staticClass: "col s3 center"
-  }, [_h('div', {
-    staticClass: "change-heading"
-  }, ["Remain Synced"]), " ", _h('div', {
-    staticClass: "change-description"
-  }, ["Keep your settings ", _h('br'), " and notes synced "])])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-494b99fe", module.exports)
-  }
-}
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
-  return _h('div', {
-    attrs: {
-<<<<<<< Updated upstream
-      "id": "clock"
-    }
-  }, [_h('div', {
-    staticClass: "time"
-  }, [_vm._s(_vm.hrs) + ":" + _vm._s(_vm.min)]), " ", _h('div', {
-    staticClass: "date",
-    class: {
-      'fade_in': _vm.settings.showDay
-    }
-  }, [_vm._s(_vm.day) + ", " + _vm._s(_vm.month) + " " + _vm._s(_vm.date) + " "])])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-65184dfb", module.exports)
-  }
-}
-
-/***/ },
-/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -6080,46 +4731,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.activeTab = "general"
       }
     }
-=======
-      "id": "close_btn",
-      "fill-rule": "nonzero",
-      "fill": "#999999"
-    }
-  }, [_h('path', {
-    attrs: {
-      "d": "M6,0 C2.69169231,0 0,2.69146154 0,6 C0,9.30853846 2.69169231,12 6,12 C9.30830769,12 12,9.30853846 12,6 C12,2.69146154 9.30830769,0 6,0 Z M6,11.5384615 C2.94623077,11.5384615 0.461538462,9.05376923 0.461538462,6 C0.461538462,2.94623077 2.94623077,0.461538462 6,0.461538462 C9.05376923,0.461538462 11.5384615,2.94623077 11.5384615,6 C11.5384615,9.05376923 9.05376923,11.5384615 6,11.5384615 Z",
-      "id": "Shape"
-    }
-  }), " ", _h('path', {
-    attrs: {
-      "d": "M8.24007692,3.75992308 C8.14984615,3.66969231 8.004,3.66969231 7.91376923,3.75992308 L6,5.67369231 L4.08623077,3.75992308 C3.996,3.66969231 3.85015385,3.66969231 3.75992308,3.75992308 C3.66969231,3.85015385 3.66969231,3.996 3.75992308,4.08623077 L5.67369231,6 L3.75992308,7.91376923 C3.66969231,8.004 3.66969231,8.14984615 3.75992308,8.24007692 C3.80492308,8.28507692 3.864,8.30769231 3.92307692,8.30769231 C3.98215385,8.30769231 4.04123077,8.28507692 4.08623077,8.24007692 L6,6.32630769 L7.91376923,8.24007692 C7.95876923,8.28507692 8.01784615,8.30769231 8.07692308,8.30769231 C8.136,8.30769231 8.19507692,8.28507692 8.24007692,8.24007692 C8.33030769,8.14984615 8.33030769,8.004 8.24007692,7.91376923 L6.32630769,6 L8.24007692,4.08623077 C8.33030769,3.996 8.33030769,3.85015385 8.24007692,3.75992308 Z",
-      "id": "Shape"
-    }
-  })])])])])]), " ", _h('span', ["Customize (C)"])]), " ", _h('div', {
-    staticClass: "flex-grow-1 flex"
-  }, [_h('div', {
-    staticClass: "csidebar"
-  }, [_h('ul', [_h('li', [_h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.activeTab),
-      expression: "activeTab"
-    }],
-    attrs: {
-      "type": "radio",
-      "value": "general",
-      "id": "tab4"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.activeTab, "general")
-    },
-    on: {
-      "change": function($event) {
-        _vm.activeTab = "general"
-      }
-    }
->>>>>>> Stashed changes
   }), " ", _h('label', {
     staticClass: "flex-center",
     class: {
@@ -6228,95 +4839,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "src": "images/icons/weather-icon.png"
     }
-<<<<<<< Updated upstream
-  }), " ", _h('span', ["Weather"])])])])]), " ", _h('div', {
-    staticClass: "container"
-  }, [(_vm.activeTab === 'general') ? _h('section', [_h('div', [_h('h4', ["Features"]), " ", _h('ul', {
-    staticClass: "inline-list"
-  }, [_h('li', {
-    staticClass: "inline-list-item"
-  }, [_h('span', {
-    staticClass: "sub-heading"
-  }, ["Weather"]), " ", _h('div', {
-    staticClass: "switch"
-  }, [_h('label', [_h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.settings.showUtilities.showWeather),
-      expression: "settings.showUtilities.showWeather"
-    }],
-    attrs: {
-      "type": "checkbox"
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.settings.showUtilities.showWeather) ? _vm._i(_vm.settings.showUtilities.showWeather, null) > -1 : _vm._q(_vm.settings.showUtilities.showWeather, true)
-    },
-    on: {
-      "change": function($event) {
-        var $$a = _vm.settings.showUtilities.showWeather,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.settings.showUtilities.showWeather = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.showUtilities.showWeather = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.showUtilities.showWeather = $$c
-        }
-      }
-    }
-  }), " ", _h('span', {
-    staticClass: "lever mar-0"
-  })])])]), " ", _h('li', {
-    staticClass: "inline-list-item"
-  }, [_h('span', {
-    staticClass: "sub-heading"
-  }, ["Date & Time"]), " ", _h('div', {
-    staticClass: "switch"
-  }, [_h('label', [_h('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.settings.showUtilities.showClock),
-      expression: "settings.showUtilities.showClock"
-    }],
-    attrs: {
-      "type": "checkbox"
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.settings.showUtilities.showClock) ? _vm._i(_vm.settings.showUtilities.showClock, null) > -1 : _vm._q(_vm.settings.showUtilities.showClock, true)
-    },
-    on: {
-      "change": function($event) {
-        var $$a = _vm.settings.showUtilities.showClock,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.settings.showUtilities.showClock = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.showUtilities.showClock = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.showUtilities.showClock = $$c
-        }
-      }
-    }
-  }), " ", _h('span', {
-    staticClass: "lever mar-0"
-  })])])]), " ", _h('li', {
-    staticClass: "inline-list-item"
-  }, [_h('span', {
-    staticClass: "sub-heading"
-  }, ["Notes"]), " ", _h('div', {
-=======
   }), " ", _h('span', ["Weather"])])]), " ", _h('li', [_h('input', {
     directives: [{
       name: "model",
@@ -6358,53 +4880,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('span', {
     staticClass: "sub-heading"
   }, ["Clock"]), " ", _h('div', {
->>>>>>> Stashed changes
     staticClass: "switch"
   }, [_h('label', [_h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-<<<<<<< Updated upstream
-      value: (_vm.settings.showUtilities.showNotes),
-      expression: "settings.showUtilities.showNotes"
-=======
       value: (_vm.settings.showUtilities.showWeather),
       expression: "settings.showUtilities.showWeather"
->>>>>>> Stashed changes
     }],
     attrs: {
       "type": "checkbox"
     },
     domProps: {
-<<<<<<< Updated upstream
-      "checked": Array.isArray(_vm.settings.showUtilities.showNotes) ? _vm._i(_vm.settings.showUtilities.showNotes, null) > -1 : _vm._q(_vm.settings.showUtilities.showNotes, true)
-    },
-    on: {
-      "change": function($event) {
-        var $$a = _vm.settings.showUtilities.showNotes,
-=======
       "checked": Array.isArray(_vm.settings.showUtilities.showWeather) ? _vm._i(_vm.settings.showUtilities.showWeather, null) > -1 : _vm._q(_vm.settings.showUtilities.showWeather, true)
     },
     on: {
       "change": function($event) {
         var $$a = _vm.settings.showUtilities.showWeather,
->>>>>>> Stashed changes
           $$el = $event.target,
           $$c = $$el.checked ? (true) : (false);
         if (Array.isArray($$a)) {
           var $$v = null,
             $$i = _vm._i($$a, $$v);
           if ($$c) {
-<<<<<<< Updated upstream
-            $$i < 0 && (_vm.settings.showUtilities.showNotes = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.settings.showUtilities.showNotes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.settings.showUtilities.showNotes = $$c
-        }
-      }
-=======
             $$i < 0 && (_vm.settings.showUtilities.showWeather = $$a.concat($$v))
           } else {
             $$i > -1 && (_vm.settings.showUtilities.showWeather = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
@@ -6491,7 +4989,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.settings.showUtilities.showNotes = $$c
         }
       }
->>>>>>> Stashed changes
     }
   }), " ", _h('span', {
     staticClass: "lever mar-0"
@@ -6578,18 +5075,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }), " ", _h('label', {
     staticClass: "inline-radio",
-<<<<<<< Updated upstream
-    attrs: {
-      "for": "bgInterval15"
-    }
-  }, ["15"])])]), " ", _h('li', {
-    staticClass: "inline-list-item"
-  }, [_h('span', {
-    staticClass: "sub-heading"
-  }, ["Wallpaper Type"]), " ", _h('div', {
-    staticClass: "right"
-  }, [_h('input', {
-=======
     attrs: {
       "for": "bgInterval15"
     }
@@ -6626,46 +5111,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "for": "wallpaperType1"
     }
   }, ["Custom"]), " ", _h('input', {
->>>>>>> Stashed changes
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.settings.background.type),
-      expression: "settings.background.type"
-    }],
-    staticClass: "filled-in",
-    attrs: {
-      "type": "radio",
-<<<<<<< Updated upstream
-      "id": "wallpaperType1",
-      "value": "custom"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.settings.background.type, "custom")
-    },
-    on: {
-      "change": function($event) {
-        _vm.settings.background.type = "custom"
-=======
-      "id": "wallpaperType2",
-      "value": "predefined"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.settings.background.type, "predefined")
-    },
-    on: {
-      "change": function($event) {
-        _vm.settings.background.type = "predefined"
->>>>>>> Stashed changes
-      }
-    }
-  }), " ", _h('label', {
-    staticClass: "inline-radio",
-    attrs: {
-<<<<<<< Updated upstream
-      "for": "wallpaperType1"
-    }
-  }, ["Custom"]), " ", _h('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6691,10 +5136,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "for": "wallpaperType2"
     }
-=======
-      "for": "wallpaperType2"
-    }
->>>>>>> Stashed changes
   }, ["Default"])])])])]), " ", (_vm.settings.background.type !== 'custom') ? _h('div', {
     class: {
       'fade_in': _vm.settings.background.type !== 'custom'
@@ -6745,11 +5186,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     class: {
       'fade_in': _vm.settings.background.type === 'custom'
     }
-<<<<<<< Updated upstream
-  }, [_h('h4', ["Custom List"]), " ", _h('span', ["Add each image in new line and press save list button"]), " ", _h('textarea', {
-=======
   }, [_h('h4', ["Custom List"]), " ", _h('textarea', {
->>>>>>> Stashed changes
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -6798,28 +5235,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     directives: [{
       name: "model",
       rawName: "v-model",
-<<<<<<< Updated upstream
-      value: (_vm.settings.clock.type),
-      expression: "settings.clock.type"
-=======
       value: (_vm.settings.clock.showTwelveHour),
       expression: "settings.clock.showTwelveHour"
->>>>>>> Stashed changes
     }],
     staticClass: "filled-in",
     attrs: {
       "type": "radio",
       "id": "clock12",
-<<<<<<< Updated upstream
-      "value": "twelve"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.settings.clock.type, "twelve")
-    },
-    on: {
-      "change": function($event) {
-        _vm.settings.clock.type = "twelve"
-=======
       "value": "true"
     },
     domProps: {
@@ -6828,7 +5250,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "change": function($event) {
         _vm.settings.clock.showTwelveHour = "true"
->>>>>>> Stashed changes
       }
     }
   }), " ", _h('label', {
@@ -6840,28 +5261,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     directives: [{
       name: "model",
       rawName: "v-model",
-<<<<<<< Updated upstream
-      value: (_vm.settings.clock.type),
-      expression: "settings.clock.type"
-=======
       value: (_vm.settings.clock.showTwelveHour),
       expression: "settings.clock.showTwelveHour"
->>>>>>> Stashed changes
     }],
     staticClass: "filled-in",
     attrs: {
       "type": "radio",
       "id": "clock24",
-<<<<<<< Updated upstream
-      "value": "twentyfour"
-    },
-    domProps: {
-      "checked": _vm._q(_vm.settings.clock.type, "twentyfour")
-    },
-    on: {
-      "change": function($event) {
-        _vm.settings.clock.type = "twentyfour"
-=======
       "value": "false"
     },
     domProps: {
@@ -6870,7 +5276,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "change": function($event) {
         _vm.settings.clock.showTwelveHour = "false"
->>>>>>> Stashed changes
       }
     }
   }), " ", _h('label', {
@@ -6979,13 +5384,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, ["Custom"])])]), " ", _h('li', {
     staticClass: "inline-list-item flex overflow-hidden flex-center flex-justify-space-between"
-<<<<<<< Updated upstream
-  }, [_vm._m(0), " ", _h('div', {
-=======
   }, [_h('span', {
     staticClass: "sub-heading"
   }, ["Location"]), " ", _h('div', {
->>>>>>> Stashed changes
     staticClass: "right flex"
   }, [_h('input', {
     directives: [{
@@ -6996,10 +5397,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }],
     staticClass: "mar-0",
     attrs: {
-<<<<<<< Updated upstream
-      "placeholder": "e.g. Mumbai",
-=======
->>>>>>> Stashed changes
       "type": "text",
       "disabled": _vm.settings.weather.location.type === 'geo'
     },
@@ -7086,9 +5483,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "for": "weather-fehren"
     }
-<<<<<<< Updated upstream
-  }, ["Fahrenheit"])])])])])]) : _vm._e()])]), " ", _h('footer', {
-=======
   }, ["Fahrenheit"])])])])])]) : _vm._e(), " ", (_vm.activeTab === 'todo') ? _h('section', [_h('div', [_h('h4', ["Settings"]), " ", _h('ul', {
     staticClass: "inline-list"
   }, [_h('li', {
@@ -7149,7 +5543,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "for": "wTodos"
     }
-  }, ["Wunderlist"])])])])]), " ", (_vm.isAuthCodeVisible || _vm.settings.todos.type == 'w') ? _h('div', {
+  }, ["Wunderlist"])])])])]), " ", (_vm.isAuthCodeVisible) ? _h('div', {
     class: {
       'fade_in': _vm.settings.todos.type === 'w'
     }
@@ -7191,7 +5585,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "innerHTML": _vm._s(_vm.saveMessage)
     }
   })]) : _vm._e()]) : _vm._e()])]), " ", _h('footer', {
->>>>>>> Stashed changes
     staticClass: "customize-footer"
   }, [_h('div', {
     staticClass: "flex"
@@ -7203,13 +5596,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, ["|"]), " ", _vm._m(0)]), " ", _vm._m(1)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;
-<<<<<<< Updated upstream
-  return _h('div', [_h('div', {
-    staticClass: "sub-heading"
-  }, ["City/Town/Village"]), " ", _h('span', ["Enter correct name and press save button."])])
-},function (){var _vm=this;var _h=_vm.$createElement;
-=======
->>>>>>> Stashed changes
   return _h('div', {
     staticClass: "flex"
   }, [_h('span', {
@@ -7247,11 +5633,7 @@ if (false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 33 */
-=======
 /* 39 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
@@ -7304,9 +5686,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }, [_h('div', {
     staticClass: "flex flex-center"
-<<<<<<< Updated upstream
-  }, [(_vm.sharedData.showUtilities.showNotes) ? _h('div', {
-=======
   }, [_h('div', {
     staticClass: "todo-widget relative",
     on: {
@@ -7379,7 +5758,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "height": "20.7"
     }
   })])])]), " "]), " ", (_vm.showTodos) ? [(_vm.sharedData.todos.type === 'default') ? _h('todos') : _vm._e(), " ", (_vm.sharedData.todos.type === 'w') ? _h('WTodos') : _vm._e()] : _vm._e()]), " ", (_vm.sharedData.showUtilities.showNotes) ? _h('div', {
->>>>>>> Stashed changes
     staticClass: "notes-widget relative",
     on: {
       "keydown": function($event) {
@@ -7458,6 +5836,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }
   }) : _vm._e()]) : _vm._e(), " ", _h('div', {
     staticClass: "pointer nav-bar-opener",
+    class: {
+      'fade_in': !_vm.showCustomizeMenu
+    },
     on: {
       "click": function($event) {
         $event.stopPropagation();
@@ -7495,13 +5876,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     attrs: {
       "settings": _vm.componentsData.weather
     }
-  }) : _vm._e()])])]), " ", (_vm.showCustomizeMenu) ? _h('div', {
+  }) : _vm._e()])])]), " ", _h('div', {
     attrs: {
       "id": "customize-section"
     }
-  }, [_h('div', {
+  }, [(_vm.showCustomizeMenu) ? _h('div', {
     staticClass: "customization-overlay"
-  }), " ", _h('customize', {
+  }) : _vm._e(), " ", _h('customize', {
     class: {
       'fade_in': _vm.showCustomizeMenu
     },
@@ -7512,7 +5893,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     on: {
       "closeCustomizeMenu": _vm.toggleCustomizeMenu
     }
-  })]) : _vm._e()]) : _vm._e()])
+  })])]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -7523,11 +5904,7 @@ if (false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 34 */
-=======
 /* 40 */
->>>>>>> Stashed changes
 /***/ function(module, exports) {
 
 /*
@@ -7749,27 +6126,16 @@ function applyToTag(styleElement, obj) {
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 35 */
-=======
 /* 41 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-<<<<<<< Updated upstream
-var content = __webpack_require__(17);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(34)(content, {});
-=======
 var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(40)(content, {});
->>>>>>> Stashed changes
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -7786,11 +6152,7 @@ if(false) {
 }
 
 /***/ },
-<<<<<<< Updated upstream
-/* 36 */
-=======
 /* 42 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13732,17 +12094,10 @@ setTimeout(function () {
 
 module.exports = Vue$2;
 
-<<<<<<< Updated upstream
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19), __webpack_require__(37)))
-
-/***/ },
-/* 37 */
-=======
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(43)))
 
 /***/ },
 /* 43 */
->>>>>>> Stashed changes
 /***/ function(module, exports) {
 
 var g;
@@ -13767,11 +12122,7 @@ module.exports = g;
 
 
 /***/ },
-<<<<<<< Updated upstream
-/* 38 */
-=======
 /* 44 */
->>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(5);

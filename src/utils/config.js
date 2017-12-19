@@ -21,6 +21,9 @@ const config = {
             themeId: 1,
             changeInterval: 10,
             type: 'predefined'
+        },
+        todos: {
+            type: 'default'
         }
     }
 };

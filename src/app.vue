@@ -11,6 +11,44 @@
                     </div>
                     <div id="position--top-right">
                         <div class="flex flex-center">
+<<<<<<< Updated upstream
+=======
+                            <div class="todo-widget relative" v-on:keydown.stop="">
+                                <div class="todo-icon pointer" v-on:click.stop="toggleTodos">
+                                    <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8rem">
+                                        <g>
+                                            <g id="todo_btn">
+                                                <path d="M370,95.4V53.9h-62.2V12.5H204.2v41.5H142v41.5H69.5v404.1h373.1V95.4H370z M224.9,33.2h62.2v20.7h-62.2V33.2z M162.7,74.7h186.5v62.2H162.7V74.7z M421.8,478.8H90.2V116.1H142v41.4h228v-41.4h51.8V478.8z"/>
+                                                <rect width="20.7" x="131.6" y="222.8" height="20.7"/>
+                                                <rect width="20.7" x="131.6" y="307.8" height="20.7"/>
+                                                <rect width="20.7" x="131.6" y="393.8" height="20.7"/>
+                                                <rect width="207.3" x="173.1" y="222.8" height="20.7"/>
+                                                <rect width="207.3" x="173.1" y="307.8" height="20.7"/>
+                                                <rect width="207.3" x="173.1" y="393.8" height="20.7"/>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8rem" >
+                                        <g id="todo_btn">
+                                            <path d="M56.261,35.724l-2.849-2.85c-1.128-1.127-3.094-1.127-4.222,0L33.799,48.265l-2.121,7.779l-0.519,0.519   c-0.388,0.388-0.389,1.014-0.006,1.405l-0.005,0.02l0.019-0.005c0.194,0.19,0.446,0.288,0.699,0.288   c0.256,0,0.512-0.098,0.707-0.293l0.52-0.52l7.778-2.121l15.39-15.391C57.425,38.781,57.425,36.888,56.261,35.724z M36.108,48.784   l10.243-10.243l4.243,4.243L40.351,53.027L36.108,48.784z M35.206,50.71l3.22,3.22l-4.428,1.208L35.206,50.71z M54.847,38.531   l-2.839,2.839l-4.243-4.243l2.839-2.839c0.372-0.373,1.021-0.373,1.393,0l2.85,2.85C55.231,37.521,55.231,38.147,54.847,38.531z" />
+                                            <path d="M8.135,36h26c0.552,0,1-0.447,1-1s-0.448-1-1-1h-26c-0.552,0-1,0.447-1,1S7.583,36,8.135,36z" />
+                                            <path d="M30.135,40h-22c-0.552,0-1,0.447-1,1s0.448,1,1,1h22c0.552,0,1-0.447,1-1S30.688,40,30.135,40z" />
+                                            <path d="M8.135,18h13c0.552,0,1-0.447,1-1s-0.448-1-1-1h-13c-0.552,0-1,0.447-1,1S7.583,18,8.135,18z" />
+                                            <path d="M21.135,48c0.552,0,1-0.447,1-1s-0.448-1-1-1h-13c-0.552,0-1,0.447-1,1s0.448,1,1,1H21.135z" />
+                                            <path d="M37.135,22h-29c-0.552,0-1,0.447-1,1s0.448,1,1,1h29c0.552,0,1-0.447,1-1S37.688,22,37.135,22z" />
+                                            <path d="M8.135,30h14c0.552,0,1-0.447,1-1s-0.448-1-1-1h-14c-0.552,0-1,0.447-1,1S7.583,30,8.135,30z" />
+                                            <path d="M38.135,29c0-0.553-0.448-1-1-1h-7c-0.552,0-1,0.447-1,1s0.448,1,1,1h7C37.688,30,38.135,29.553,38.135,29z" />
+                                            <path d="M26.845,29.709c0.18-0.189,0.29-0.45,0.29-0.71s-0.11-0.52-0.29-0.71c-0.38-0.37-1.05-0.37-1.42,0   c-0.18,0.19-0.29,0.45-0.29,0.71c0,0.271,0.11,0.521,0.29,0.71c0.19,0.181,0.45,0.29,0.71,0.29   C26.395,29.999,26.656,29.89,26.845,29.709z" />
+                                            <path d="M26.135,56h-23V8h7v2c0,0.553,0.448,1,1,1h23c0.552,0,1-0.447,1-1V8h7v22c0,0.553,0.448,1,1,1s1-0.447,1-1V7   c0-0.553-0.448-1-1-1h-8V4c0-0.553-0.448-1-1-1h-6V1c0-0.553-0.448-1-1-1h-9c-0.552,0-1,0.447-1,1v2h-6c-0.552,0-1,0.447-1,1v2h-8   c-0.552,0-1,0.447-1,1v50c0,0.553,0.448,1,1,1h24c0.552,0,1-0.447,1-1S26.688,56,26.135,56z M19.135,2h7v2v2h-7V4V2z M12.135,5h5v2   c0,0.553,0.448,1,1,1h9c0.552,0,1-0.447,1-1V5h5v2v2h-21V7V5z" />
+                                        </g>
+                                    </svg>-->
+                                </div>
+                                <template :class="{'fade_in': showTodos}" v-if="showTodos">
+                                    <todos v-if="sharedData.todos.type === 'default'"></todos>
+                                    <WTodos v-if="sharedData.todos.type === 'w'"/>
+                                </template>
+                            </div>
+>>>>>>> Stashed changes
                             <div class="notes-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showNotes">
                                 <div class="notes-icon pointer" v-on:click.stop="toggleNotes">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8rem" >
@@ -64,16 +102,30 @@
     export default {
         beforeCreate(){
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
+<<<<<<< Updated upstream
             this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
+=======
+            this.seenOnBoarding = storage.get('seen-onboarding') || false;
+            if(this.sharedData && !this.sharedData.todos){
+                this.sharedData.todos = {
+                    type: 'default'
+                }
+            }
+>>>>>>> Stashed changes
         },
         data () {
             return {
                 sharedData: this.sharedData,
                 componentsData: JSON.parse(JSON.stringify(this.sharedData)),
-                showCustomizeMenu: false,
+                showCustomizeMenu: true,
                 showNotes: false,
                 isLoading: true,
+<<<<<<< Updated upstream
                 seenOnBoarding: this.seenOnBoarding
+=======
+                seenOnBoarding: this.seenOnBoarding,
+                showTodos: false
+>>>>>>> Stashed changes
             }
         },
         mounted(){
@@ -100,7 +152,13 @@
         },
         methods: {
             toggleCustomizeMenu() {
+<<<<<<< Updated upstream
                 this.showCustomizeMenu = !this.showCustomizeMenu
+=======
+                this.showCustomizeMenu = !this.showCustomizeMenu;
+                this.showTodos = false;
+                this.showNotes = false;
+>>>>>>> Stashed changes
             },
             toggleNotes() {
                 this.showNotes = !this.showNotes
@@ -126,6 +184,15 @@
                     bgCustom = bgData.customBackgrounds
                     storage.set(Constants.STORAGE.BACKGROUND_CUSTOM, bgCustom)
                 }
+<<<<<<< Updated upstream
+=======
+            },
+            toTitleCase(text) {
+                if(!text){
+                    return
+                }
+                return text.charAt(0).toUpperCase() + text.slice(1)
+>>>>>>> Stashed changes
             }
         },
         components: {

@@ -172,6 +172,8 @@ let _console = (log) => {
 
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details && details.reason && details.reason === 'install') {
+        let sharedData;
+
         storage.chromeSync.get(null, (details) => {
             let key;
             for (key in details) {
