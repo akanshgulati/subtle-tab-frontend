@@ -95,6 +95,7 @@
             document.execCommand("DefaultParagraphSeparator", false, "p");
             this.populateNotes();
             this.addNoteLimit('note');
+            this.$ga.event('notes', 'open')
         },
         computed:{
             sortedNoted: function(){
@@ -182,6 +183,7 @@
                 }
                 this.errorMessage = null;
                 document.getElementById("note").innerHTML = this.currentNote.content;
+                this.$ga.event('notes', 'change', 'click')
             },
             trimContent(value){
                 let ellipsis = '';
@@ -246,6 +248,7 @@
                     this.currentNote = this.notes[0];
                     this.setCurrentNote(this.currentNote.id);
                 }
+                this.$ga.event('notes', 'delete')
             },
             createNote(e){
                 e.stopPropagation();
@@ -259,11 +262,13 @@
                 this.notesMeta.count++;
                 storage.set('note-' + newNote.id, newNote);
                 setTimeout(() => this.setCurrentNote(newNote.id), 100);
+                this.$ga.event('notes', 'create')
             },
             createFirstNote(e){
                 let self = this;
                 this.createNote(e);
                 this.showSidebar = true;
+                this.$ga.event('notes', 'first')
                 setTimeout(()=>{
                     self.isolateScroll('note');
                 },100);
@@ -286,6 +291,9 @@
                 let now = +new Date();
                 return now - date >= 86400000 ? date.toLocaleDateString() : date.toLocaleTimeString();
             }
+        },
+        beforeDestroy(){
+            this.$ga.event('notes', 'close')
         }
     };
 </script>

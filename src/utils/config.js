@@ -19,7 +19,7 @@ const config = {
         },
         background: {
             themeId: 1,
-            changeInterval: 10,
+            changeInterval: 2,
             type: 'predefined'
         }
     }

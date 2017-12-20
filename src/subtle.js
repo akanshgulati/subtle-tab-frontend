@@ -297,9 +297,14 @@ function updateLocalStorage(){
         if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
             sharedData.showUtilities.showNotes = true;
         }
-        if(sharedData.background && !sharedData.background.type){
-            sharedData.background.type = 'predefined';
-            storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds);
+        if(sharedData.background){
+            if (!sharedData.background.type) {
+                sharedData.background.type = 'predefined'
+                storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
+            }
+            if (sharedData.background.changeInterval) {
+                sharedData.background.changeInterval = 2
+            }
         }
         if(sharedData.clock && !sharedData.clock.type){
             sharedData.clock.type = sharedData.clock.showTwelveHour ? 'twelve' : 'twentyfour';

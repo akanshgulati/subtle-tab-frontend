@@ -81,13 +81,17 @@
             document.addEventListener('keydown', (e)=>{
                 if (e.keyCode === 78) {
                     self.showNotes = true;
+                    this.$ga.event('app', 'keydown', 'notes')
                 } else if (e.keyCode === 67) {
                     self.showCustomizeMenu = true;
+                    this.$ga.event('app', 'keydown', 'customize')
                 } else if (e.keyCode === 27) {
                     self.closeWindows();
+                    this.$ga.event('app', 'keydown', 'closeAll')
                 }
             });
             this.init()
+            this.initAnalytics()
         },
         watch: {
             sharedData: {
@@ -114,6 +118,7 @@
             stopOnBoarding() {
                 this.seenOnBoarding = true
                 storage.set(Constants.STORAGE.SEEN_ONBOARDING, this.seenOnBoarding)
+                this.$ga.event('app', 'onboarding', 'close')
             },
             closeWindows() {
                 this.showNotes = false
@@ -126,6 +131,12 @@
                     bgCustom = bgData.customBackgrounds
                     storage.set(Constants.STORAGE.BACKGROUND_CUSTOM, bgCustom)
                 }
+            },
+            initAnalytics() {
+                if(!this.seenOnBoarding){
+                    this.$ga.event('app', 'onboarding', 'shown')
+                }
+                this.$ga.page('/app')
             }
         },
         components: {

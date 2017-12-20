@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "extract-text-webpack-plugin": "^2.1.2",
-    "vue": "^2.1.4"
+    "vue": "^2.1.4",
+    "vue-analytics": "^5.7.1"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
