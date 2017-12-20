@@ -64,12 +64,15 @@
                         this.isLoading = false;
 
                     } else {
-                        this.prepareWeatherCall();
+                        this.showWeather(this.localWeather)
+                        this.prepareWeatherCall(true);
                     }
                 }
             },
             getWeather(data){
-                this.isLoading = true;
+                if(!this.localWeather) {
+                    this.isLoading = true;
+                }
                 chrome.runtime.sendMessage({query: 'startWeather'});
 
                 let url = 'https://api.subtletab.com/weather/new'
@@ -86,11 +89,11 @@
                     this.showWeather(this.localWeather)
                 })
             },
-            prepareWeatherCall() {
+            prepareWeatherCall(noLoading) {
                 let options
                 if (this.settings.location.type !== 'custom') {
                     // adding loading because below call takes time
-                    this.isLoading = true
+                    this.isLoading = !noLoading
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             options = {
