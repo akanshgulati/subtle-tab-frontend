@@ -94,6 +94,18 @@
             });
             this.init()
             this.initAnalytics()
+            setTimeout(()=>{
+                this.$notify.show({
+                    title: 'Hey',
+                    message: 'What would you like to add?',
+                    progressBar: false,
+                    timeout: false,
+                    position: 'bottomLeft',
+                    transition: 'transitionIn',
+                    animateInside: false,
+                    balloon: true
+                })
+            }, 2000)
         },
         watch: {
             sharedData: {

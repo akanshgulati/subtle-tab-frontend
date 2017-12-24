@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/build/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 40);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -70,7 +70,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ exports["a"] = {
+var BASE_API = 'https://api.subtletab.com/';
+var constants = {
     THEME: {
         NATURE: 'nature',
         ARCHITECTURE: 'building',
@@ -79,6 +80,7 @@
     },
     STORAGE: {
         SHARED_DATA: 'shared-data',
+        MISC_SETTINGS: 'misc_settings',
         WEATHER: 'weather',
 
         BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
@@ -90,10 +92,16 @@
 
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
+        NOTES_META: 'notes_meta',
+        WHATS_NEW: 'whats_new'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom']
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings'],
+    URL: {
+        WHATS_NEW: BASE_API + 'whatsnew'
+    }
 };
+
+/* harmony default export */ exports["a"] = constants;
 
 /***/ },
 
@@ -183,114 +191,14 @@ var storage = {
 
 /***/ },
 
-/***/ 2:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ exports["a"] = {
-    themes: [{
-        id: 1,
-        lValue: 'Nature',
-        tags: 'nature',
-        value: 'nature',
-        imgUrl: 'images/nature_thumbnail.png'
-    }, {
-        id: 2,
-        lValue: 'Architecture',
-        tags: 'building',
-        value: 'building',
-        imgUrl: 'images/architecture_thumbnail.png'
-    }, {
-        id: 3,
-        lValue: 'Travel',
-        tags: 'travel',
-        value: 'travel',
-        imgUrl: 'images/travel_thumbnail.png'
-    }, {
-        id: 4,
-        lValue: 'Night Life',
-        tags: 'night',
-        value: 'night',
-        imgUrl: 'images/night_thumbnail.png'
-    }],
-    stored: {
-        1: {
-            1: './images/backgrounds/nature-1.jpg',
-            2: './images/backgrounds/nature-2.jpg',
-            3: './images/backgrounds/nature-3.jpg'
-        },
-        2: {
-            4: './images/backgrounds/building-1.jpg',
-            5: './images/backgrounds/building-2.jpg',
-            6: './images/backgrounds/building-3.jpg'
-        },
-        3: {
-            7: './images/backgrounds/travel-1.jpg',
-            8: './images/backgrounds/travel-2.jpg',
-            9: './images/backgrounds/travel-3.jpg'
-        },
-        4: {
-            10: './images/backgrounds/night-1.jpg',
-            11: './images/backgrounds/night-2.jpg',
-            12: './images/backgrounds/night-3.jpg'
-        }
-
-    },
-    customBackgrounds: ['https://subtletab.com/extras/1.jpg', 'https://subtletab.com/extras/2.jpg', 'https://subtletab.com/extras/3.jpg', 'https://subtletab.com/extras/4.jpg', 'https://subtletab.com/extras/5.jpg', 'https://subtletab.com/extras/6.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/8.jpg']
-};
-
-/***/ },
-
-/***/ 3:
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-var config = {
-    defaultCustomization: {
-        showUtilities: {
-            showWeather: true,
-            showClock: true,
-            showNotes: true
-        },
-        clock: {
-            showTwelveHour: true,
-            showDay: true,
-            type: 'twelve'
-        },
-        weather: {
-            unit: 'c',
-            location: {
-                type: 'geo',
-                name: ''
-            }
-        },
-        background: {
-            themeId: 1,
-            changeInterval: 2,
-            type: 'predefined'
-        }
-    }
-};
-/* harmony default export */ exports["a"] = config;
-
-/***/ },
-
-/***/ 40:
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(5);
-
-
-/***/ },
-
-/***/ 5:
+/***/ 10:
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_storage__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_Constants__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_config__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_config__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_backgroundData__ = __webpack_require__(3);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 
@@ -624,6 +532,112 @@ function init() {
     });
 }
 init();
+
+/***/ },
+
+/***/ 3:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ exports["a"] = {
+    themes: [{
+        id: 1,
+        lValue: 'Nature',
+        tags: 'nature',
+        value: 'nature',
+        imgUrl: 'images/nature_thumbnail.png'
+    }, {
+        id: 2,
+        lValue: 'Architecture',
+        tags: 'building',
+        value: 'building',
+        imgUrl: 'images/architecture_thumbnail.png'
+    }, {
+        id: 3,
+        lValue: 'Travel',
+        tags: 'travel',
+        value: 'travel',
+        imgUrl: 'images/travel_thumbnail.png'
+    }, {
+        id: 4,
+        lValue: 'Night Life',
+        tags: 'night',
+        value: 'night',
+        imgUrl: 'images/night_thumbnail.png'
+    }],
+    stored: {
+        1: {
+            1: './images/backgrounds/nature-1.jpg',
+            2: './images/backgrounds/nature-2.jpg',
+            3: './images/backgrounds/nature-3.jpg'
+        },
+        2: {
+            4: './images/backgrounds/building-1.jpg',
+            5: './images/backgrounds/building-2.jpg',
+            6: './images/backgrounds/building-3.jpg'
+        },
+        3: {
+            7: './images/backgrounds/travel-1.jpg',
+            8: './images/backgrounds/travel-2.jpg',
+            9: './images/backgrounds/travel-3.jpg'
+        },
+        4: {
+            10: './images/backgrounds/night-1.jpg',
+            11: './images/backgrounds/night-2.jpg',
+            12: './images/backgrounds/night-3.jpg'
+        }
+
+    },
+    customBackgrounds: ['https://subtletab.com/extras/1.jpg', 'https://subtletab.com/extras/2.jpg', 'https://subtletab.com/extras/3.jpg', 'https://subtletab.com/extras/4.jpg', 'https://subtletab.com/extras/5.jpg', 'https://subtletab.com/extras/6.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/7.jpg', 'https://subtletab.com/extras/8.jpg']
+};
+
+/***/ },
+
+/***/ 4:
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+var config = {
+    defaultCustomization: {
+        showUtilities: {
+            showWeather: true,
+            showClock: true,
+            showNotes: true
+        },
+        clock: {
+            showTwelveHour: true,
+            showDay: true,
+            type: 'twelve'
+        },
+        weather: {
+            unit: 'c',
+            location: {
+                type: 'geo',
+                name: ''
+            }
+        },
+        background: {
+            themeId: 1,
+            changeInterval: 2,
+            type: 'predefined'
+        }
+    },
+    misc: {
+        update: {
+            lastChecked: new Date(),
+            isToCheck: true
+        }
+    }
+};
+/* harmony default export */ exports["a"] = config;
+
+/***/ },
+
+/***/ 42:
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(10);
+
 
 /***/ }
 
