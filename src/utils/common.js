@@ -7,7 +7,11 @@ export default {
             xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id))
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4) {
-                    resolve(JSON.parse(xmlhttp.responseText))
+                    if(xmlhttp.responseText){
+                        resolve(JSON.parse(xmlhttp.responseText))
+                        return;
+                    }
+                    reject(xmlhttp.status)
                 }
             }
             xmlhttp.onerror = () => {

@@ -22,6 +22,12 @@ const config = {
             changeInterval: 2,
             type: 'predefined'
         }
+    },
+    misc: {
+        update: {
+            lastChecked : '0.0.1.9',
+            isToCheck : true
+        }
     }
 };
 export default config;

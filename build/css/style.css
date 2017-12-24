@@ -18,7 +18,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif !important;
-
+    font-size: 1.07rem;
 }
 
 [type="radio"]:checked + label:after {
@@ -278,7 +278,6 @@ svg:hover #close_btn {
     left: calc(50vw - 450px);
     top: calc(50vh - 14.27rem);
     width: 900px;
-    height: 28.54rem;
     background: #ffffff;
     color: #666;
     border-radius: 5px;
@@ -286,6 +285,9 @@ svg:hover #close_btn {
     z-index: 10;
     overflow: hidden;
     visibility: hidden;
+}
+#customize .main-window {
+    height: 22rem;
 }
 #customize .save-button{
     background: rgb(122, 184, 0);
@@ -295,9 +297,6 @@ svg:hover #close_btn {
 }
 #customize .save-button:disabled{
     background: grey;
-    padding: 1px 4px;
-    color: white;
-    margin-left: 0.3rem;
 }
 .csidebar {
     border-right: 1px solid #e3e3e3;
@@ -305,6 +304,10 @@ svg:hover #close_btn {
 }
 .csidebar li{
     color: #333;
+}
+
+.csidebar li.separator {
+    border-top: 1px solid rgba(204, 204, 204, 0.2);
 }
 .csidebar li label.active{
     background: #ebebeb;
@@ -340,11 +343,6 @@ svg:hover #close_btn {
     padding: 0 1rem;
     overflow: auto;
 }
-#customize .container h4 {
-    font-size: 1rem;
-    color: #666;
-    font-weight: 500;
-}
 #customize .container > section > div {
     margin-bottom: 1rem;
 }
@@ -357,10 +355,6 @@ svg:hover #close_btn {
     border-bottom: 1px solid rgba(236, 236, 236, 0.51);
     display: flex;
     justify-content: space-between;
-}
-#customize .container .sub-heading{
-    font-size: 0.9rem;
-    font-weight: 500;
 }
 #customize .container .inline-radio, #customize .container .inline-checkbox{
     padding-left: 25px;
@@ -530,14 +524,9 @@ svg:hover #close_btn {
 }
 
 .customize-footer {
-    color: #666;
-    background: #ebebeb;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
     padding: 1rem;
     border-top: 1px solid #e3e3e3;
+    min-height: 45px;
 }
 
 .customize-footer a {
@@ -970,4 +959,19 @@ svg:hover #close_btn {
 .notes-arrow_box:before {
     border-bottom-color: #fff;
     border-width: 0.7rem;
+}
+
+.update-list li p:first-child:before{
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #666;
+    transform: translateX(-10px);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.update-list li p:nth-child(2){
+    margin-left: 6px !important;
 }

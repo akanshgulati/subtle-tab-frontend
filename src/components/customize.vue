@@ -18,8 +18,8 @@
             </div>
             <span>Customize (C)</span>
         </header>
-        <div class="flex-grow-1 flex">
-                <div class="csidebar">
+        <div class="flex-grow-1 flex main-window">
+                <aside class="csidebar">
                     <ul>
                         <li>
                             <input type="radio" v-model="activeTab" value="general" id="tab4" @change="categoryChange">
@@ -54,15 +54,24 @@
                                 <span>Weather</span>
                             </label>
                         </li>
+                        <li class="separator">
+                            <input type="radio" v-model="activeTab" value="whatsnew" id="tab5" @change="categoryChange">
+                            <label for="tab5" class="flex-center"  :class="{'active': activeTab === 'whatsnew'}">
+                                <svg viewBox="0 0 21 21">
+                                    <use xlink:href="#icon-whatsnew"></use>
+                                </svg>
+                                <span>What's new</span>
+                            </label>
+                        </li>
                     </ul>
-                </div>
+                </aside>
                 <div class="container">
                     <section v-if="activeTab === 'general'">
                         <div>
-                            <h4>Features</h4>
-                            <ul class="inline-list">
+                            <h4 class="font-medium text-black semi-bold">Features</h4>
+                            <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Weather</span>
+                                    <span class="font-small semi-bold">Weather</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showWeather">
@@ -71,7 +80,7 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Date & Time</span>
+                                    <span class="font-small semi-bold">Date & Time</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showClock">
@@ -80,7 +89,7 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Notes</span>
+                                    <span class="font-small semi-bold">Notes</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showNotes">
@@ -94,12 +103,12 @@
                     </section>
                     <section v-if="activeTab === 'background'">
                         <div>
-                            <h4>Settings</h4>
-                            <ul class="inline-list">
+                            <h4 class="font-medium text-black semi-bold">Settings</h4>
+                            <ul class="ph-10">
                                 <li class="inline-list-item">
                                     <div>
-                                        <div class="sub-heading">Change Interval (tabs)</div>
-                                        <span>Choose lower value for high internet speed</span>
+                                        <div class="font-small semi-bold">Change Interval (tabs)</div>
+                                        <small>Choose lower value for high internet speed</small>
                                     </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval1"
@@ -117,7 +126,7 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Wallpaper Type</span>
+                                    <span class="font-small semi-bold">Wallpaper Type</span>
                                     <div class="right">
                                         <input type="radio" v-model="settings.background.type" id="wallpaperType1"
                                                class="filled-in" value="custom" @change="backgroundTypeChange"/>
@@ -130,7 +139,7 @@
                             </ul>
                         </div>
                         <div v-if="settings.background.type !== 'custom'" :class="{'fade_in': settings.background.type !== 'custom'}">
-                            <h4>Default Category</h4>
+                            <h4 class="font-medium text-black semi-bold">Default Category</h4>
                             <ul class="flex">
                                 <li v-for='(theme, index) in themes' v-bind:class="{active: isActiveTheme(index)}" class="thumbnail">
                                     <input type="radio" v-model="settings.background.themeId"
@@ -143,20 +152,20 @@
                             </ul>
                         </div>
                         <div v-if="settings.background.type === 'custom'" :class="{'fade_in': settings.background.type === 'custom'}">
-                            <h4>Custom List</h4>
-                            <span>Add each image in new line and press save list button</span>
+                            <h4 class="font-medium text-black semi-bold">Custom List</h4>
+                            <small>Add each image in new line and press save list button</small>
                             <textarea name="" id="" cols="30" rows="15" v-model="currentBgCustom"></textarea>
-                            <button class="save-button mar-0" v-on:click.stop="saveCustomBg"
+                            <button class="save-button font-xsmall mar-0" v-on:click.stop="saveCustomBg"
                                     :disabled="!currentBgCustom.trim().length">Save List</button>
                             <span v-html="isCustomBgSaveMsg"></span>
                         </div>
                     </section>
                     <section v-if="activeTab === 'clock'">
                         <div>
-                            <h4>Options</h4>
-                            <ul class="inline-list">
+                            <h4 class="font-medium text-black semi-bold">Options</h4>
+                            <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Clock format</span>
+                                    <span class="font-small semi-bold">Clock format</span>
                                     <div class="right">
                                         <input type="radio" v-model="settings.clock.type" id="clock12"
                                                class="filled-in" value="twelve">
@@ -167,7 +176,7 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Show Date</span>
+                                    <span class="font-small semi-bold">Show Date</span>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.clock.showDay">
@@ -181,10 +190,10 @@
                     </section>
                     <section v-if="activeTab === 'weather'">
                         <div>
-                            <h4>Weather location</h4>
-                            <ul class="inline-list">
+                            <h4 class="font-medium text-black semi-bold">Weather location</h4>
+                            <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Type</span>
+                                    <span class="font-small semi-bold">Type</span>
                                     <div class="right">
                                         <input type="radio" v-model="settings.weather.location.type" id="weather-geo" class="filled-in"
                                                value="geo" @change="locationTypeChange">
@@ -196,21 +205,21 @@
                                 </li>
                                 <li class="inline-list-item flex overflow-hidden flex-center flex-justify-space-between">
                                     <div>
-                                        <div class="sub-heading">City/Town/Village</div>
-                                        <span>Enter correct name and press save button.</span>
+                                        <div class="font-small semi-bold">City/Town/Village</div>
+                                        <small>Enter correct name and press save button.</small>
                                     </div>
                                     <div class="right flex">
                                         <input placeholder="e.g. Mumbai" type="text" v-model="customLocation" class="mar-0"
                                                :disabled="settings.weather.location.type==='geo'" v-on:keydown.stop="">
-                                        <button class="save-button" v-on:click.stop="updateCustomLocation"
+                                        <button class="save-button font-xsmall" v-on:click.stop="updateCustomLocation"
                                                 :disabled="customLocation == settings.weather.location.name">Save</button>
                                     </div>
                                 </li>
                             </ul>
-                            <h4>Miscellaneous Options</h4>
-                            <ul class="inline-list">
+                            <h4 class="font-medium text-black semi-bold">Miscellaneous Options</h4>
+                            <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="sub-heading">Temperature Unit</span>
+                                    <span class="font-small semi-bold">Temperature Unit</span>
                                     <div class="right">
                                         <input type="radio" v-model="settings.weather.unit" id="weather-celcius" class="filled-in"
                                                value="c">
@@ -223,9 +232,12 @@
                             </ul>
                         </div>
                     </section>
+                    <section v-if="activeTab === 'whatsnew'">
+                        <whats-new></whats-new>
+                    </section>
                 </div>
             </div>
-        <footer class="customize-footer">
+        <footer class="customize-footer font-xsmall flex flex-justify-space-between bg-light-grey">
             <div class="flex">
                 <span class="version">v{{version}}</span>
                 <span style="margin:0 0.5rem">|</span>
@@ -239,8 +251,8 @@
                 </div>
             </div>
             <div class="success-links">
-                <a href="https://goo.gl/forms/XcIS7fojHNT166nA2" target="_blank">Support</a>
-                <a href="https://goo.gl/forms/hMD1i4sXIUVwkKtD2" target="_blank">Feedback</a>
+                <a class="text-black" href="https://goo.gl/forms/XcIS7fojHNT166nA2" target="_blank">Support</a>
+                <a class="text-black" href="https://goo.gl/forms/hMD1i4sXIUVwkKtD2" target="_blank">Feedback</a>
             </div>
         </footer>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
@@ -275,6 +287,12 @@
                     <path d="M1.79016958,11.3939565 L3.11329925,10.0229504"></path>
                     <path d="M1.79016958,2.02501403 L3.11329925,3.39602011"></path>
                 </g>
+                <g id="icon-whatsnew">
+                    <path d="M17.1432424,1.48612748 C18.8262781,1.48612748 20.1395453,2.95036374 19.9566757,4.62374579 L19.0055056,13.3268203 C18.8462784,14.7829455 17.6770643,15.8494186 16.0271805,15.8494186 L15.6098951,15.8494186 L15.5352461,16.2599727 L15.1542502,18.3553726 C15.0286389,19.0466277 14.1734653,19.3090833 13.681496,18.8089868 L10.9157511,15.9987006 L10.7688351,15.8494186 L10.5593849,15.8494186 L4.62197891,15.8494186 C3.17492962,15.8494186 1.96595019,14.765394 1.8086188,13.3267848 L0.857452054,4.62374096 C0.674511168,2.95069577 1.98743707,1.48612748 3.67080828,1.48612748 L17.1432424,1.48612748 Z"></path>
+                    <circle  fill-rule="nonzero" cx="6.86892358" cy="9.03592685" r="1"></circle>
+                    <circle  fill-rule="nonzero" cx="10.4069865" cy="9.03592685" r="1"></circle>
+                    <circle  fill-rule="nonzero" cx="13.9450495" cy="9.03592685" r="1"></circle>
+                </g>
             </defs>
         </svg>
     </div>
@@ -283,8 +301,12 @@
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
     import constants from '../utils/Constants'
+    import WhatsNew from './whatsNew.vue'
 
     export default{
+        components: {
+            WhatsNew
+        },
         data: function(){
             return {
                 selectedTheme: this.settings.background.themeId,

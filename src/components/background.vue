@@ -225,7 +225,3 @@
     };
     export default backgroundVue;
 </script>
-
-<style>
-
-</style>

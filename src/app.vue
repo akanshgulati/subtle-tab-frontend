@@ -52,6 +52,7 @@
 <script>
     import config from './utils/config'
     import storage from './utils/storage'
+    import commonUtils from './utils/common'
     import Constants from './utils/Constants'
     import Clock from './components/clock.vue'
     import Background from './components/background.vue'
@@ -73,7 +74,8 @@
                 showCustomizeMenu: false,
                 showNotes: false,
                 isLoading: true,
-                seenOnBoarding: this.seenOnBoarding
+                seenOnBoarding: this.seenOnBoarding,
+                miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc
             }
         },
         mounted(){
@@ -100,6 +102,12 @@
                     this.componentsData = newValue;
                 },
                 deep: true
+            },
+            miscSettings: {
+                handler: function (newValue) {
+                    storage.set(Constants.STORAGE.MISC_SETTINGS, newValue);
+                },
+                deep: true
             }
         },
         methods: {
@@ -124,6 +132,21 @@
                 this.showNotes = false
                 this.showCustomizeMenu = false
             },
+            checkForUpdates (){
+                if (!this.miscSettings.update || !this.miscSettings.update.isToCheck) {
+                    return
+                }
+                commonUtils.http(Constants.URL.WHATS_NEW).then((data) => {
+                    storage.set(Constants.STORAGE.WHATS_NEW, data.response);
+                    this.miscSettings.update.isToCheck = false;
+                })
+            },
+            initWhenIdle() {
+                let self = this;
+                setTimeout(()=>{
+                    self.checkForUpdates();
+                })
+            },
             init() {
                 // this is done for backgrounds
                 let bgCustom = storage.get(Constants.STORAGE.BACKGROUND_CUSTOM)
@@ -135,8 +158,9 @@
             initAnalytics() {
                 if(!this.seenOnBoarding){
                     this.$ga.event('app', 'onboarding', 'shown')
+                }else {
+                    this.$ga.page('/app')
                 }
-                this.$ga.page('/app')
             }
         },
         components: {

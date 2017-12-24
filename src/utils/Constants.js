@@ -1,4 +1,5 @@
-export default {
+const BASE_API = 'https://api.subtletab.com/'
+const constants = {
     THEME: {
         NATURE: 'nature',
         ARCHITECTURE: 'building',
@@ -7,6 +8,7 @@ export default {
     },
     STORAGE: {
         SHARED_DATA: 'shared-data',
+        MISC_SETTINGS: 'misc_settings',
         WEATHER: 'weather',
 
         BACKGROUND_SEEN_NIGHT: 'bg-seen-night',
@@ -18,10 +20,16 @@ export default {
 
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',
-        NOTES_META: 'notes_meta'
+        NOTES_META: 'notes_meta',
+        WHATS_NEW: 'whats_new'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
-        'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom'
-    ]
+        'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings'
+    ],
+    URL : {
+        WHATS_NEW : BASE_API + 'whatsnew'
+    }
 };
+
+export default constants
