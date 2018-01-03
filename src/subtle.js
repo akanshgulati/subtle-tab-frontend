@@ -285,9 +285,11 @@ function stopWeather() {
 
 function updateLocalStorage(){
     let sharedData;
+    let miscSettings;
     // Show onboarding with latest features
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
     // Add feature of custom location in weather
     if(sharedData && typeof sharedData === 'object'){
         if(sharedData.weather && !sharedData.weather.location){
@@ -311,7 +313,12 @@ function updateLocalStorage(){
         }
     }
 
+    if(miscSettings && typeof miscSettings === 'object'){
+        miscSettings.update.isToBeFetched = true;
+    }
+
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
+    storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
 function init() {
 

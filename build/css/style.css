@@ -975,3 +975,17 @@ svg:hover #close_btn {
 .update-list li p:nth-child(2){
     margin-left: 6px !important;
 }
+.whatsnew-notify{
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    background: rgba(255, 255, 255, 0.80);
+    color: #333;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 900;
+}

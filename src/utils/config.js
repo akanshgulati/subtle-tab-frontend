@@ -25,8 +25,9 @@ const config = {
     },
     misc: {
         update: {
-            lastChecked : '0.0.1.9',
-            isToCheck : true
+            lastChecked : '0019',
+            isToBeFetched : true,
+            isSeen: false
         }
     }
 };

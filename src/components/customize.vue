@@ -312,7 +312,7 @@
                 selectedTheme: this.settings.background.themeId,
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
-                activeTab: 'general',
+                activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'general',
                 customLocation: '',
                 currentBgCustom: '',
                 isCustomBgSaveMsg: ''
@@ -340,6 +340,7 @@
                 this.$ga.event('customize', 'wallpaper', 'category', this.themes[index].lValue)
             },
             closeCustomizeMenu(){
+                storage.remove(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
                 this.$emit('closeCustomizeMenu');
             },
             updateCustomLocation() {
