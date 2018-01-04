@@ -122,7 +122,9 @@
         methods: {
             toggleCustomizeMenu() {
                 this.showCustomizeMenu = !this.showCustomizeMenu
-                this.miscSettings.update.isSeen = true;
+                if(!this.miscSettings.update.isSeen) {
+                    this.miscSettings.update.isSeen = true;
+                }
             },
             toggleNotes() {
                 this.showNotes = !this.showNotes
