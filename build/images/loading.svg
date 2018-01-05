@@ -1,0 +1,6 @@
+<svg width="200px"  height="200px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-liquid" style="background: none;">
+    <circle cx="50" cy="50" ng-attr-r="{{config.radius}}" ng-attr-stroke="{{config.c1}}" ng-attr-stroke-width="{{config.width}}" fill="none" r="40" stroke="#666666" stroke-width="2"></circle>
+    <path ng-attr-d="{{config.d}}" ng-attr-fill="{{config.c2}}" d="M 12 50 Q 31 45.5504 50 50 Q 69 54.4496 88 50 A 38 38 0 0 1 12 50" fill="#4cb0a7">
+      <animate attributeName="d" calcMode="spline" values="M12 50 Q31 39 50 50 Q69 61 88 50 A38 38 0 0 1 12 50;M12 50 Q31 61 50 50 Q69 39 88 50 A38 38 0 0 1 12 50;M12 50 Q31 39 50 50 Q69 61 88 50 A38 38 0 0 1 12 50" keyTimes="0;0.5;1" dur="1.1" keySplines="0.5 0 0.5 1;0.5 0 0.5 1" begin="0s" repeatCount="indefinite"></animate>
+    </path>
+  </svg>

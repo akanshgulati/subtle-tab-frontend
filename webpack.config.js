@@ -23,7 +23,7 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg|ttf|eot|woff)$/,
                 loader: 'file-loader',
                 query: {
                     name: '[name].[ext]?[hash]'
@@ -43,7 +43,11 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
-            }
+            },
+            output: {
+                comments: false,
+            },
+            exclude: [/\.min\.js$/gi]
         })
     ]
 } else {

@@ -237,7 +237,7 @@ function getWeather(data) {
 
 function loadWeather(settings) {
     let options = {};
-    if (settings.weather.type !== 'custom') {
+    if (settings.weather.location.type !== 'custom') {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 options = {
@@ -252,7 +252,7 @@ function loadWeather(settings) {
         );
     } else {
         options = {
-            location: settings.weather.location,
+            location: settings.weather.location.name,
             type: 'custom'
         };
         getWeather(options);
@@ -285,9 +285,11 @@ function stopWeather() {
 
 function updateLocalStorage(){
     let sharedData;
+    let miscSettings;
     // Show onboarding with latest features
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
     // Add feature of custom location in weather
     if(sharedData && typeof sharedData === 'object'){
         if(sharedData.weather && !sharedData.weather.location){
@@ -311,8 +313,14 @@ function updateLocalStorage(){
         }
     }
 
+    if(miscSettings && typeof miscSettings === 'object'){
+        miscSettings.update.isToBeFetched = true;
+    }
+
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
+    storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
+
 function init() {
 
     chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');

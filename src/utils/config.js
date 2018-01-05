@@ -22,6 +22,13 @@ const config = {
             changeInterval: 2,
             type: 'predefined'
         }
+    },
+    misc: {
+        update: {
+            lastChecked : '0020',
+            isToBeFetched : true,
+            isSeen: true
+        }
     }
 };
 export default config;

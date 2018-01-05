@@ -1,27 +1,3 @@
-@font-face {
-    font-family: "Open Sans";
-    font-weight: 300;
-    src: url('../fonts/OpenSans-Light.ttf');
-}
-
-@font-face {
-    font-family: "Open Sans";
-    font-weight: 400;
-    src: url('../fonts/OpenSans-Regular.ttf');
-}
-
-@font-face {
-    font-family: "Open Sans";
-    font-weight: 500;
-    src: url('../fonts/OpenSans-SemiBold.ttf');
-}
-
-@font-face {
-    font-family: "Open Sans";
-    font-weight: 900;
-    src: url('../fonts/OpenSans-Bold.ttf');
-}
-
 .wi {
     font-size: 1.3rem;
     margin-right: 0.5rem;
@@ -29,13 +5,14 @@
 
 html {
     box-sizing: border-box;
-    overflow-y: hidden;
+    overflow: hidden;
+    height: 100%;
+
 }
 
 *, *:before, *:after {
     box-sizing: inherit;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -43,7 +20,9 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif !important;
-
+    font-size: 1.07rem;
+    height: 100%;
+    overflow: auto;
 }
 
 [type="radio"]:checked + label:after {
@@ -59,48 +38,9 @@ body {
     padding: 0.5rem !Important;
 }
 
-.flex {
-    display: flex;
-}
-
-.flex-end {
-    align-items: flex-end;
-}
-
-.flex-center {
-    align-items: center;
-}
-
-.flex-justify-center {
-    justify-content: center;
-}
-.flex-justify-space-between {
-    justify-content: space-between;
-}
-
-.flex-flow-column {
-    flex-direction: column;
-}
-
-.flex-grow-1 {
-    flex-grow: 1;
-}
-
-.mar-0 {
-    margin: 0 !important;
-}
-
-.pad-0 {
-    padding: 0 !important;
-}
-.overflow-hidden{
-    overflow: hidden;
-}
-
 label {
     color: #666;
 }
-
 .switch label input[type=checkbox]:checked + .lever {
     background-color: rgb(122, 184, 0);
 }
@@ -342,7 +282,6 @@ svg:hover #close_btn {
     left: calc(50vw - 450px);
     top: calc(50vh - 14.27rem);
     width: 900px;
-    height: 28.54rem;
     background: #ffffff;
     color: #666;
     border-radius: 5px;
@@ -350,6 +289,9 @@ svg:hover #close_btn {
     z-index: 10;
     overflow: hidden;
     visibility: hidden;
+}
+#customize .main-window {
+    height: 22rem;
 }
 #customize .save-button{
     background: rgb(122, 184, 0);
@@ -359,9 +301,6 @@ svg:hover #close_btn {
 }
 #customize .save-button:disabled{
     background: grey;
-    padding: 1px 4px;
-    color: white;
-    margin-left: 0.3rem;
 }
 .csidebar {
     border-right: 1px solid #e3e3e3;
@@ -369,6 +308,10 @@ svg:hover #close_btn {
 }
 .csidebar li{
     color: #333;
+}
+
+.csidebar li.separator {
+    border-top: 1px solid rgba(204, 204, 204, 0.2);
 }
 .csidebar li label.active{
     background: #ebebeb;
@@ -388,18 +331,24 @@ svg:hover #close_btn {
     max-width: 1.5rem;
     margin-right: 0.5rem;
 }
+.csidebar svg {
+    width: 1.5rem;
+    margin-right: 0.5rem;
+    height: 1.5rem;
+    fill: none;
+    stroke: #666;
+}
+.csidebar label:hover:not(.active) svg, .csidebar label:hover:not(.active) span {
+    stroke: #7AB800;
+    color: #7AB800;
+}
 #customize .container {
     width: 80%;
     padding: 0 1rem;
     overflow: auto;
 }
-#customize .container h4 {
-    font-size: 1rem;
-    color: #666;
-    font-weight: 500;
-}
 #customize .container > section > div {
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 #customize .container .inline-list{
     padding-left: 0.25rem;
@@ -410,10 +359,7 @@ svg:hover #close_btn {
     border-bottom: 1px solid rgba(236, 236, 236, 0.51);
     display: flex;
     justify-content: space-between;
-}
-#customize .container .sub-heading{
-    font-size: 0.9rem;
-    font-weight: 500;
+    align-items: center;
 }
 #customize .container .inline-radio, #customize .container .inline-checkbox{
     padding-left: 25px;
@@ -583,14 +529,9 @@ svg:hover #close_btn {
 }
 
 .customize-footer {
-    color: #666;
-    background: #ebebeb;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
     padding: 1rem;
     border-top: 1px solid #e3e3e3;
+    min-height: 45px;
 }
 
 .customize-footer a {
@@ -1023,4 +964,33 @@ svg:hover #close_btn {
 .notes-arrow_box:before {
     border-bottom-color: #fff;
     border-width: 0.7rem;
+}
+
+.update-list li p:first-child:before{
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #666;
+    transform: translateX(-10px);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.update-list li p:nth-child(2){
+    margin-left: 6px !important;
+}
+.whatsnew-notify{
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    background: rgba(255, 255, 255, 0.80);
+    color: #333;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 900;
 }

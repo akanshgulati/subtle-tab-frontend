@@ -57,7 +57,7 @@
                     <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar && notesMeta.count}">
                         <transition-group name="flip-list" tag="ul" id="note-list" class="note-list flex flex-flow-column flex-center">
                                 <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
-                                    v-on:click="setCurrentNote(note.id); showSidebar = false;" v-bind:key="note">
+                                    v-on:click="setCurrentNote(note.id); showSidebar = false;" v-bind:key="note.id">
                                     <p class="note-title" v-html="trimContent(note.content)"></p>
                                     <div class="note-data">{{note.createdOn | formatDate}}</div>
                                 </li>
