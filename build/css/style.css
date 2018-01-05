@@ -5,7 +5,9 @@
 
 html {
     box-sizing: border-box;
-    overflow-y: hidden;
+    overflow: hidden;
+    height: 100%;
+
 }
 
 *, *:before, *:after {
@@ -19,6 +21,8 @@ body {
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif !important;
     font-size: 1.07rem;
+    height: 100%;
+    overflow: auto;
 }
 
 [type="radio"]:checked + label:after {
@@ -344,7 +348,7 @@ svg:hover #close_btn {
     overflow: auto;
 }
 #customize .container > section > div {
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 #customize .container .inline-list{
     padding-left: 0.25rem;
@@ -355,6 +359,7 @@ svg:hover #close_btn {
     border-bottom: 1px solid rgba(236, 236, 236, 0.51);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 #customize .container .inline-radio, #customize .container .inline-checkbox{
     padding-left: 25px;
