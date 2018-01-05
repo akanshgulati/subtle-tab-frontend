@@ -196,6 +196,9 @@
                 let value = Math.random();
                 let themeId = this.settings.themeId;
                 counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
+                if (this.settings) {
+                    this.$ga.event('background', 'default', this.settings.type, this.settings.changeInterval);
+                }
                 chrome.runtime.sendMessage({query: 'log', value: 'getDefaultBg Called with counter, ' + counter});
                 return bgData.stored[themeId][1 + (themeId - 1) * 3 + counter];
             },
