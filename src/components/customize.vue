@@ -68,10 +68,13 @@
                 <div class="container">
                     <section v-if="activeTab === 'general'">
                         <div>
-                            <h4 class="font-medium text-black semi-bold">Features</h4>
+                            <h4 class="font-medium text-black semi-bold">Show/hide Widgets</h4>
                             <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Weather</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Weather widget</div>
+                                        <small>Show/hide weather widget</small>
+                                    </div>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showWeather">
@@ -80,7 +83,10 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Date & Time</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Date & Time widget</div>
+                                        <small>Show/hide date and time widget</small>
+                                    </div>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showClock">
@@ -89,7 +95,10 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Notes</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Notes widget</div>
+                                        <small>Show/hide notes widget</small>
+                                    </div>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.showUtilities.showNotes">
@@ -107,33 +116,36 @@
                             <ul class="ph-10">
                                 <li class="inline-list-item">
                                     <div>
-                                        <div class="font-small semi-bold">Change Interval (tabs)</div>
-                                        <small>Choose lower value for high internet speed</small>
+                                        <div class="font-small semi-bold">Wallpaper Change Interval (new tabs)</div>
+                                        <small>Choose lower value with high internet speed to prevent loading.</small>
                                     </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval1"
                                                class="filled-in" value="1">
-                                        <label for="bgInterval1" class="inline-radio">1</label>
+                                        <label for="bgInterval1" class="inline-radio">1 tab</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval2"
                                                class="filled-in" value="2">
-                                        <label for="bgInterval2" class="inline-radio">2</label>
+                                        <label for="bgInterval2" class="inline-radio">2 tabs</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval5"
                                                class="filled-in" value="5">
-                                        <label for="bgInterval5" class="inline-radio">5</label>
+                                        <label for="bgInterval5" class="inline-radio">5 tabs</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval10"
                                                class="filled-in" value="10">
-                                        <label for="bgInterval10" class="inline-radio">10</label>
+                                        <label for="bgInterval10" class="inline-radio">10 tabs</label>
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Wallpaper Type</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Wallpaper Type</div>
+                                        <small>Choose default for Subtle collection or add custom wallpapers</small>
+                                    </div>
                                     <div class="right">
-                                        <input type="radio" v-model="settings.background.type" id="wallpaperType1"
-                                               class="filled-in" value="custom" @change="backgroundTypeChange"/>
-                                        <label for="wallpaperType1" class="inline-radio">Custom</label>
                                         <input type="radio" v-model="settings.background.type" id="wallpaperType2"
                                                class="filled-in" value="predefined" @change="backgroundTypeChange"/>
                                         <label for="wallpaperType2" class="inline-radio">Default</label>
+                                        <input type="radio" v-model="settings.background.type" id="wallpaperType1"
+                                               class="filled-in" value="custom" @change="backgroundTypeChange"/>
+                                        <label for="wallpaperType1" class="inline-radio">Custom</label>
                                     </div>
                                 </li>
                             </ul>
@@ -153,7 +165,7 @@
                         </div>
                         <div v-if="settings.background.type === 'custom'" :class="{'fade_in': settings.background.type === 'custom'}">
                             <h4 class="font-medium text-black semi-bold">Custom List</h4>
-                            <small>Add each image in new line and press save list button</small>
+                            <small>Add each image url in new line and press save list button. Image url should end with (.png, .jpg)</small>
                             <textarea name="" id="" cols="30" rows="15" v-model="currentBgCustom"></textarea>
                             <button class="save-button font-xsmall mar-0" v-on:click.stop="saveCustomBg"
                                     :disabled="!currentBgCustom.trim().length">Save List</button>
@@ -162,10 +174,13 @@
                     </section>
                     <section v-if="activeTab === 'clock'">
                         <div>
-                            <h4 class="font-medium text-black semi-bold">Options</h4>
+                            <h4 class="font-medium text-black semi-bold">Settings</h4>
                             <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Clock format</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Clock format</div>
+                                        <small>Choose 12 hour or 24 hour clock format</small>
+                                    </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.clock.type" id="clock12"
                                                class="filled-in" value="twelve">
@@ -176,7 +191,10 @@
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Show Date</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Date (show/hide)</div>
+                                        <small>Show/hide date along with time</small>
+                                    </div>
                                     <div class="switch">
                                         <label>
                                             <input type="checkbox" v-model="settings.clock.showDay">
@@ -190,14 +208,17 @@
                     </section>
                     <section v-if="activeTab === 'weather'">
                         <div>
-                            <h4 class="font-medium text-black semi-bold">Weather location</h4>
+                            <h4 class="font-medium text-black semi-bold">Location settings</h4>
                             <ul class="ph-10">
                                 <li class="inline-list-item">
-                                    <span class="font-small semi-bold">Type</span>
+                                    <div>
+                                        <div class="font-small semi-bold">Location type</div>
+                                        <small>Choose either default geo-location or add custom location</small>
+                                    </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.weather.location.type" id="weather-geo" class="filled-in"
                                                value="geo" @change="locationTypeChange">
-                                        <label for="weather-geo" class="inline-radio">Geolocation</label>
+                                        <label for="weather-geo" class="inline-radio">Default Geolocation</label>
                                         <input type="radio" v-model="settings.weather.location.type" id="weather-custom" class="filled-in"
                                                value="custom" @change="locationTypeChange">
                                         <label for="weather-custom" class="inline-radio">Custom</label>
@@ -205,7 +226,7 @@
                                 </li>
                                 <li class="inline-list-item flex overflow-hidden flex-center flex-justify-space-between">
                                     <div>
-                                        <div class="font-small semi-bold">City/Town/Village</div>
+                                        <div class="font-small semi-bold">City/Town/Village Name</div>
                                         <small>Enter correct name and press save button.</small>
                                     </div>
                                     <div class="right flex">
@@ -216,7 +237,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <h4 class="font-medium text-black semi-bold">Miscellaneous Options</h4>
+                            <h4 class="font-medium text-black semi-bold">Miscellaneous Settings</h4>
                             <ul class="ph-10">
                                 <li class="inline-list-item">
                                     <span class="font-small semi-bold">Temperature Unit</span>
@@ -232,8 +253,8 @@
                             </ul>
                         </div>
                     </section>
-                    <section v-if="activeTab === 'whatsnew'">
-                        <whats-new></whats-new>
+                    <section v-if="activeTab === 'whatsnew'" class="full-height">
+                        <whats-new class="full-height"></whats-new>
                     </section>
                 </div>
             </div>
