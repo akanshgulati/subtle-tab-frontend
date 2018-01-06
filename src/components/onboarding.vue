@@ -7,9 +7,9 @@
                 </div>
                 <div class="col s6 flex flex-flow-column flex-justify-center">
                     <h1>Hi, Thank you for <br> choosing
-                        <span class="italics semi-bold relative">Subtle<span class="version">v{{version}}</span></span>
+                        <span class="italics semi-bold relative">Subtle tab<span class="version">v{{version}}</span></span>
                     </h1>
-                    <div class="onboarding-btn" v-on:click="closeOnboarding">Let's Start</div>
+                    <div class="onboarding-btn semi-bold" v-on:click="closeOnboarding">Explore Now</div>
                 </div>
             </div>
             <div class="row change-row">
