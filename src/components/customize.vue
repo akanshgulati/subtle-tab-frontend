@@ -22,7 +22,7 @@
                 <aside class="csidebar">
                     <ul>
                         <li>
-                            <input type="radio" v-model="activeTab" value="general" id="tab4" @change="categoryChange">
+                            <input type="radio" v-model="activeTab" value="general" id="tab4" @change="onChange('changeTab')">
                             <label for="tab4" class="flex-center" :class="{'active': activeTab === 'general'}">
                                 <svg viewBox="0 0 21 21">
                                     <use xlink:href="#icon-general"></use></svg>
@@ -30,7 +30,7 @@
                             </label>
                         </li>
                         <li>
-                            <input type="radio" v-model="activeTab" value="background" id="tab1" @change="categoryChange">
+                            <input type="radio" v-model="activeTab" value="background" id="tab1" @change="onChange('changeTab')">
                             <label for="tab1" class="flex-center"  :class="{'active': activeTab === 'background'}">
                                 <svg viewBox="0 0 21 21">
                                     <use xlink:href="#icon-wallpaper"></use>
@@ -39,14 +39,14 @@
                             </label>
                         </li>
                         <li>
-                            <input type="radio" v-model="activeTab" value="clock" id="tab2" :change="categoryChange">
+                            <input type="radio" v-model="activeTab" value="clock" id="tab2" @change="onChange('changeTab')">
                             <label for="tab2" class="flex-center" :class="{'active': activeTab === 'clock'}">
                                 <svg><use xlink:href="#icon-clock"></use></svg>
                                 <span>Clock</span>
                             </label>
                         </li>
                         <li>
-                            <input type="radio" v-model="activeTab" value="weather" id="tab3" @change="categoryChange">
+                            <input type="radio" v-model="activeTab" value="weather" id="tab3" @change="onChange('changeTab')">
                             <label for="tab3" class="flex-center"  :class="{'active': activeTab === 'weather'}">
                                 <svg viewBox="0 0 21 21">
                                     <use xlink:href="#icon-weather"></use>
@@ -55,7 +55,7 @@
                             </label>
                         </li>
                         <li class="separator">
-                            <input type="radio" v-model="activeTab" value="whatsnew" id="tab5" @change="categoryChange">
+                            <input type="radio" v-model="activeTab" value="whatsnew" id="tab5" @change="onChange('changeTab')">
                             <label for="tab5" class="flex-center"  :class="{'active': activeTab === 'whatsnew'}">
                                 <svg viewBox="0 0 21 21">
                                     <use xlink:href="#icon-whatsnew"></use>
@@ -121,16 +121,16 @@
                                     </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval1"
-                                               class="filled-in" value="1">
+                                               class="filled-in" value="1" @change="onChange('backgroundInterval')">
                                         <label for="bgInterval1" class="inline-radio">1 tab</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval2"
-                                               class="filled-in" value="2">
+                                               class="filled-in" value="2" @change="onChange('backgroundInterval')">
                                         <label for="bgInterval2" class="inline-radio">2 tabs</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval5"
-                                               class="filled-in" value="5">
+                                               class="filled-in" value="5" @change="onChange('backgroundInterval')">
                                         <label for="bgInterval5" class="inline-radio">5 tabs</label>
                                         <input type="radio" v-model="settings.background.changeInterval" id="bgInterval10"
-                                               class="filled-in" value="10">
+                                               class="filled-in" value="10" @change="onChange('backgroundInterval')">
                                         <label for="bgInterval10" class="inline-radio">10 tabs</label>
                                     </div>
                                 </li>
@@ -141,10 +141,10 @@
                                     </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.background.type" id="wallpaperType2"
-                                               class="filled-in" value="predefined" @change="backgroundTypeChange"/>
+                                               class="filled-in" value="predefined" @change="onChange('backgroundType')"/>
                                         <label for="wallpaperType2" class="inline-radio">Default</label>
                                         <input type="radio" v-model="settings.background.type" id="wallpaperType1"
-                                               class="filled-in" value="custom" @change="backgroundTypeChange"/>
+                                               class="filled-in" value="custom" @change="onChange('backgroundType')"/>
                                         <label for="wallpaperType1" class="inline-radio">Custom</label>
                                     </div>
                                 </li>
@@ -217,10 +217,10 @@
                                     </div>
                                     <div class="right">
                                         <input type="radio" v-model="settings.weather.location.type" id="weather-geo" class="filled-in"
-                                               value="geo" @change="locationTypeChange">
+                                               value="geo" @change="onChange('weatherLocationType')">
                                         <label for="weather-geo" class="inline-radio">Default Geolocation</label>
                                         <input type="radio" v-model="settings.weather.location.type" id="weather-custom" class="filled-in"
-                                               value="custom" @change="locationTypeChange">
+                                               value="custom" @change="onChange('weatherLocationType')">
                                         <label for="weather-custom" class="inline-radio">Custom</label>
                                     </div>
                                 </li>
@@ -358,7 +358,7 @@
             },
             selectActive(index){
                 this.settings.background.themeId = (index + 1);
-                this.$ga.event('customize', 'wallpaper', 'category', this.themes[index].lValue)
+                this.$ga.event('customize', 'wallpaperCategoryChanged', this.themes[index].lValue)
             },
             closeCustomizeMenu(){
                 storage.remove(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
@@ -403,18 +403,22 @@
                     this.isCustomBgSaveMsg = ''
                 }, 2000);
             },
-            backgroundTypeChange() {
-                if (this.settings.background && this.settings.background.type) {
-                    this.$ga.event('customize', 'customType', 'wallpaper', this.settings.background.type)
+            onChange(changeType) {
+                try {
+                    let value;
+                    if (changeType === 'backgroundInterval') {
+                        value = this.settings.background && this.settings.background.changeInterval;
+                    } else if (changeType === 'changeTab') {
+                        value = this.activeTab;
+                    } else if (changeType === 'backgroundType') {
+                        value = this.settings.background && this.settings.background.type;
+                    } else if (changeType === 'weatherLocationType') {
+                        value = this.settings.weather.location && this.settings.weather.location.type;
+                    }
+                    this.$ga.event('customize', changeType, value);
+                } catch (e) {
+
                 }
-            },
-            locationTypeChange() {
-                if (this.settings.weather && this.settings.weather.location && this.settings.weather.location.type) {
-                    this.$ga.event('customize', 'customType', 'weather', this.settings.weather.location.type)
-                }
-            },
-            categoryChange() {
-                // this.$ga.event('customize', 'changeTab', this.activeTab)
             }
         },
         props:['settings'],
