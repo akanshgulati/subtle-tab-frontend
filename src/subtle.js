@@ -214,7 +214,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 function getWeather(data) {
     let xmlhttp = new XMLHttpRequest();
 
-    let url = 'https://api.subtletab.com/weather/new';
+    let url = 'https://api.subtletab.com/weather';
 
     if(data.type !== 'custom'){
         url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
@@ -227,9 +227,9 @@ function getWeather(data) {
     xmlhttp.onreadystatechange = () => {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let weather = JSON.parse(xmlhttp.responseText);
-            let now = +new Date();
-            let localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
-            storage.set('weather', localWeather);
+            weather.timeStamp = +new Date();
+            //let localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
+            storage.set(constants.STORAGE.WEATHER, weather);
         }
     };
     xmlhttp.send();

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="isLoading" class="weather-loading">Loading..</div>
-        <div id="weather" :class="{'fade_in':!isLoading}">
+        <div id="weather" @click="toggle('showWeatherInfo')" :class="{'fade_in':!isLoading}">
             <div class="temperature" v-if="temp">
                 <div class="temperature-value">{{temp}}</div>
                 <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
@@ -12,14 +12,15 @@
                 <span class="weather-city">{{weatherCity}}</span>
             </div>
         </div>
+        <WeatherInfo v-if="showWeatherInfo && localWeather" :data="localWeather" :settings="settings"></WeatherInfo>
     </div>
 </template>
-
 <script>
     import storage from '../utils/storage';
     import weatherUtil from '../utils/weatherUtil';
     import constants from '../utils/Constants';
     import commonUtils from '../utils/common';
+    import WeatherInfo from './WeatherInfo.vue';
 
     export default {
         beforeCreate(){
@@ -31,17 +32,33 @@
         },
         data () {
             return {
-                weatherCode: null,
                 weatherClass: null,
                 weatherCity: null,
                 temp: null,
                 localWeather: this.localWeather,
                 error: null,
                 isLoading: false,
-                localSettings: Object.assign({}, this.settings)
+                localSettings: Object.assign({}, this.settings),
+                showWeatherInfo: false
             }
         },
         methods: {
+            toggle(prop) {
+                this[prop] = !this[prop];
+            },
+            getTemp(unit, temp) {
+                // use for only converting fahrenheit
+                if(!unit || !temp){
+                    return;
+                }
+                return unit === "f"? Math.round((5.0 / 9.0) * (temp - 32.0)): temp;
+            },
+            getWeatherClass(code) {
+                if (!code) {
+                    return
+                }
+                return weatherUtil[code]
+            },
             checkWeather(forceUpdate){
 
                 if (!navigator.onLine) {
@@ -75,7 +92,7 @@
                 }
                 chrome.runtime.sendMessage({query: 'startWeather'});
 
-                let url = 'https://api.subtletab.com/weather/new'
+                let url = 'https://api.subtletab.com/weather'
                 if (data.type !== 'custom') {
                     url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo'
                 } else {
@@ -120,18 +137,18 @@
                     }
                 }
             },
-            showWeather(weatherArr) {
-                this.temp = this.settings.unit === 'f' ? weatherArr[2] : weatherArr[1]
-                this.weatherCode = weatherArr[3]
-                this.weatherClass = weatherUtil[weatherArr[3]]
-                this.weatherCity = weatherArr[4]
+            showWeather(weatherObj) {
+                let current = weatherObj.current;
+                this.temp = this.getTemp(this.settings.unit, current.temp)
+                this.weatherClass = this.getWeatherClass(current.code)
+                this.weatherCity = current.city
             },
             updateLocalWeather(weatherObj) {
                 if (Object.keys(weatherObj).length !== 4) {
                     return
                 }
-                let now = +new Date();
-                this.localWeather = [now, weatherObj.temp, weatherObj.alt.temp, weatherObj.code, weatherObj.city];
+                weatherObj.timeStamp = +new Date();
+                this.localWeather = weatherObj
                 storage.set(constants.STORAGE.WEATHER, this.localWeather);
             }
         },
@@ -148,6 +165,9 @@
                 },
                 deep: true
             }
+        },
+        components:{
+            WeatherInfo
         }
     }
 </script>

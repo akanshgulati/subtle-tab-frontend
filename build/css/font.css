@@ -85,3 +85,10 @@
 .bold {
     font-weight: bold;
 }
+.font-black {
+    color: #333;
+}
+.font-light-black {
+    color: #666;
+}
+
