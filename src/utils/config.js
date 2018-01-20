@@ -29,6 +29,11 @@ const config = {
             isToBeFetched : true,
             isSeen: true
         }
+    },
+    other: {
+        weather: {
+            showWeatherInfo: false
+        }
     }
 };
 export default config;

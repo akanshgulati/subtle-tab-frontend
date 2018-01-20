@@ -1,15 +1,16 @@
 <template>
     <div>
-        <div class="flex fade_in font-black" id="weatherInfo">
+        <div class="flex font-black absolute" id="weatherInfo">
             <div id="currentWeather">
-                <div class="flex">
+                <div class="flex flex-start">
                     <div class="relative">
                         <div class="temperature-value">{{getTemp(settings.unit, data.current.temp)}}</div>
                         <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
                         <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
                     </div>
-                    <div class="ml-30 font-xsmall semi-bold">
-                        <i class="wi" :class="'wi-'+getWeatherClass(data.current.code)"></i>{{data.current.text}}
+                    <div class="ml-30 font-xsmall semi-bold flex flex-center">
+                        <i class="wi" :class="'wi-'+getWeatherClass(data.current.code)"></i>
+                        <span>{{data.current.text}}</span>
                     </div>
                 </div>
                 <div class="flex font-xsmall flex-justify-space-between flex-end mt-15 font-center">
@@ -87,11 +88,7 @@
 <script>
     export default {
         props: ['data', 'settings'],
-        mounted () {
-            console.log(this.data);
-            console.log('Mounted')
-        },
-        data () {
+        data() {
             return {
                 getTemp: this.$parent.getTemp,
                 getWeatherClass: this.$parent.getWeatherClass
@@ -105,7 +102,6 @@
         min-width: 40rem;
         margin-left: -1rem;
         margin-top: 1rem;
-        position: relative;
     }
     #weatherInfo:before {
         bottom: 100%;

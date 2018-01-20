@@ -1,36 +1,46 @@
 <template>
-    <div>
-        <div v-if="isLoading" class="weather-loading">Loading..</div>
-        <div id="weather" @click="toggle('showWeatherInfo')" :class="{'fade_in':!isLoading}">
-            <div class="temperature" v-if="temp">
-                <div class="temperature-value">{{temp}}</div>
-                <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
-                <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
+    <div v-on:click.stop="" @mousedown.stop="">
+        <transition mode="out-in">
+            <div v-if="isLoading" class="weather-loading" key="loading">Loading..</div>
+            <div v-else id="weather" @click="toggle('showWeatherInfo')" key="notLoading">
+                <transition mode="out-in" name="fast-fade">
+                    <div :key="weatherCity + temp">
+                        <div class="temperature" v-if="temp">
+                            <div class="temperature-value">{{temp}}</div>
+                            <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
+                            <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
+                        </div>
+                        <div class="weather-icon flex flex-center">
+                            <i class="wi" :class="'wi-'+weatherClass"></i>
+                            <span class="weather-city">{{weatherCity}}</span>
+                        </div>
+                    </div>
+                </transition>
             </div>
-            <div class="weather-icon flex flex-center">
-                <i class="wi" :class="'wi-'+weatherClass"></i>
-                <span class="weather-city">{{weatherCity}}</span>
-            </div>
-        </div>
-        <WeatherInfo v-if="showWeatherInfo && localWeather" :data="localWeather" :settings="settings"></WeatherInfo>
+        </transition>
+        <transition>
+            <WeatherInfo
+                    v-if="showWeatherInfo && localWeather && !isLoading" :data="localWeather"
+                    :settings="settings"/>
+        </transition>
     </div>
 </template>
 <script>
-    import storage from '../utils/storage';
-    import weatherUtil from '../utils/weatherUtil';
-    import constants from '../utils/Constants';
-    import commonUtils from '../utils/common';
-    import WeatherInfo from './WeatherInfo.vue';
+    import storage from '../utils/storage'
+    import weatherUtil from '../utils/weatherUtil'
+    import constants from '../utils/Constants'
+    import CommonUtils from '../utils/common'
+    import WeatherInfo from './WeatherInfo.vue'
 
     export default {
-        beforeCreate(){
-            this.localWeather = storage.get(constants.STORAGE.WEATHER);
+        beforeCreate() {
+            this.localWeather = storage.get(constants.STORAGE.WEATHER)
         },
-        props: ['settings'],
-        mounted () {
-            this.checkWeather();
+        props: ['settings', 'otherSettings'],
+        mounted() {
+            this.checkWeather()
         },
-        data () {
+        data() {
             return {
                 weatherClass: null,
                 weatherCity: null,
@@ -38,20 +48,21 @@
                 localWeather: this.localWeather,
                 error: null,
                 isLoading: false,
-                localSettings: Object.assign({}, this.settings),
-                showWeatherInfo: false
+                localSettings: Object.assign({}, this.settings)
             }
         },
         methods: {
             toggle(prop) {
-                this[prop] = !this[prop];
+                if (prop === 'showWeatherInfo') {
+                    this.otherSettings.weather.showWeatherInfo = !this.otherSettings.weather.showWeatherInfo
+                }
             },
             getTemp(unit, temp) {
                 // use for only converting fahrenheit
-                if(!unit || !temp){
-                    return;
+                if (!unit || !temp) {
+                    return
                 }
-                return unit === "f"? Math.round((5.0 / 9.0) * (temp - 32.0)): temp;
+                return unit === "f" ? Math.round((5.0 / 9.0) * (temp - 32.0)) : temp
             },
             getWeatherClass(code) {
                 if (!code) {
@@ -59,38 +70,38 @@
                 }
                 return weatherUtil[code]
             },
-            checkWeather(forceUpdate){
+            checkWeather(forceUpdate) {
 
                 if (!navigator.onLine) {
                     this.weatherCity = 'Offline'
                     return
                 }
 
-                let now = +new Date();
-                const oneHourTime = 900000;
+                let now = +new Date()
+                const fifteenMin = 900000
 
-                if(!this.localWeather || forceUpdate){
-                    this.prepareWeatherCall();
-                    return;
+                if (!this.localWeather || forceUpdate) {
+                    this.prepareWeatherCall()
+                    return
                 }
                 if (this.localWeather) {
                     // Check if local weather is not more than an hour old and also
                     // checks if local city
-                    if ((now - this.localWeather[0]) < oneHourTime) {
+                    if ((now - this.localWeather.updatedOn) < fifteenMin) {
                         this.showWeather(this.localWeather)
-                        this.isLoading = false;
+                        this.isLoading = false
 
                     } else {
                         this.showWeather(this.localWeather)
-                        this.prepareWeatherCall(true);
+                        this.prepareWeatherCall(true)
                     }
                 }
             },
-            getWeather(data){
-                if(!this.localWeather) {
-                    this.isLoading = true;
+            getWeather(data) {
+                if (!this.localWeather) {
+                    this.isLoading = true
                 }
-                chrome.runtime.sendMessage({query: 'startWeather'});
+                chrome.runtime.sendMessage({query: 'startWeather'})
 
                 let url = 'https://api.subtletab.com/weather'
                 if (data.type !== 'custom') {
@@ -99,10 +110,9 @@
                     url += '?location=' + data.location + '&type=custom'
                 }
 
-                return commonUtils.http(url).then(_resp =>{
-                    let weather = _resp
-                    this.isLoading = false;
-                    this.updateLocalWeather(weather)
+                return CommonUtils.http(url).then(_resp => {
+                    this.isLoading = false
+                    this.updateLocalWeather(_resp)
                     this.showWeather(this.localWeather)
                 })
             },
@@ -121,7 +131,7 @@
                             this.getWeather(options)
                         },
                         (error) => {
-                            console.log(error)
+                            //console.log(error)
                         },
                         {
                             timeout: 10000
@@ -138,22 +148,21 @@
                 }
             },
             showWeather(weatherObj) {
-                let current = weatherObj.current;
+                let current = weatherObj.current
                 this.temp = this.getTemp(this.settings.unit, current.temp)
                 this.weatherClass = this.getWeatherClass(current.code)
                 this.weatherCity = current.city
             },
             updateLocalWeather(weatherObj) {
-                if (Object.keys(weatherObj).length !== 4) {
+                if (!CommonUtils.isObject(weatherObj) || Object.keys(weatherObj).length === 0) {
                     return
                 }
-                weatherObj.timeStamp = +new Date();
                 this.localWeather = weatherObj
-                storage.set(constants.STORAGE.WEATHER, this.localWeather);
+                storage.set(constants.STORAGE.WEATHER, this.localWeather)
             }
         },
-        watch:{
-            settings:{
+        watch: {
+            settings: {
                 handler: function (newValue) {
                     if (this.localSettings.unit !== newValue.unit) {
                         this.checkWeather()
@@ -161,12 +170,17 @@
                         this.localSettings.location.type !== newValue.location.type) {
                         this.checkWeather(true)
                     }
-                    this.localSettings = JSON.parse(JSON.stringify(newValue));
+                    this.localSettings = JSON.parse(JSON.stringify(newValue))
                 },
                 deep: true
             }
         },
-        components:{
+        computed: {
+            showWeatherInfo() {
+                return this.otherSettings.weather.showWeatherInfo || false
+            }
+        },
+        components: {
             WeatherInfo
         }
     }

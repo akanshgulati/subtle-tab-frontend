@@ -1,5 +1,5 @@
 <template>
-    <div id="notes" v-on:click.stop="" class="notes-arrow_box">
+    <div id="notes" class="notes-arrow_box">
         <div v-if="!notesMeta.count" class="col s12 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
             <div>
                 <img src="images/note_landing_page_icon.png">

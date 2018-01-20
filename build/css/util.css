@@ -100,6 +100,10 @@
     align-items: flex-end;
 }
 
+.flex-start {
+    align-items: flex-start;
+}
+
 .flex-center {
     align-items: center;
 }
