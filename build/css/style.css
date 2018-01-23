@@ -7,6 +7,7 @@ html {
     box-sizing: border-box;
     overflow: hidden;
     height: 100%;
+    font-family: 'Open Sans', sans-serif;
 
 }
 
@@ -962,7 +963,7 @@ svg:hover #close_btn {
 }
 
 .tooltip:hover:after {
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     color: #fff;
     content: attr(rel);
     display: block;
@@ -970,9 +971,11 @@ svg:hover #close_btn {
     position: absolute;
     white-space: nowrap;
     font-size: 0.8rem;
-    padding: 0.2rem;
+    padding: 0.25rem;
     border-radius: 3px;
     animation: fade_in 0.3s;
+    font-family: 'Open Sans', sans-serif !important;
+    letter-spacing: 0.04rem;
 }
 
 .v-enter-active {

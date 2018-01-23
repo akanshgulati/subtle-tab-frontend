@@ -100,7 +100,7 @@
 <style lang="css">
     #weatherInfo {
         min-width: 40rem;
-        margin-left: -1rem;
+        margin-left: -0.5rem;
         margin-top: 1rem;
     }
     #weatherInfo:before {

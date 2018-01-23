@@ -108,6 +108,9 @@
                 } else if (e.keyCode === 27) {
                     self.closeWindows();
                     this.$ga.event('app', 'keydown', 'closeAll')
+                } else if (e.keyCode === 87) {
+                    self.otherSettings.weather.showWeatherInfo = true;
+                    this.$ga.event('app', 'keydown', 'weather')
                 }
             });
             this.init()

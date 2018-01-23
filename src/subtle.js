@@ -272,40 +272,39 @@ function updateLocalStorage(){
     let sharedData;
     let miscSettings;
     // Show onboarding with latest features
+
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
     // Add feature of custom location in weather
-    if(sharedData && typeof sharedData === 'object'){
-        if(sharedData.weather && !sharedData.weather.location){
+    if(sharedData && CommonUtils.isObject(sharedData)){
+        if (sharedData.weather && CommonUtils.isUndefined(sharedData.weather.location)) {
             let storedWeather = storage.get(constants.STORAGE.WEATHER);
+            // defining object of weather
             sharedData.weather.location = config.defaultCustomization.weather.location;
-            if(Object.prototype.toString.call(storedWeather) === '[object Object]')
-            sharedData.weather.location.name = storedWeather[4] || storedWeather.city || '';
+
+            if (CommonUtils.isObject(storedWeather) && !sharedData.weather.location.name) {
+                sharedData.weather.location.name = storedWeather[4] || storedWeather.city || '';
+            }
         }
-        if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
+        if (sharedData.showUtilities && CommonUtils.isUndefined(sharedData.showUtilities.showNotes)) {
             sharedData.showUtilities.showNotes = true;
         }
-        if(sharedData.background){
-            if (!sharedData.background.type) {
+
+        if (sharedData.background) {
+            if (CommonUtils.isUndefined(sharedData.background.type)) {
                 sharedData.background.type = 'predefined'
                 storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
             }
-            if (sharedData.background.changeInterval) {
-                sharedData.background.changeInterval = 2
-            }
         }
-        if(sharedData.clock && !sharedData.clock.type){
-            sharedData.clock.type = sharedData.clock.showTwelveHour ? 'twelve' : 'twentyfour';
-        }
+        storage.remove(constants.STORAGE.WEATHER);
     }
 
-    if(miscSettings && typeof miscSettings === 'object'){
+    if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
         // remove this line once you send this update
         miscSettings.update.lastChecked = '002';
     }
-
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
