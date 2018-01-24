@@ -13,7 +13,7 @@
                         <span class="font-small">{{data.current.text}}</span>
                     </div>
                 </div>
-                <div class="flex font-xsmall flex-justify-space-between flex-end mt-15">
+                <div class="flex font-xsmall flex-justify-space-around flex-end mt-15">
                     <div v-if="data.current.humidity">
                         <p>
                             <svg viewBox="0 0 12 17" width="0.7rem">

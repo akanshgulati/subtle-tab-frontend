@@ -312,7 +312,7 @@ function updateLocalStorage(){
 
 function init() {
 
-    chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+    chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
 
     chrome.storage.sync.get(null, (data) => {
         for (let key in data) {
