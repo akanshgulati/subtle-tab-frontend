@@ -2,18 +2,18 @@
     <div>
         <div class="flex font-black absolute" id="weatherInfo">
             <div id="currentWeather">
-                <div class="flex flex-start">
+                <div class="flex flex-center">
                     <div class="relative">
                         <div class="temperature-value">{{getTemp(settings.unit, data.current.temp)}}</div>
                         <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
                         <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
                     </div>
-                    <div class="ml-30 font-xsmall semi-bold flex flex-center">
+                    <div class="ml-30 semi-bold flex flex-center">
                         <i class="wi" :class="'wi-'+getWeatherClass(data.current.code)"></i>
-                        <span>{{data.current.text}}</span>
+                        <span class="font-small">{{data.current.text}}</span>
                     </div>
                 </div>
-                <div class="flex font-xsmall flex-justify-space-between flex-end mt-15 font-center">
+                <div class="flex font-xsmall flex-justify-space-between flex-end mt-15">
                     <div v-if="data.current.humidity">
                         <p>
                             <svg viewBox="0 0 12 17" width="0.7rem">

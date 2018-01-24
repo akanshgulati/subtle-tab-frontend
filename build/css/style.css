@@ -605,7 +605,6 @@ svg:hover #close_btn {
     color: white;
     user-select: none;
     cursor: pointer;
-    display: table-cell;
 }
 
 .weather-loading {
