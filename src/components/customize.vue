@@ -1,5 +1,5 @@
 <template>
-    <div v-on:click.stop="" v-on:keydown.stop="" class="flex flex-flow-column">
+    <div v-on:click.stop="" v-on:keydown.stop="" @mousedown.stop="" class="flex flex-flow-column">
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
@@ -265,9 +265,10 @@
                 <div class="flex">
                     <span class="semi-bold">Shortcuts</span>
                     <ul class="flex shortcut-bar">
-                        <li><span class="shortcut-key">N</span> Open Notes</li>
-                        <li><span class="shortcut-key">C</span> Open Customize</li>
-                        <li><span class="shortcut-key">Esc</span> Close all</li>
+                        <li><span class="shortcut-key">n</span> Open Notes</li>
+                        <li><span class="shortcut-key">c</span> Open Customize</li>
+                        <li><span class="shortcut-key">w</span> Open Weather Forecast</li>
+                        <li><span class="shortcut-key">esc</span> Close all</li>
                     </ul>
                 </div>
             </div>
@@ -342,7 +343,7 @@
         mounted(){
             // this is done for weather
             this.customLocation = this.settings.weather.location.name ||
-                (storage.get(constants.STORAGE.WEATHER) && storage.get(constants.STORAGE.WEATHER)[4])
+                (storage.get(constants.STORAGE.WEATHER) && storage.get(constants.STORAGE.WEATHER)['city'])
             // this is done for backgrounds
             let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
 

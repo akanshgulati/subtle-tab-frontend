@@ -1,7 +1,9 @@
 <template>
     <div id="clock">
         <div class="time">{{hrs}}:{{min}}</div>
-        <div class="date" v-bind:class="{'fade_in' : settings.showDay}">{{day}}, {{month}} {{date}} </div>
+        <transition>
+            <div class="date" v-if="settings.showDay">{{day}}, {{month}} {{date}}</div>
+        </transition>
     </div>
 </template>
 

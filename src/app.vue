@@ -1,5 +1,5 @@
 <template>
-    <div v-on:click="closeWindows">
+    <div @mousedown.left="closeWindows">
         <onboarding id="onboarding" v-if="!seenOnBoarding" v-on:stopOnboarding="stopOnBoarding"></onboarding>
         <div v-if="seenOnBoarding">
             <div class="loading" :class="{ 'show-loading': isLoading}"></div>
@@ -9,10 +9,10 @@
                     <div id="position--bottom-right">
                         <clock :settings="componentsData.clock" v-if="sharedData.showUtilities.showClock"></clock>
                     </div>
-                    <div id="position--top-right">
+                    <div id="position--top-right" v-on:click.stop="" @mousedown.stop="">
                         <div class="flex flex-center">
-                            <div class="notes-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showNotes">
-                                <div class="notes-icon pointer" v-on:click.stop="toggleNotes">
+                            <div class="notes-widget relative" v-on:keydown.stop=""  v-if="sharedData.showUtilities.showNotes">
+                                <div class="notes-icon pointer" v-on:click.stop="showNotes = !showNotes">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8rem" >
                                         <g id="note_btn">
                                             <path d="M56.261,35.724l-2.849-2.85c-1.128-1.127-3.094-1.127-4.222,0L33.799,48.265l-2.121,7.779l-0.519,0.519   c-0.388,0.388-0.389,1.014-0.006,1.405l-0.005,0.02l0.019-0.005c0.194,0.19,0.446,0.288,0.699,0.288   c0.256,0,0.512-0.098,0.707-0.293l0.52-0.52l7.778-2.121l15.39-15.391C57.425,38.781,57.425,36.888,56.261,35.724z M36.108,48.784   l10.243-10.243l4.243,4.243L40.351,53.027L36.108,48.784z M35.206,50.71l3.22,3.22l-4.428,1.208L35.206,50.71z M54.847,38.531   l-2.839,2.839l-4.243-4.243l2.839-2.839c0.372-0.373,1.021-0.373,1.393,0l2.85,2.85C55.231,37.521,55.231,38.147,54.847,38.531z" />
@@ -28,7 +28,9 @@
                                         </g>
                                     </svg>
                                 </div>
-                                <notes :class="{'fade_in': showNotes}" v-if="showNotes"></notes>
+                                <transition>
+                                    <notes v-if="showNotes"/>
+                                </transition>
                             </div>
                             <div class="pointer nav-bar-opener relative" v-on:click.stop="toggleCustomizeMenu">
                                 <svg enable-background="new 0 0 20 20" height="2rem" version="1.1" viewBox="0 0 100 100" width="2rem" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -44,15 +46,22 @@
                         </div>
                     </div>
                     <div id="position--top-left">
-                        <weather :settings="componentsData.weather" v-if="sharedData.showUtilities.showWeather"></weather>
+                        <transition>
+                            <weather :settings="componentsData.weather"
+                                     :otherSettings="otherSettings"
+                                     v-if="sharedData.showUtilities.showWeather"
+                                     v-on:weatherInfoStateChange="weatherInfoStateChange"/>
+                        </transition>
                     </div>
                 </div>
             </div>
-            <div id="customize-section" v-if="showCustomizeMenu">
-                <div class="customization-overlay"></div>
-                <customize :settings="sharedData" id="customize" :class="{ 'fade_in': showCustomizeMenu}"
-                           v-on:closeCustomizeMenu="toggleCustomizeMenu"></customize>
-            </div>
+            <transition>
+                <div id="customize-section" v-if="showCustomizeMenu">
+                    <div class="customization-overlay"></div>
+                    <customize :settings="sharedData" id="customize"
+                               v-on:closeCustomizeMenu="toggleCustomizeMenu"></customize>
+                </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -83,7 +92,8 @@
                 showNotes: false,
                 isLoading: true,
                 seenOnBoarding: this.seenOnBoarding,
-                miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc
+                miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
+                otherSettings: config.other
             }
         },
         mounted(){
@@ -98,6 +108,9 @@
                 } else if (e.keyCode === 27) {
                     self.closeWindows();
                     this.$ga.event('app', 'keydown', 'closeAll')
+                } else if (e.keyCode === 87) {
+                    self.otherSettings.weather.showWeatherInfo = true;
+                    this.$ga.event('app', 'keydown', 'weather')
                 }
             });
             this.init()
@@ -125,9 +138,8 @@
                 if(!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
-            },
-            toggleNotes() {
-                this.showNotes = !this.showNotes
+                this.showNotes = false
+                this.otherSettings.weather.showWeatherInfo = false
             },
             stopLoad() {
                 this.isLoading = false
@@ -144,6 +156,7 @@
                 storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
                 this.showNotes = false
                 this.showCustomizeMenu = false
+                this.otherSettings.weather.showWeatherInfo = false
             },
             showUpdateNotification(newVersion){
                 if (!newVersion) {
@@ -181,11 +194,14 @@
                 }
             },
             initAnalytics() {
-                if(!this.seenOnBoarding){
+                if (!this.seenOnBoarding) {
                     this.$ga.event('app', 'onboarding', 'shown')
-                }else {
+                } else {
                     this.$ga.page('/app')
                 }
+            },
+            weatherInfoStateChange (state){
+                this.otherSettings.weather.showWeatherInfo = state
             }
         },
         components: {

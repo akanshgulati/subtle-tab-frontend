@@ -19,5 +19,14 @@ export default {
             }
             xmlhttp.send(JSON.stringify(data))
         })
+    },
+    isObject(data) {
+        return data && Object.prototype.toString.call(data) === '[object Object]'
+    },
+    isArray(data) {
+        return data && Object.prototype.toString.call(data) === '[object Array]'
+    },
+    isUndefined(data) {
+        return typeof data === 'undefined';
     }
 };

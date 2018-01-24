@@ -69,7 +69,21 @@
 .mb-5 {
     margin-bottom : 0.36rem;
 }
-
+.mt-15 {
+    margin-top: 1.08rem;
+}
+.mr-20, .mh-20 {
+    margin-right: 1.44rem
+}
+.ml-20, .mh-20 {
+    margin-left: 1.44rem
+}
+.mr-30, .mh-30 {
+    margin-right: 2.16rem
+}
+.ml-30, .mh-30 {
+    margin-left: 2.16rem
+}
 .border-0 {
     border: none !important;
 }
@@ -86,6 +100,10 @@
     align-items: flex-end;
 }
 
+.flex-start {
+    align-items: flex-start;
+}
+
 .flex-center {
     align-items: center;
 }
@@ -95,6 +113,10 @@
 }
 .flex-justify-space-between {
     justify-content: space-between;
+}
+
+.flex-justify-space-around {
+    justify-content: space-around;
 }
 
 .flex-flow-column {

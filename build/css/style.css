@@ -7,6 +7,7 @@ html {
     box-sizing: border-box;
     overflow: hidden;
     height: 100%;
+    font-family: 'Open Sans', sans-serif;
 
 }
 
@@ -285,10 +286,8 @@ svg:hover #close_btn {
     background: #ffffff;
     color: #666;
     border-radius: 5px;
-    opacity: 0;
     z-index: 10;
     overflow: hidden;
-    visibility: hidden;
 }
 #customize .main-window {
     height: 22rem;
@@ -547,30 +546,6 @@ svg:hover #close_btn {
     padding: 0 0.5rem;
 }
 
-.slide-fade-enter-active {
-    transition: all 0.3s ease;
-}
-
-.slide-fade-leave-active {
-    transition: all 0.2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-
-.slide-fade-enter, .slide-fade-leave-to {
-    opacity: 0;
-}
-
-.button-fade-enter-active {
-    transition: all 0.3s ease;
-}
-
-.button-fade-leave-to {
-    transition: all 0.2s ease;
-}
-
-.button-fade-enter, .button-fade-leave-to {
-    opacity: 0;
-}
-
 .background-fade-enter-active {
     transition: all 5s ease;
     opacity: 0;
@@ -610,17 +585,9 @@ svg:hover #close_btn {
 }
 
 .date {
-    max-height: 0;
     font-size: 2.5rem;
     line-height: 3rem;
     overflow: hidden;
-    transition: max-height 0.5s ease-in-out, height 0.5s ease-in-out;
-}
-
-.date.fade_in {
-    transition: max-height 0.5s ease-in-out, height 0.5s ease-in-out;
-    height: 3rem;
-    max-height: inherit;
 }
 
 .util-overlay {
@@ -636,9 +603,8 @@ svg:hover #close_btn {
 /*WEATHER*/
 #weather {
     color: white;
-    opacity: 0;
     user-select: none;
-    cursor: default;
+    cursor: pointer;
 }
 
 .weather-loading {
@@ -993,4 +959,44 @@ svg:hover #close_btn {
     font-size: 1rem;
     line-height: 1rem;
     font-weight: 900;
+}
+
+.tooltip:hover:after {
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    content: attr(rel);
+    display: block;
+    margin-top: 2px;
+    position: absolute;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    padding: 0.25rem;
+    border-radius: 3px;
+    animation: fade_in 0.3s;
+    font-family: 'Open Sans', sans-serif !important;
+    letter-spacing: 0.04rem;
+}
+
+.v-enter-active {
+    transition: all 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.v-leave-active {
+    transition: all .30s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.v-enter, .v-leave-to {
+    opacity: 0;
+}
+
+.fast-fade-enter-active {
+    transition: all 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+.fast-fade-leave-active {
+    transition: all .10s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fast-fade-enter, .fast-fade-leave-to {
+    opacity: 0;
 }
