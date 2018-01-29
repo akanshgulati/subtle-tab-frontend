@@ -8,6 +8,11 @@ Vue.use(vueAnalytics, {
     ],
     config:{
         'cookieDomain': 'none'
+    },
+    debug: {
+        enabled: true,
+        trace: false,
+        sendHitTask: true
     }
 })
 new Vue({

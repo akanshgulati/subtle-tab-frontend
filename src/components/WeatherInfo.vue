@@ -16,7 +16,7 @@
                 <div class="flex font-xsmall flex-justify-space-around flex-end mt-15">
                     <div v-if="data.current.humidity">
                         <p>
-                            <svg viewBox="0 0 12 17" width="0.7rem">
+                            <svg viewBox="0 0 12 17" width="0.7em">
                                 <use xlink:href="#icon-drop"></use>
                             </svg>
                             Humid
@@ -25,7 +25,7 @@
                     </div>
                     <div v-if="data.current.wind">
                         <p>
-                            <svg viewBox="0 0 14 12" width="1rem">
+                            <svg viewBox="0 0 14 12" width="1em">
                                 <use xlink:href="#icon-wind"></use>
                             </svg>
                             Wind
@@ -34,7 +34,7 @@
                     </div>
                     <div v-if="data.pollution.aqi">
                         <p>
-                            <svg viewBox="0 0 14 12" width="1rem">
+                            <svg viewBox="0 0 14 12" width="1em">
                                 <use xlink:href="#icon-pollution"></use>
                             </svg>
                             Pollution

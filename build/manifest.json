@@ -1,8 +1,8 @@
 {
   "name": "Subtle Tab",
   "description": "Personalized experience on new tabs for better productivity",
-  "version": "0.0.3",
-  "incognito": "split",
+  "version": "0.0.1",
+  "incognito": "spanning",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
@@ -24,7 +24,6 @@
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png"
   },
-  "offline_enabled": true,
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2
 }
