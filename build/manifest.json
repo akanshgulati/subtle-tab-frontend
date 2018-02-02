@@ -24,6 +24,9 @@
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png"
   },
+  "chrome_settings_overrides": {
+    "homepage": "index.html"
+  },
   "offline_enabled": true,
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2

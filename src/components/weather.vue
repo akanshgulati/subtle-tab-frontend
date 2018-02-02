@@ -68,6 +68,9 @@
         methods: {
             toggle(prop) {
                 if (prop === 'showWeatherInfo') {
+                    if (!this.otherSettings.weather.showWeatherInfo) {
+                        this.$ga.event('weatherInfo', 'open')
+                    }
                     this.otherSettings.weather.showWeatherInfo = !this.otherSettings.weather.showWeatherInfo
                 }
             },
