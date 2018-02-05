@@ -3,7 +3,7 @@
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
-                    <svg width="1.5rem" height="1.5rem" viewBox="0 0 12 12" version="1.1"
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 12 12" version="1.1"
                          xmlns="http://www.w3.org/2000/svg">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="close_btn" fill-rule="nonzero" fill="#999999">
@@ -261,7 +261,7 @@
         <footer class="customize-footer font-xsmall flex flex-justify-space-between bg-light-grey">
             <div class="flex">
                 <span class="version">v{{version}}</span>
-                <span style="margin:0 0.5rem">|</span>
+                <span style="margin:0 0.5em">|</span>
                 <div class="flex">
                     <span class="semi-bold">Shortcuts</span>
                     <ul class="flex shortcut-bar">

@@ -24,7 +24,7 @@ Vue.use(vueAnalytics, {
     config: {
         'cookieDomain': 'none'
     },
-    fields: gaFields
+    fields:  gaFields
 })
 
 new Vue({

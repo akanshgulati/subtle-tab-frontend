@@ -3,12 +3,14 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        build: ['./src/main.js'],
-        subtle: ['./src/subtle.js']
+        'build/build': ['./src/main.js'],
+        'build/subtle': ['./src/subtle.js'],
+        'firefox/build': ['./src/main.js'],
+        'firefox/subtle': ['./src/subtle.js']
     },
     output: {
-        path: path.resolve(__dirname, './build'),
-        publicPath: '/build/',
+        path: path.resolve(__dirname),
+        publicPath: '/',
         filename: '[name].js'
     },
     module: {

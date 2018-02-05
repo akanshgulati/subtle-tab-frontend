@@ -9,7 +9,7 @@
         <div v-if="notesMeta.count" class="full-height">
             <div class="note full-height no-padding relative flex-flow-column flex">
                 <header class="flex widget-header flex-center">
-                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3rem" height="1rem" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3em" height="1em" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <defs></defs>
                         <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
@@ -22,7 +22,7 @@
                     <h4 class="widget-heading mar-0">Notes (N)</h4>
                     <div class="button-section flex">
                         <div>
-                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3rem" height="1.3rem" viewBox="0 0 49 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3em" height="1.3em" viewBox="0 0 49 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="create_note" transform="translate(0.000000, -4.000000)" fill-rule="nonzero" fill="#7d7d7d">
                                         <polyline id="XMLID_5_" points="12.0936873 10.8107459 12.0936873 21.4530518 1.13730207 21.4530518"></polyline>
@@ -36,7 +36,7 @@
                             </svg>
                         </div>
                         <div>
-                            <svg v-on:click="deleteNote" class="pointer" width="1.3rem" height="1.3rem" viewBox="0 0 30 36" version="1.1"
+                            <svg v-on:click="deleteNote" class="pointer" width="1.3em" height="1.3em" viewBox="0 0 30 36" version="1.1"
                                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="delete_note" fill-rule="nonzero" fill="#7d7d7d">
