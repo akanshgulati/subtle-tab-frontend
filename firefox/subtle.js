@@ -94,9 +94,10 @@ var constants = {
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta',
         WHATS_NEW: 'whats_new',
-        CURRENT_CUSTOMIZATION_TAB: 'current_c_tab'
+        CURRENT_CUSTOMIZATION_TAB: 'current_c_tab',
+        SUBTLE_USER: 'subtle_user'
     },
-    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings'],
+    SYNC: ['shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night', 'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings', 'subtle_user'],
     URL: {
         WHATS_NEW: BASE_API + 'whatsnew'
     }
@@ -596,6 +597,7 @@ init();
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(exports, "b", function() { return generateId; });
 /* harmony default export */ exports["a"] = {
     http: function http(url, method, data) {
         return new Promise(function (resolve, reject) {
@@ -627,6 +629,13 @@ init();
     isUndefined: function isUndefined(data) {
         return typeof data === 'undefined';
     }
+};
+var generateId = function generateId() {
+    return 'xxxxxxxx-xxxx-Sxxx-Uxxx-xxxxxxxxxxxx\n'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : r & 0x3 | 0x8;
+        return v.toString(16);
+    });
 };
 
 /***/ },

@@ -3,8 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        'build/build': ['./src/main.js'],
-        'build/subtle': ['./src/subtle.js'],
+        'chrome/build': ['./src/main.js'],
+        'chrome/subtle': ['./src/subtle.js'],
         'firefox/build': ['./src/main.js'],
         'firefox/subtle': ['./src/subtle.js']
     },
