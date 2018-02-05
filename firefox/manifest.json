@@ -1,7 +1,7 @@
 {
   "name": "Subtle Tab",
   "description": "Personalized experience on new tabs for better productivity",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "incognito": "spanning",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -16,8 +16,18 @@
     "http://*.subtletab.com/",
     "storage"
   ],
+  "applications": {
+    "gecko": {
+      "id": "subtle@subtletab.com",
+      "strict_min_version": "54.0"
+    }
+  },
   "browser_action": {
-    "default_title": "Subtle"
+    "default_title": "Subtle Tab",
+    "default_icon": {
+      "16": "images/icons/icon16.png",
+      "48": "images/icons/icon48.png"
+    }
   },
   "icons": {
     "128": "images/icons/icon128.png",
@@ -26,12 +36,6 @@
   },
   "chrome_settings_overrides": {
     "homepage": "index.html"
-  },
-  "applications": {
-    "gecko": {
-      "id": "abc@gma.com",
-      "strict_min_version": "53.0"
-    }
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2
