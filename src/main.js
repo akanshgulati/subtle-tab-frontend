@@ -6,13 +6,11 @@ Vue.use(vueAnalytics, {
     set: [
         { field: 'checkProtocolTask', value: function(){} }
     ],
-    config:{
+    config: {
         'cookieDomain': 'none'
     },
-    debug: {
-        enabled: true,
-        trace: false,
-        sendHitTask: true
+    fields: {
+        'cookieDomain': 'none'
     }
 })
 new Vue({
