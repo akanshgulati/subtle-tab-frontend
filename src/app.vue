@@ -194,26 +194,12 @@
                 }
             },
             initAnalytics() {
-                /*const user = storage.get(Constants.STORAGE.SUBTLE_USER);
-
-                if (!user) {
-                    user.clientId = this.generateId()
-                    storage.set(Constants.STORAGE.SUBTLE_USER, user);
-                }
-
-                if (!user.clientId) {
-                    this.$ga.query((tracker) => {
-                        user.clientId = tracker.get('clientId')
-
-                    })
-                }
-
-                this.$ga.set('userId', user.userId);*/
-
                 if (!this.seenOnBoarding) {
                     this.$ga.event('app', 'onboarding', 'shown')
-                } else {
-                    this.$ga.page('/app')
+                } else if (navigator.userAgent.indexOf('Firefox') > -1) {
+                    this.$ga.page('/firefox-app')
+                } else if(navigator.userAgent.indexOf('Chrome') > -1){
+                    this.$ga.page('/chrome-app')
                 }
             },
             weatherInfoStateChange (state){

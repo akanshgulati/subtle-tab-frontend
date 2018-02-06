@@ -17,7 +17,7 @@ if (localStorage && localStorage[USER]) {
 }
 
 Vue.use(vueAnalytics, {
-    id: 'UA-113476704-1',
+    id: 'UA-111434172-1',
     set: [
         { field: 'checkProtocolTask', value: function(){} }
     ],
