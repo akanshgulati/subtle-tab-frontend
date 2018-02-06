@@ -1,18 +1,18 @@
 {
-  "name": "vue-webpack",
-  "description": "Example using Webpack with vue-loader",
-  "author": "Sohel Amin",
+  "name": "subtle-tab",
+  "description": "A new tab firefox addon and chrome extension",
+  "author": "Akansh Gulati",
   "private": true,
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --open --inline --hot --quiet --port 8080",
-    "build": "cross-env NODE_ENV=dev webpack --progress --hide-modules",
-    "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "watch": "cross-env NODE_ENV=dev webpack --progress --colors --hide-modules --watch",
-    "symlinks": "chmod +x symlinks.sh; ./symlinks.sh"
+    "build": "npm run symlinks && cross-env NODE_ENV=dev webpack --progress --hide-modules",
+    "prod": "npm run copy && cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "watch": "npm run symlinks && cross-env NODE_ENV=dev webpack --progress --colors --hide-modules --watch",
+    "symlinks": "chmod +x symlinks.sh; ./symlinks.sh",
+    "copy": "chmod +x build.sh; ./build.sh"
   },
   "dependencies": {
-    "extract-text-webpack-plugin": "^2.1.2",
     "vue": "2.5.13",
     "vue-analytics": "^5.7.1"
   },
