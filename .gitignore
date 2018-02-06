@@ -19,4 +19,5 @@ firefox/subtle.*
 firefox/css
 firefox/fonts
 firefox/images
+firefox/vendors
 firefox/index.html
