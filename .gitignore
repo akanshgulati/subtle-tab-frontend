@@ -4,5 +4,15 @@ node_modules
 *.zip
 Versions
 Backup
-build/build.*
-build/subtle.*
+chrome/build.*
+firefox/build.*
+chrome/subtle.*
+firefox/subtle.*
+chrome/vendors
+chrome/css
+chrome/fonts
+chrome/images
+chrome/vendors
+firefox/css
+firefox/fonts
+firefox/images
