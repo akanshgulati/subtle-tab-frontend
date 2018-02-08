@@ -1,5 +1,5 @@
 <template>
-    <div v-on:click.stop="" v-on:keydown.stop="" @mousedown.stop="" class="flex flex-flow-column">
+    <div v-on:click.stop="" @mousedown.stop="" class="flex flex-flow-column">
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
