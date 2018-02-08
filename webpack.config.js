@@ -13,6 +13,11 @@ module.exports = {
         publicPath: '/',
         filename: '[name].js'
     },
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.runtime.js'
+        }
+    },
     module: {
         loaders: [
             {
@@ -50,6 +55,7 @@ if (process.env.NODE_ENV === 'production') {
             compress: {
                 warnings: false
             },
+            sourceMap: false,
             output: {
                 comments: false,
             },
@@ -57,5 +63,5 @@ if (process.env.NODE_ENV === 'production') {
         })
     ]
 } else {
-    module.exports.devtool = '#source-map'
+    // module.exports.devtool = '#eval-source-map'
 }
