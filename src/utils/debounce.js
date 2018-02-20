@@ -8,7 +8,7 @@ _.now = Date.now || function() {
         return new Date().getTime();
     };
 
-module.exports = function(func, wait, options) {
+export default function(func, wait, options) {
     var context, args, result;
     var timeout = null;
     var previous = 0;
