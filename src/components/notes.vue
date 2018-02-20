@@ -182,7 +182,14 @@
                     }
                 }
                 this.errorMessage = null;
-                document.getElementById("note").innerHTML = this.currentNote.content;
+                const note = document.getElementById('note')
+                const parser = new DOMParser()
+                const parsed = parser.parseFromString(`<div>${this.currentNote.content}</div>`, `text/html`)
+                const tag = parsed.getElementsByTagName(`body`)[0]
+                note.innerHTML = ``
+                note.appendChild(tag.firstChild)
+
+                //document.getElementById("note").innerHTML = this.currentNote.content;
                 this.$ga.event('notes', 'change', 'click')
             },
             trimContent(value){

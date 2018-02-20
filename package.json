@@ -11,6 +11,7 @@
     "watch": "npm run symlinks && cross-env NODE_ENV=dev webpack --progress --colors --hide-modules --watch",
     "symlinks": "chmod +x symlinks.sh; ./symlinks.sh",
     "copy": "chmod +x build.sh; ./build.sh",
+    "lint": "cd firefox && web-ext lint",
     "browserify": "cross-env NODE_ENV=production browserify -g envify src/main.js | uglifyjs -c warnings=false -m > firefox/build.js",
     "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o firefox/build.js"
   },

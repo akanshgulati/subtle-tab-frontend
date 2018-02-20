@@ -41,7 +41,8 @@ module.exports = {
                 loader: 'css-loader'
             }
         ]
-    }
+    },
+    node: false
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -63,5 +64,5 @@ if (process.env.NODE_ENV === 'production') {
         })
     ]
 } else {
-    // module.exports.devtool = '#eval-source-map'
+    module.exports.devtool = '#eval-source-map'
 }
