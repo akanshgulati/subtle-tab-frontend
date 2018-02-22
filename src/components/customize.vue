@@ -3,8 +3,7 @@
         <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 12 12" version="1.1"
-                         xmlns="http://www.w3.org/2000/svg">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 12 12">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="close_btn" fill-rule="nonzero" fill="#999999">
                                 <path d="M6,0 C2.69169231,0 0,2.69146154 0,6 C0,9.30853846 2.69169231,12 6,12 C9.30830769,12 12,9.30853846 12,6 C12,2.69146154 9.30830769,0 6,0 Z M6,11.5384615 C2.94623077,11.5384615 0.461538462,9.05376923 0.461538462,6 C0.461538462,2.94623077 2.94623077,0.461538462 6,0.461538462 C9.05376923,0.461538462 11.5384615,2.94623077 11.5384615,6 C11.5384615,9.05376923 9.05376923,11.5384615 6,11.5384615 Z"
@@ -277,7 +276,7 @@
                 <a class="text-black" href="https://goo.gl/forms/hMD1i4sXIUVwkKtD2" target="_blank">Feedback</a>
             </div>
         </footer>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+        <svg style="display: none;">
             <defs>
                 <g id="icon-general">
                     <path d="M10.05774,8.83187063 L0.45885,8.83187063 C0.503546734,8.83187063 0.53885,8.86729826 0.53885,8.91039111 C0.53885,8.95348396 0.503546734,8.98891159 0.45885,8.98891159 L10.05774,8.98891159 C10.0130433,8.98891159 9.97774,8.95348396 9.97774,8.91039111 C9.97774,8.86729826 10.0130433,8.83187063 10.05774,8.83187063 Z" ></path>

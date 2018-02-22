@@ -9,7 +9,7 @@
         <div v-if="notesMeta.count" class="full-height">
             <div class="note full-height no-padding relative flex-flow-column flex">
                 <header class="flex widget-header flex-center">
-                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3em" height="1em" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3em" height="1em" viewBox="0 0 23 21" version="1.1">
                         <defs></defs>
                         <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
@@ -21,8 +21,8 @@
                     </svg>
                     <h4 class="widget-heading mar-0">Notes (N)</h4>
                     <div class="button-section flex">
-                        <div>
-                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3em" height="1.3em" viewBox="0 0 49 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <div class="tooltip" rel="Create">
+                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3em" height="1.3em" viewBox="0 0 49 51" version="1.1">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="create_note" transform="translate(0.000000, -4.000000)" fill-rule="nonzero" fill="#7d7d7d">
                                         <polyline id="XMLID_5_" points="12.0936873 10.8107459 12.0936873 21.4530518 1.13730207 21.4530518"></polyline>
@@ -35,16 +35,14 @@
                                 </g>
                             </svg>
                         </div>
-                        <div>
-                            <svg v-on:click="deleteNote" class="pointer" width="1.3em" height="1.3em" viewBox="0 0 30 36" version="1.1"
-                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <div class="tooltip" rel="Delete">
+                            <svg v-on:click="deleteNote" class="pointer" width="1.3em" height="1.3em" viewBox="0 0 30 36">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="delete_note" fill-rule="nonzero" fill="#7d7d7d">
                                         <polygon points="9.875 11.175 12.125 11.175 12.125 29.175 9.875 29.175" ></polygon>
                                         <polygon points="17.375 11.175 19.625 11.175 19.625 29.175 17.375 29.175" ></polygon>
                                         <polygon points="0.375 4.425 29.625 4.425 29.625 6.675 0.375 6.675" ></polygon>
-                                        <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"
-                                              ></path>
+                                        <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"></path>
                                         <path d="M21.75,35.925 L8.25,35.925 C6.45,35.925 4.875,34.425 4.725,32.625 L2.625,5.625 L4.875,5.475 L6.975,32.475 C7.05,33.15 7.65,33.675 8.25,33.675 L21.75,33.675 C22.425,33.675 23.025,33.075 23.025,32.475 L25.125,5.475 L27.375,5.625 L25.275,32.625 C25.125,34.5 23.55,35.925 21.75,35.925"></path>
                                     </g>
                                 </g>
