@@ -29,7 +29,7 @@
                                     </svg>
                                 </div>
                                 <transition>
-                                    <notes v-if="showNotes"/>
+                                    <notes :settings="sharedData.notes" v-if="showNotes"/>
                                 </transition>
                             </div>
                             <div class="pointer nav-bar-opener relative" v-on:click.stop="toggleCustomizeMenu">
@@ -83,12 +83,13 @@
         beforeCreate(){
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
             this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
+            this.showNotes = this.sharedData.notes.isPinned;
         },
         data () {
             return {
                 sharedData: this.sharedData,
                 showCustomizeMenu: false,
-                showNotes: false,
+                showNotes: this.showNotes,
                 isLoading: true,
                 seenOnBoarding: this.seenOnBoarding,
                 miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
@@ -113,7 +114,6 @@
                 }
             });
             this.init()
-            this.initAnalytics()
             this.initWhenIdle()
         },
         watch: {
@@ -136,7 +136,7 @@
                 if(!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
-                this.showNotes = false
+                this.showNotes = this.sharedData.notes.isPinned
                 this.otherSettings.weather.showWeatherInfo = false
             },
             stopLoad() {
@@ -152,7 +152,7 @@
             },
             closeWindows() {
                 storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
-                this.showNotes = false
+                this.showNotes = this.sharedData.notes.isPinned
                 this.showCustomizeMenu = false
                 this.otherSettings.weather.showWeatherInfo = false
             },
@@ -181,6 +181,7 @@
                 let self = this;
                 setTimeout(()=>{
                     self.checkForUpdates();
+                    self.initAnalytics();
                 }, 0)
             },
             init() {
