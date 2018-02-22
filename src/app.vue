@@ -4,10 +4,10 @@
         <div v-if="seenOnBoarding">
             <div class="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
-                <background :settings="componentsData.background" v-on:stopLoading="stopLoad" v-on:startLoading="startLoad"></background>
+                <background :settings="sharedData.background" v-on:stopLoading="stopLoad" v-on:startLoading="startLoad"></background>
                 <div id="utilities">
                     <div id="position--bottom-right">
-                        <clock :settings="componentsData.clock" v-if="sharedData.showUtilities.showClock"></clock>
+                        <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
                     </div>
                     <div id="position--top-right" v-on:click.stop="" @mousedown.stop="">
                         <div class="flex flex-center">
@@ -47,7 +47,7 @@
                     </div>
                     <div id="position--top-left">
                         <transition>
-                            <weather :settings="componentsData.weather"
+                            <weather :settings="sharedData.weather"
                                      :otherSettings="otherSettings"
                                      v-if="sharedData.showUtilities.showWeather"
                                      v-on:weatherInfoStateChange="weatherInfoStateChange"/>
@@ -87,7 +87,6 @@
         data () {
             return {
                 sharedData: this.sharedData,
-                componentsData: JSON.parse(JSON.stringify(this.sharedData)),
                 showCustomizeMenu: false,
                 showNotes: false,
                 isLoading: true,
@@ -119,9 +118,8 @@
         },
         watch: {
             sharedData: {
-                handler: function (newValue) {
-                    storage.set(Constants.STORAGE.SHARED_DATA, newValue);
-                    this.componentsData = newValue;
+                handler(newValue) {
+                    storage.set(Constants.STORAGE.SHARED_DATA, newValue)
                 },
                 deep: true
             },
