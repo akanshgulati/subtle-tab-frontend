@@ -15,6 +15,10 @@ A new tab firefox addon and chrome extension
 - Static Directory (/static): It contains common static files used in chrome and firefox plugins. For development purposes, we use symlinks of this directory in firefox and chrome directory and copy this folder to both firefox and chrome for production ready code.
 - Src directory (/src): It contains all files related to Vue for content script (build.js) and background script (subtle.js)
 
+## Install Process
+ In order to use below build processes, you must have yarn installed on your machine on global level. 
+ Use command `yarn run install` to install Vue and other essential packages to build 
+ 
 ## Build Process
 
 1. **Development Build**  `yarn run build`
