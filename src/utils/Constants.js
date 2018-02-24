@@ -22,11 +22,12 @@ const constants = {
         SEEN_ONBOARDING: 'seen-onboarding',
         NOTES_META: 'notes_meta',
         WHATS_NEW: 'whats_new',
-        CURRENT_CUSTOMIZATION_TAB: 'current_c_tab'
+        CURRENT_CUSTOMIZATION_TAB: 'current_c_tab',
+        SUBTLE_USER: 'subtle_user'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
-        'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings'
+        'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings', 'subtle_user'
     ],
     URL : {
         WHATS_NEW : BASE_API + 'whatsnew'

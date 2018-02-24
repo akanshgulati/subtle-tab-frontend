@@ -3,13 +3,20 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        build: ['./src/main.js'],
-        subtle: ['./src/subtle.js']
+        'chrome/build': ['./src/main.js'],
+        'chrome/subtle': ['./src/subtle.js'],
+        'firefox/build': ['./src/main.js'],
+        'firefox/subtle': ['./src/subtle.js']
     },
     output: {
-        path: path.resolve(__dirname, './build'),
-        publicPath: '/build/',
+        path: path.resolve(__dirname),
+        publicPath: '/',
         filename: '[name].js'
+    },
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.runtime.js'
+        }
     },
     module: {
         loaders: [
@@ -34,7 +41,8 @@ module.exports = {
                 loader: 'css-loader'
             }
         ]
-    }
+    },
+    node: false
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -48,6 +56,7 @@ if (process.env.NODE_ENV === 'production') {
             compress: {
                 warnings: false
             },
+            sourceMap: false,
             output: {
                 comments: false,
             },

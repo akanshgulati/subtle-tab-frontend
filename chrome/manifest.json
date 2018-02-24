@@ -25,6 +25,6 @@
     "48": "images/icons/icon48.png"
   },
   "offline_enabled": true,
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2
 }

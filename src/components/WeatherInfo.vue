@@ -14,32 +14,32 @@
                     </div>
                 </div>
                 <div class="flex font-xsmall flex-justify-space-around flex-end mt-15">
-                    <div v-if="data.current.humidity">
+                    <div>
                         <p>
-                            <svg viewBox="0 0 12 17" width="0.7rem">
+                            <svg viewBox="0 0 12 17" width="0.7em">
                                 <use xlink:href="#icon-drop"></use>
                             </svg>
                             Humid
                         </p>
-                        <p class="semi-bold">{{data.current.humidity}}%</p>
+                        <p class="semi-bold">{{humidity}}%</p>
                     </div>
-                    <div v-if="data.current.wind">
+                    <div>
                         <p>
-                            <svg viewBox="0 0 14 12" width="1rem">
+                            <svg viewBox="0 0 14 12" width="1em">
                                 <use xlink:href="#icon-wind"></use>
                             </svg>
                             Wind
                         </p>
-                        <p class="semi-bold">{{data.current.wind}} km/hr</p>
+                        <p class="semi-bold">{{wind}} km/hr</p>
                     </div>
-                    <div v-if="data.pollution.aqi">
+                    <div>
                         <p>
-                            <svg viewBox="0 0 14 12" width="1rem">
+                            <svg viewBox="0 0 14 12" width="1em">
                                 <use xlink:href="#icon-pollution"></use>
                             </svg>
                             Pollution
                         </p>
-                        <p class="semi-bold">{{data.pollution.aqi}} AQI</p>
+                        <p class="semi-bold">{{pollution}} AQI</p>
                     </div>
                 </div>
             </div>
@@ -56,8 +56,7 @@
                 </div>
             </div>
         </div>
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             style="display: none;">
+        <svg version="1.1" style="display: none;">
             <defs>
                 <g id="icon-drop" fill-rule="nonzero" fill="#333">
                     <path d="M7.51729577,1.82901408 C7.13419718,1.2656338 6.79616901,0.747323943 6.48067606,0.274084507 C6.43560563,0.206478873 6.368,0.138873239 6.30039437,0.0938028167 C6.02997183,-0.0864788734 5.66940845,0.00366197167 5.48912676,0.274084507 C5.19616901,0.747323943 4.85814085,1.24309859 4.45250704,1.82901408 C2.67222535,4.44309859 0.0130704225,8.38676056 0.0130704225,10.6402817 C0.0130704225,12.2853521 0.689126761,13.7726761 1.7708169,14.8543662 C2.85250704,15.9135211 4.33983099,16.5895775 5.98490141,16.5895775 C7.62997183,16.5895775 9.11729577,15.9135211 10.1989859,14.831831 C11.2806761,13.7501408 11.9567324,12.2628169 11.9567324,10.6177465 C11.9567324,8.36422535 9.29757746,4.44309859 7.51729577,1.82901408 Z M9.38771831,14.0205634 C8.50884507,14.8994366 7.31447887,15.4177465 5.98490141,15.4177465 C4.65532394,15.4177465 3.46095775,14.8769014 2.58208451,14.0205634 C1.70321127,13.1416901 1.18490141,11.9473239 1.18490141,10.6177465 C1.18490141,8.72478873 3.73138028,4.96140845 5.42152113,2.46 C5.62433803,2.16704225 5.80461972,1.87408451 5.98490141,1.62619718 C6.1651831,1.87408451 6.34546479,2.16704225 6.54828169,2.46 C8.23842254,4.98394366 10.7849014,8.72478873 10.7849014,10.6177465 C10.7849014,11.9473239 10.2440563,13.1416901 9.38771831,14.0205634 Z"
@@ -92,6 +91,26 @@
             return {
                 getTemp: this.$parent.getTemp,
                 getWeatherClass: this.$parent.getWeatherClass
+            }
+        },
+        methods:{
+            isAvailable(value) {
+                if (typeof value === 'undefined') {
+                    return 'NA'
+                } else {
+                    return value
+                }
+            }
+        },
+        computed:{
+            humidity() {
+                return this.isAvailable(this.data.current.humidity)
+            },
+            wind() {
+                return this.isAvailable(this.data.current.wind)
+            },
+            pollution(){
+                return this.isAvailable(this.data.pollution.aqi)
             }
         }
     }

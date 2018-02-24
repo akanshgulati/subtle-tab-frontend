@@ -280,9 +280,9 @@ svg:hover #close_btn {
 
 #customize {
     position: fixed;
-    left: calc(50vw - 450px);
+    left: calc(50vw - 32.14rem);
     top: calc(50vh - 14.27rem);
-    width: 900px;
+    width: 64.29rem;
     background: #ffffff;
     color: #666;
     border-radius: 5px;

@@ -287,9 +287,6 @@ function updateLocalStorage(){
                 sharedData.weather.location.name = storedWeather[4] || storedWeather.city || '';
             }
         }
-        if (sharedData.showUtilities && CommonUtils.isUndefined(sharedData.showUtilities.showNotes)) {
-            sharedData.showUtilities.showNotes = true;
-        }
 
         if (sharedData.background) {
             if (CommonUtils.isUndefined(sharedData.background.type)) {
@@ -297,13 +294,13 @@ function updateLocalStorage(){
                 storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
             }
         }
-        storage.remove(constants.STORAGE.WEATHER);
+        if (CommonUtils.isUndefined(sharedData.notes)) {
+            sharedData.notes = config.defaultCustomization.notes
+        }
     }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
-        // remove this line once you send this update
-        miscSettings.update.lastChecked = '002';
     }
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);

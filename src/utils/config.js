@@ -15,12 +15,18 @@ const config = {
             location: {
                 type: 'geo',
                 name : ''
+            },
+            weatherInfo: {
+                isPinned: false
             }
         },
         background: {
             themeId: 1,
             changeInterval: 2,
             type: 'predefined'
+        },
+        notes: {
+            isPinned: false
         }
     },
     misc: {

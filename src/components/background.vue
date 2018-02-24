@@ -159,12 +159,11 @@
                         let nextUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i + 1]], this.bgKeys[i + 1]);
                         chrome.runtime.sendMessage({query: 'log', value: 'Next URL ' + nextUrl});
                         chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
-                    }else{
+                    } else {
                         this.defaultImageLoaded = true;
                         bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
                         chrome.runtime.sendMessage({query: 'log', value: 'Default URL'+ this.settings.themeId});
                         this.$emit('stopLoading');
-                        chrome.runtime.sendMessage({query: 'setTabsCount', value: 'decrement'});
                     }
                     this.markBgSeen(this.bgKeys[i]);
                 });
