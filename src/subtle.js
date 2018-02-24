@@ -294,6 +294,9 @@ function updateLocalStorage(){
                 storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
             }
         }
+        if (CommonUtils.isUndefined(sharedData.notes)) {
+            sharedData.notes = config.defaultCustomization.notes
+        }
     }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
