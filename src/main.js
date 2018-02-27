@@ -5,7 +5,7 @@ const USER = 'subtle_user'
 /*
 * Analytics code
  */
-const GA_TRACKING_ID = 'UA-113476704-1';
+const GA_TRACKING_ID = 'UA-111434172-1';
 
 let GA_CLIENT_ID
 if (localStorage && localStorage[USER]) {

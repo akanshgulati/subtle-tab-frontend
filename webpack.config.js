@@ -13,11 +13,6 @@ module.exports = {
         publicPath: '/',
         filename: '[name].js'
     },
-    resolve: {
-        alias: {
-            'vue$': 'vue/dist/vue.runtime.js'
-        }
-    },
     module: {
         loaders: [
             {
@@ -46,6 +41,7 @@ module.exports = {
 };
 
 if (process.env.NODE_ENV === 'production') {
+    console.log('RUNNING PRODUCTION')
     module.exports.plugins = [
         new webpack.DefinePlugin({
             'process.env': {
