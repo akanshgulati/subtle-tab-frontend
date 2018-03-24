@@ -7,7 +7,10 @@
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad" v-on:startLoading="startLoad"></background>
                 <div id="utilities">
                     <div id="position--bottom-right">
-                        <clock :settings="sharedData.clock" v-if="sharedData.showUtilities.showClock"></clock>
+                        <ClockWrapper
+                                :settings="sharedData.clock"
+                                v-if="sharedData.showUtilities.showClock"
+                                id="clock"/>
                     </div>
                     <div id="position--top-right" v-on:click.stop="" @mousedown.stop="">
                         <div class="flex flex-center">
@@ -71,13 +74,14 @@
     import storage from './utils/storage'
     import commonUtils from './utils/common'
     import Constants from './utils/Constants'
-    import Clock from './components/clock.vue'
+    import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
     import Customize from './components/customize.vue'
     import Weather from './components/weather.vue'
     import Notes from './components/notes.vue'
     import Onboarding from './components/onboarding.vue'
     import bgData from './utils/backgroundData'
+    import { EventBus } from './utils/EventBus.js';
 
     export default {
         beforeCreate(){
@@ -111,8 +115,18 @@
                 } else if (e.keyCode === 87) {
                     self.otherSettings.weather.showWeatherInfo = true;
                     this.$ga.event('app', 'keydown', 'weather')
+                } else if(e.keyCode === 71){
+                  this.$ga.event('app', 'keydown', 'calendar')
+                  EventBus.$emit('calendar', {message: 'open'})
                 }
             });
+
+          EventBus.$on('app', e => {
+            if (e.message === 'OpenCustomize') {
+              self.toggleCustomizeMenu()
+            }
+          })
+
             this.init()
             this.initWhenIdle()
         },
@@ -131,6 +145,9 @@
             }
         },
         methods: {
+          toggle(el, option) {
+            EventBus.$emit(el, option)
+          },
             toggleCustomizeMenu() {
                 this.showCustomizeMenu = !this.showCustomizeMenu
                 if(!this.miscSettings.update.isSeen) {
@@ -138,6 +155,7 @@
                 }
                 this.showNotes = this.sharedData.notes.isPinned
                 this.otherSettings.weather.showWeatherInfo = false
+              this.toggle('calendar', {message: 'close', force: 'true'})
             },
             stopLoad() {
                 this.isLoading = false
@@ -155,6 +173,7 @@
                 this.showNotes = this.sharedData.notes.isPinned
                 this.showCustomizeMenu = false
                 this.otherSettings.weather.showWeatherInfo = false
+              this.toggle('calendar', {message: 'close'})
             },
             showUpdateNotification(newVersion){
                 if (!newVersion) {
@@ -207,7 +226,7 @@
         },
         components: {
             Background,
-            Clock,
+            ClockWrapper,
             Customize,
             Weather,
             Onboarding,
