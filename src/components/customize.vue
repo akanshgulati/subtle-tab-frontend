@@ -286,7 +286,8 @@
                     <ul class="flex shortcut-bar">
                         <li><span class="shortcut-key">n</span> Open Notes</li>
                         <li><span class="shortcut-key">c</span> Open Customize</li>
-                        <li><span class="shortcut-key">w</span> Open Weather Forecast</li>
+                        <li><span class="shortcut-key">w</span> Open Forecast</li>
+                        <li><span class="shortcut-key">g</span> Open Calendar</li>
                         <li><span class="shortcut-key">esc</span> Close all</li>
                     </ul>
                 </div>
@@ -357,7 +358,7 @@
               selectedTheme: this.settings.background.themeId,
               themes: bgData.themes,
               version: chrome.runtime.getManifest().version,
-              activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'clock',
+              activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'general',
               customLocation: '',
               currentBgCustom: '',
               isCustomBgSaveMsg: '',
