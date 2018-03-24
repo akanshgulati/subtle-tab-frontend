@@ -13,7 +13,7 @@
   },
   "permissions": [
     "geolocation",
-    "http://*.subtletab.com/",
+    "https://*.subtletab.com/",
     "storage"
   ],
   "browser_action": {
