@@ -39,7 +39,11 @@ const $ga = {
     send(message){
         let request = new XMLHttpRequest()
         request.open('GET', `https://www.google-analytics.com/collect?${message}`)
-        request.send();
+        if (process.env.NODE_ENV === 'production') {
+            request.send()
+        } else {
+            console.log('_GA_EVENT', message)
+        }
     }
 }
 

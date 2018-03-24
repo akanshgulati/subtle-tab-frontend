@@ -45,6 +45,18 @@
 .pr-10, .ph-10 {
     padding-right : 0.72rem
 }
+.pl-20, .ph-20 {
+    padding-left: 1.44rem;
+}
+.pr-20, .ph-20 {
+    padding-right : 1.44rem;
+}
+.pv-5, .pt-5 {
+    padding-top: 0.36rem;
+}
+.pv-5, .pb-5 {
+    padding-bottom: 0.36rem;
+}
 .pv-10, .pt-10 {
     padding-top: 0.72rem;
 }
@@ -125,4 +137,7 @@
 
 .flex-grow-1 {
     flex-grow: 1;
+}
+.btn {
+    text-transform: none;
 }

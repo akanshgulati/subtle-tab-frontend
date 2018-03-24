@@ -8,7 +8,10 @@ const config = {
         clock: {
             showTwelveHour: true,
             showDay: true,
-            type: 'twelve'
+            type: 'twelve',
+          calendar: {
+              isPinned: true
+          }
         },
         weather: {
             unit: 'c',
@@ -43,3 +46,5 @@ const config = {
     }
 };
 export default config;
+
+export const DefaultConfig = config.defaultCustomization;

@@ -23,15 +23,28 @@ const constants = {
         NOTES_META: 'notes_meta',
         WHATS_NEW: 'whats_new',
         CURRENT_CUSTOMIZATION_TAB: 'current_c_tab',
-        SUBTLE_USER: 'subtle_user'
+        SUBTLE_USER: 'subtle_user',
+        G_CAL_AUTH: 'g_cal_auth'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
         'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings', 'subtle_user'
     ],
     URL : {
-        WHATS_NEW : BASE_API + 'whatsnew'
+        WHATS_NEW : BASE_API + 'whatsnew',
+      G_CAL_INTEGRATION: 'https://subtletab.com/#/integrations/calendar'
     }
 };
+export const G_CAL = {
+    URL: {
+        BASE: 'https://www.googleapis.com/calendar/v3/',
+        LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+        REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh'
+    },
+    STORAGE: {
 
+    }
+}
 export default constants
+
+export const STORAGE = constants.STORAGE

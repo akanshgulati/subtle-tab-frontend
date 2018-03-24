@@ -75,3 +75,6 @@ let storage = {
 
 };
 export default storage;
+export const Get = storage.get
+export const Set = storage.set
+export const Remove = storage.remove
