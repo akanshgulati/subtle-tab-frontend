@@ -37,12 +37,10 @@ const constants = {
 };
 export const G_CAL = {
     URL: {
-        BASE: 'https://www.googleapis.com/calendar/v3/',
-        LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-        REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh'
-    },
-    STORAGE: {
-
+      BASE: 'https://www.googleapis.com/calendar/v3/',
+      LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+      REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
+      ORIGIN: 'https://www.googleapis.com/',
     }
 }
 export default constants

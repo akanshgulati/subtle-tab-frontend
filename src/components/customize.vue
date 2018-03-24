@@ -346,6 +346,7 @@
     import { DecryptAuth } from '../utils/common'
     import { DefaultConfig } from '../utils/config'
     import {EventBus} from '../utils/EventBus'
+    import {G_CAL} from '../utils/Constants'
 
     export default{
         components: {
@@ -448,6 +449,19 @@
 
             }
           },
+          calendarAuthSuccess(){
+            storage.set(constants.STORAGE.G_CAL_AUTH, this.calendar.authCode)
+            this.calendar.isAuthSaved = true
+            this.calendar.saveMsg = `<span class="success">Authentication done successfully.</span>`
+          },
+          calendarAuthFailed(message) {
+            storage.remove(constants.STORAGE.G_CAL_AUTH)
+            this.calendar.isAuthSaved = false
+            this.calendar.saveMsg =
+              `<span class="error">${message ?
+                message :
+                'Authentication code not copied properly. Try again or contact support.'}</span>`
+          },
           calendarAuth() {
             // case of remove
             if (this.calendar.isAuthSaved) {
@@ -471,13 +485,24 @@
             try {
               let code = DecryptAuth(this.calendar.authCode);
               if (code.access_token && code.refresh_token) {
-                storage.set(constants.STORAGE.G_CAL_AUTH, this.calendar.authCode);
-                this.calendar.isAuthSaved = true;
-                this.calendar.saveMsg = `<span class="success">Authentication done successfully.</span>`
+                // check for permissions
+                chrome.permissions.contains({origins: [G_CAL.URL.ORIGIN]}, result => {
+                  // returns a boolean when permission is there
+                  if (result) {
+                    this.calendarAuthSuccess();
+                  } else {
+                    chrome.permissions.request({origins: [G_CAL.URL.ORIGIN]}, granted => {
+                      // The callback argument will be true if the user granted the permissions.
+                      if (granted) {
+                        this.calendarAuthSuccess()
+                      } else {
+                        this.calendarAuthFailed('Integration process aborted.');
+                      }
+                    });
+                  }
+                });
               } else {
-                storage.remove(constants.STORAGE.G_CAL_AUTH)
-                this.calendar.saveMsg =
-                  `<span class="error">Authentication code not copied properly. Try again or contact support.</span>`
+                this.calendarAuthFailed();
               }
             } catch (e) {
               storage.remove(constants.STORAGE.G_CAL_AUTH)
