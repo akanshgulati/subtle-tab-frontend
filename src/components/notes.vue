@@ -4,7 +4,7 @@
             <div>
                 <img src="images/note_landing_page_icon.png">
             </div>
-            <h5 class="italics create_note pointer" v-on:click="createFirstNote">Create first note</h5>
+            <h5 class="btn btn-flat mt-15" v-on:click="createFirstNote">Create first note</h5>
         </div>
         <div v-if="notesMeta.count" class="full-height">
             <div class="note full-height no-padding relative flex-flow-column flex">
@@ -19,7 +19,7 @@
                             </g>
                         </g>
                     </svg>
-                    <h4 class="widget-heading mar-0">Notes (N)</h4>
+                    <h4 class="widget-heading ml-10 mv-0">Notes (N)</h4>
                     <div class="button-section flex">
                         <div class="tooltip" rel="Create">
                             <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3em" height="1.3em" viewBox="0 0 49 51" version="1.1">
@@ -48,7 +48,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="tooltip" :rel="settings.isPinned?'Unpin Notes':'Pin Notes'">
+                        <div class="tooltip tooltip-left" :rel="settings.isPinned?'Unpin':'Pin'">
                             <svg viewBox="0 0 19 19" width="1.3em" height="1.3em" class="pointer" @click="togglePin">
                                 <g transform="translate(1.000000, 0.000000)" stroke="#7d7d7d" fill-rule="nonzero"
                                    stroke-width="1" fill="none">
