@@ -251,10 +251,6 @@ svg #customize_btn, svg #note_btn {
     transition: all 0.2s ease-in-out;
 }
 
-.nav-bar-opener {
-    margin-left: 1.5rem;
-}
-
 .nav-bar-opener svg {
     padding: 0.20rem;
     transition: all 0.2s ease-in-out;
@@ -638,8 +634,6 @@ svg:hover #close_btn {
 
 /*NOTE*/
 .notes-widget{
-    border-right: 2px solid rgba(255, 255, 255, 0.2);
-    padding-right: 1.5rem;
 }
 /*.notes-icon:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -918,7 +912,7 @@ svg:hover #close_btn {
 }
 .notes-arrow_box:before {
     bottom: 100%;
-    right: 2rem;
+    right: 0.8rem;
     border: solid transparent;
     content: " ";
     height: 0;
