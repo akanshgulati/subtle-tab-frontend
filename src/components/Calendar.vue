@@ -8,7 +8,7 @@
                alt="integrate google calendar">
           <p class="font-medium semi-bold font-light-black">Integrate with
             Google Calendar</p>
-          <h5 class="btn btn-flat" @click="integration" v-if="integrate.btn">{{integrate.btn}}</h5>
+          <h5 class="btn btn-flat" @click="integration">Integrate</h5>
           <small class="error center" v-if="integrate.error">{{integrate.error}}</small>
           <a class="font-xsmall mar-0 pointer" @click="skip" v-if="!integrate.error"> Skip for
             now </a>
@@ -37,62 +37,90 @@
             </div>
           </div>
         </header>
-        <section id="g-cal-date-selection"
-                 class="semi-bold flex flex-justify-space-between ph-20 pv-10">
-          <span>{{currentDate.day}}, {{currentDate.month}} {{currentDate.date}}</span>
-          <div class="date-changer flex flex-center">
-            <div
-              class="flex flex-center flex-justify-center date-change-icon mr-10"
-              @click="prevDate()">
-              <svg width="5" height="11" viewBox="0 0 11 20" id="prev-arrow">
-                <use xlink:href="#icon-next-arrow"></use>
+        <template v-if="integrate.errorTitle.length">
+          <section
+            id="g-cal-error"
+            class="semi-bold flex flex-center flex-justify-space-between ph-20 pv-5">
+            <span class="white-text semi-bold">{{integrate.errorTitle}}</span>
+            <button v-if="integrate.reIntegration"
+              class="re-integrate-btn btn-no-border btn btn-flat bg-white font-xsmall ph-10 flex flex-center">
+              <svg viewBox="0 0 489.935 489.935" height="1em"
+                   width="1em" style="enable-background:new 0 0 489.935 489.935;" class="mr-5">
+                <g>
+                  <path d="M278.235,33.267c-116.7,0-211.6,95-211.6,211.7v0.7l-41.9-63.1c-4.1-6.2-12.5-7.9-18.7-3.8c-6.2,4.1-7.9,12.5-3.8,18.7
+                        l60.8,91.5c2.2,3.3,5.7,5.4,9.6,5.9c0.6,0.1,1.1,0.1,1.7,0.1c3.3,0,6.5-1.2,9-3.5l84.5-76.1c5.5-5,6-13.5,1-19.1
+                        c-5-5.5-13.5-6-19.1-1l-56.1,50.7v-1c0-101.9,82.8-184.7,184.6-184.7s184.7,82.8,184.7,184.7s-82.8,184.7-184.6,184.7
+                        c-49.3,0-95.7-19.2-130.5-54.1c-5.3-5.3-13.8-5.3-19.1,0c-5.3,5.3-5.3,13.8,0,19.1c40,40,93.1,62,149.6,62
+                        c116.6,0,211.6-94.9,211.6-211.7S394.935,33.267,278.235,33.267z"/>
+                </g>
               </svg>
+              Integrate
+            </button>
+          </section>
+          <section
+            class="flex flex-center ph-20 pv-5">
+            <img src="/images/error_integration.png" alt="error in integration" width="45px" height="45px">
+            <div class="ml-20 error semi-bold font-xsmall" v-html="integrate.errorDesc"/>
+          </section>
+        </template>
+        <template v-else>
+          <section id="g-cal-date-selection"
+                   class="semi-bold flex flex-justify-space-between ph-20 pv-10">
+            <span>{{currentDate.day}}, {{currentDate.month}} {{currentDate.date}}</span>
+            <div class="date-changer flex flex-center">
+              <div
+                class="flex flex-center flex-justify-center date-change-icon mr-10"
+                @click="prevDate()">
+                <svg width="5" height="11" viewBox="0 0 11 20" id="prev-arrow">
+                  <use xlink:href="#icon-next-arrow"></use>
+                </svg>
+              </div>
+              <div class="flex flex-center flex-justify-center date-change-icon"
+                   @click="nextDate()">
+                <svg width="5" height="11" viewBox="0 0 11 20" id="next-arrow">
+                  <use xlink:href="#icon-next-arrow"></use>
+                </svg>
+              </div>
             </div>
-            <div class="flex flex-center flex-justify-center date-change-icon"
-                 @click="nextDate()">
-              <svg width="5" height="11" viewBox="0 0 11 20" id="next-arrow">
-                <use xlink:href="#icon-next-arrow"></use>
-              </svg>
-            </div>
-          </div>
-        </section>
-        <section
-          id="g-cal-events"
-          class="font-small pb-5"
-          style="transition: all 0.5s ease-in-out">
-          <transition mode="out-in">
-            <div v-if="isLoading" class="font-center" style="height: 3.36rem">
-              <img src="/images/loading.svg" alt="loading" width="25px">
-              <p class="mar-0 font-xsmall">Loading...</p>
-            </div>
-            <ul v-else-if="events && events.length > 0" class="calendar-events mar-0"
-                :style="{ 'max-height': maxHeight}">
-              <li class="calendar-event pv-5" v-for="event in events">
-                <template>
-                  <div v-if="event.from"
-                       class="event-duration font-xsmall semi-bold">
-                    {{ formatTime(event.from) }} - {{ formatTime(event.to) }}
+          </section>
+          <section
+            id="g-cal-events"
+            class="font-small pb-5"
+            style="transition: all 0.5s ease-in-out">
+            <transition mode="out-in">
+              <div v-if="isLoading" class="font-center" style="height: 3.36rem">
+                <img src="/images/loading.svg" alt="loading" width="25px">
+                <p class="mar-0 font-xsmall">Loading...</p>
+              </div>
+              <ul v-else-if="events && events.length > 0" class="calendar-events mar-0"
+                  :style="{ 'max-height': maxHeight}">
+                <li class="calendar-event pv-5" v-for="event in events">
+                  <template>
+                    <div v-if="event.from"
+                         class="event-duration font-xsmall semi-bold">
+                      {{ formatTime(event.from) }} - {{ formatTime(event.to) }}
+                    </div>
+                    <div v-else class="event-duration font-xsmall semi-bold">
+                      Full Day
+                    </div>
+                  </template>
+                  <div class="event-title">
+                    {{event.summary}}
                   </div>
-                  <div v-else class="event-duration font-xsmall semi-bold">
-                    Full Day
-                  </div>
-                </template>
-                <div class="event-title">
-                  {{event.summary}}
-                </div>
-              </li>
-            </ul>
-            <div
-              v-else
-              class="flex flex-center ph-20" style="height: 3.36rem">
-              <img src="/images/no_calendar_events.jpg" alt="no events" width="45px" height="45px">
-              <p class="ml-20 font-xsmall">
-                <strong>All Caught Up!</strong><br>
-                No events scheduled for today.
-              </p>
-            </div>
-          </transition>
-        </section>
+                </li>
+              </ul>
+              <div
+                v-else
+                class="flex flex-center ph-20" style="height: 3.36rem">
+                <img src="/images/no_calendar_events.jpg" alt="no events" width="45px" height="45px">
+                <p class="ml-20 font-xsmall">
+                  <strong>All Caught Up!</strong><br>
+                  No events scheduled for today.
+                </p>
+              </div>
+            </transition>
+          </section>
+        </template>
       </template>
     </div>
   </div>
@@ -114,8 +142,9 @@
         isLoading: true,
         maxHeight: '14.5rem',
         integrate: {
-          btn: 'Integrate',
-          error: ''
+          errorTitle: '',
+          errorDesc: '',
+          reIntegration: false
         }
       }
     },
@@ -124,6 +153,7 @@
       if (!this.auth) {
         return
       }
+
       this.refreshAuth().then(() => {
         this.getList().then(() => {
           this.isLoading = false
@@ -145,18 +175,20 @@
         }
       },
       errorState() {
-        this.integrate.btn = false
-        this.auth = ''
         if (!navigator.onLine) {
-          this.integrate.error = 'You seem offline, please try in new tab.'
+          this.integrate.errorTitle = "You seem offline!"
+          this.integrate.errorDesc = 'Please try once you come online.'
+          this.integrate.reIntegration = false
         } else {
-          this.integrate.error = 'Some error occurred, please try in new tab.'
+          this.integrate.errorTitle = "Some error occurred!"
+          this.integrate.errorDesc = "Please try in new tab or contact support with your authentication code."
+          this.integrate.reIntegration = false
         }
       },
       resetState(){
-        this.integrate.error = 'Due to some issue, please integrate again or contact support';
-        this.integrate.btn = 'Integrate Again'
-        this.auth = false
+        this.integrate.errorTitle = "Some error occurred!"
+        this.integrate.errorDesc = "Integrate again or contact support with your authentication code."
+        this.integrate.reIntegration = true
         Remove(STORAGE.G_CAL_AUTH)
       },
       skip(){
@@ -185,7 +217,6 @@
             let url
 
             url = G_CAL.URL.REFRESH
-            url = 'http://localhost:8080/integrations/calendar/refresh'
             Http(url, {
               method: 'POST',
               data: {
@@ -335,10 +366,6 @@
     background: #cccccc;
   }
 
-  .date-selection {
-    border-bottom: 1px solid rgba(236, 236, 236, 0.5);
-  }
-
   .calendar-events {
     overflow-y: auto;
     max-height: 14.5rem;
@@ -356,5 +383,14 @@
 
   #g-integrate {
     height: 20rem;
+  }
+
+  #g-cal-error {
+    background: #d63333;
+  }
+  .re-integrate-btn {
+    border: none;
+    line-height: 1.5rem;
+    height: 1.5rem;
   }
 </style>

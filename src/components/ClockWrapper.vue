@@ -64,6 +64,7 @@
     min-width: 300px;
     margin-bottom: 1rem;
     max-height: 40vh;
+    min-height: 20rem;
     bottom: 100%
   }
 

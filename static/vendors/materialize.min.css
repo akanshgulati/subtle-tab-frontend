@@ -3100,7 +3100,7 @@ button.btn-floating {
     background: none;
     border: 1px solid rgba(102, 102, 102, 0.75);
     color: rgb(67, 67, 67);
-    border-radius: 10px;
+    border-radius: 50px;
     font-weight: 500;
     transition: all .2s ease-in-out;
 }
@@ -3112,7 +3112,7 @@ button.btn-floating {
 .btn-flat:focus, .btn-flat:hover {
     border: 1px solid #333333;
     color: #333;
-    background: none;
+    background: #fff;
 }
 
 .btn-flat:active {

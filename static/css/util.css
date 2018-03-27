@@ -34,7 +34,9 @@
 .ph-0, .pr-0 {
     margin-right: 0 !important;
 }
-
+.mr-5 {
+    margin-right: 0.35rem !important;
+}
 .ph-10 {
     padding-left: 0.72rem !important;
     padding-right: 0.72rem !important;
@@ -140,4 +142,11 @@
 }
 .btn {
     text-transform: none;
+}
+.btn-no-border {
+    border: none !important;
+}
+
+.btn-no-border:hover {
+    border: none !important;
 }
