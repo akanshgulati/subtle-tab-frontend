@@ -244,15 +244,28 @@
       },
       getList() {
         return this.get(G_CAL.URL.LIST).then(data => {
-          this.lists = data.items
+          // only filtering those lists which are selected in google calendar
+          this.lists = data.items.filter(list => list.selected)
           return this.getEvents()
         }).catch(e => this.manageReject(e))
+      },
+      sortEvents(events) {
+        function getTime(from) {
+          const time = new Date(from)
+          return time.getHours()*3600 + time.getMinutes()*60 + time.getSeconds()
+        }
+
+        events = events.sort((a, b) => {
+          return getTime(a.from) - getTime(b.from)
+        })
+        return events
       },
       getEvents() {
         let promises = this.eventsUrls.map(eventsUrl => this.get(eventsUrl))
         return Promise.all(promises).then((values) => {
-          this.events = this.extractEventsFromResponse(values)
-          this.maxHeight = (this.events.length * 3.38 || 3.36) + 'rem'
+          let events = this.extractEventsFromResponse(values)
+          this.events = this.sortEvents(events);
+          //this.maxHeight = (this.events.length * 3.38 || 3.36) + 'rem'
           return true
         }).catch(e => this.manageReject(e))
       },
@@ -268,7 +281,9 @@
         let processedEventIds = []
         for (let i = 0; i < events.length; i++) {
           let event = events[i]
-          if (event && processedEventIds.indexOf(event.id) === -1) {
+          // currently we hide repetitive events
+          // we show only confirmed events
+          if (event && processedEventIds.indexOf(event.id) === -1 && event.status === 'confirmed') {
             processedEventIds.push(event.id)
             processedEvents.push({
               id: event.id,
@@ -293,7 +308,7 @@
         }
         return G_CAL.URL.BASE + 'calendars/' + encodeURIComponent(listId) +
           '/events?timeMax=' + getDate(this.nextDateTimeStamp)['iso'] +
-          '&timeMin=' + this.currentDate.iso
+          '&timeMin=' + this.currentDate.iso + "&fields=items(id,status,start,end,summary)"
       },
       nextDate() {
         this.isLoading = true
@@ -327,8 +342,7 @@
         if (this.lists && this.lists.length > 0) {
           const self = this
           return this.lists.map(list => {
-            let url = self.getEventsUrl(list.id)
-            return url
+            return self.getEventsUrl(list.id)
           })
         }
       },
@@ -393,5 +407,8 @@
     border: none;
     line-height: 1.5rem;
     height: 1.5rem;
+  }
+  #g-cal-events {
+    overflow-y: auto;
   }
 </style>
