@@ -383,6 +383,7 @@
 
   #g-integrate {
     height: 20rem;
+    max-height: 40vh;
   }
 
   #g-cal-error {
