@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="widget relative">
+    <div class="widget relative pb-5">
       <section v-if="!auth" id="g-integrate">
         <div
           class="full-height flex flex-justify-center flex-flow-column flex-center ph-10">
@@ -85,7 +85,7 @@
           </section>
           <section
             id="g-cal-events"
-            class="font-small pb-5"
+            class="font-small"
             :style="{ 'max-height': maxHeightValue}">
             <transition mode="out-in">
               <div v-if="isLoading" class="font-center" style="height: 3.43rem">
