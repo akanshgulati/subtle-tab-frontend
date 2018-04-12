@@ -120,7 +120,7 @@
                     self.showNotes = true;
                     this.$ga.event('app', 'keydown', 'notes')
                 } else if (e.keyCode === 67) {
-                    self.showCustomizeMenu = true;
+                    self.toggleCustomizeMenu(true)
                     this.$ga.event('app', 'keydown', 'customize')
                 } else if (e.keyCode === 27) {
                     self.closeWindows();
@@ -161,14 +161,14 @@
           toggle(el, option) {
             EventBus.$emit(el, option)
           },
-            toggleCustomizeMenu() {
-                this.showCustomizeMenu = !this.showCustomizeMenu
+            toggleCustomizeMenu(state) {
+                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu: state
                 if(!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
-                this.showNotes = this.sharedData.notes.isPinned
+                this.showNotes = state ? !state : this.sharedData.notes.isPinned
                 this.otherSettings.weather.showWeatherInfo = false
-              this.toggle('calendar', {message: 'close', force: 'true'})
+              this.toggle('calendar', {message: 'close', force: state})
             },
             stopLoad() {
                 this.isLoading = false
@@ -183,10 +183,7 @@
             },
             closeWindows() {
                 storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
-                this.showNotes = this.sharedData.notes.isPinned
-                this.showCustomizeMenu = false
-                this.otherSettings.weather.showWeatherInfo = false
-              this.toggle('calendar', {message: 'close'})
+                this.toggleCustomizeMenu(false)
             },
             showUpdateNotification(newVersion){
                 if (!newVersion) {
