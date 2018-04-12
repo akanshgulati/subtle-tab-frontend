@@ -86,34 +86,36 @@
           <section
             id="g-cal-events"
             class="font-small pb-5"
-            style="transition: all 0.5s ease-in-out">
+            :style="{ 'max-height': maxHeightValue}">
             <transition mode="out-in">
-              <div v-if="isLoading" class="font-center" style="height: 3.36rem">
+              <div v-if="isLoading" class="font-center" style="height: 3.43rem">
                 <img src="/images/loading.svg" alt="loading" width="25px">
                 <p class="mar-0 font-xsmall">Loading...</p>
               </div>
-              <ul v-else-if="events && events.length > 0" class="calendar-events mar-0"
-                  :style="{ 'max-height': maxHeight}">
-                <li class="calendar-event pv-5" v-for="event in events">
+              <ul v-else-if="events && events.length > 0" class="calendar-events mar-0">
+                <li class="calendar-event pv-5" v-for="event in events"
+                    :link="event.link" :class="{'pointer': event.link}" @click.stop="openEvent">
                   <template>
-                    <div v-if="event.from"
+                    <div v-if="event.from && event.from !== -1"
                          class="event-duration font-xsmall semi-bold">
                       {{ formatTime(event.from) }} - {{ formatTime(event.to) }}
                     </div>
+                    <!-- HANDLING FULL DAY EVENTS-->
                     <div v-else class="event-duration font-xsmall semi-bold">
                       Full Day
                     </div>
                   </template>
+                  <!-- HANDLING PRIVATE EVENTS NOT ACCESSIBLE -->
                   <div class="event-title">
-                    {{event.summary}}
+                    {{event.summary || 'Busy'}}
                   </div>
                 </li>
               </ul>
               <div
                 v-else
-                class="flex flex-center ph-20" style="height: 3.36rem">
+                class="flex flex-center ph-20">
                 <img src="/images/no_calendar_events.jpg" alt="no events" width="45px" height="45px">
-                <p class="ml-20 font-xsmall">
+                <p class="ml-20 font-xsmall mar-0">
                   <strong>All Caught Up!</strong><br>
                   No events scheduled for today.
                 </p>
@@ -126,11 +128,13 @@
   </div>
 </template>
 <script>
-  import {getDate, getTime} from '../utils/ClockUtil'
+  import {getDate, getTime, convertISOToTime} from '../utils/ClockUtil'
   import {STORAGE, G_CAL} from '../utils/Constants'
   import {Get, Set, Remove} from '../utils/storage'
   import {Http, DecryptAuth} from '../utils/common'
   import {EventBus} from '../utils/EventBus'
+  const EVENT_HEIGHT = 3.43
+  const MAX_EVENTS = 4;
 
   export default {
     data() {
@@ -140,7 +144,7 @@
         lists: [],
         now: new Date(),
         isLoading: true,
-        maxHeight: '14.5rem',
+        maxHeight: EVENT_HEIGHT,
         integrate: {
           errorTitle: '',
           errorDesc: '',
@@ -157,6 +161,7 @@
       this.refreshAuth().then(() => {
         this.getList().then(() => {
           this.isLoading = false
+          this.scrollToCurrentEvent()
         }, (e) => {
           this.manageReject(e)
         })
@@ -165,6 +170,15 @@
       })
     },
     methods: {
+      openEvent(e) {
+        if (e && e.currentTarget) {
+          const url = e.currentTarget.getAttribute('link')
+          if (!url) {
+            return
+          }
+          window.chrome.tabs.create({url: url, active: true})
+        }
+      },
       manageReject(e){
         if (e.status > 400 && e.status < 500) {
           // call reset state when issue comes due to api
@@ -250,22 +264,47 @@
         }).catch(e => this.manageReject(e))
       },
       sortEvents(events) {
-        function getTime(from) {
-          const time = new Date(from)
-          return time.getHours()*3600 + time.getMinutes()*60 + time.getSeconds()
-        }
-
         events = events.sort((a, b) => {
-          return getTime(a.from) - getTime(b.from)
+          return convertISOToTime(a.from) - convertISOToTime(b.from)
         })
         return events
       },
+      scrollToCurrentEvent() {
+        setTimeout(()=>{
+          let currentTime = convertISOToTime()
+          let index
+          try {
+            index = this.events.findIndex(event => {
+              if (event.to !== -1) {
+                let eventTo = convertISOToTime(event.to)
+                return currentTime < eventTo
+              }
+            })
+          } catch (e) {}
+
+          if (!index || index <= 1) {
+            return
+          }
+          document.querySelector('#g-cal-events').scroll({
+            top: (index - 1) * document.querySelector('.calendar-event').offsetHeight,
+            left: 0,
+            behavior: 'smooth'
+          })
+        }, 500)
+
+      },
       getEvents() {
         let promises = this.eventsUrls.map(eventsUrl => this.get(eventsUrl))
+
         return Promise.all(promises).then((values) => {
           let events = this.extractEventsFromResponse(values)
-          this.events = this.sortEvents(events);
-          //this.maxHeight = (this.events.length * 3.38 || 3.36) + 'rem'
+          events = this.processEventsResponse(events)
+          events = this.sortEvents(events)
+          // in case no event is present, then we take inner math.max for it to add minimum height
+          // then we take math.min in case events are more than 4
+          this.maxHeight = events.length > 0 ? Math.min(events.length * EVENT_HEIGHT, EVENT_HEIGHT * MAX_EVENTS) :
+            EVENT_HEIGHT * 2
+          this.events = events
           return true
         }).catch(e => this.manageReject(e))
       },
@@ -274,7 +313,7 @@
         for (let i = 0; i < events.length; i++) {
           _events = _events.concat(events[i].items)
         }
-        return this.processEventsResponse(_events)
+        return _events
       },
       processEventsResponse(events) {
         let processedEvents = []
@@ -283,13 +322,17 @@
           let event = events[i]
           // currently we hide repetitive events
           // we show only confirmed events
-          if (event && processedEventIds.indexOf(event.id) === -1 && event.status === 'confirmed') {
-            processedEventIds.push(event.id)
+          if (event &&
+            processedEventIds.indexOf(event.iCalUID) === -1 &&
+            event.status === 'confirmed') {
+            processedEventIds.push(event.iCalUID)
+
             processedEvents.push({
               id: event.id,
-              from: event.start && (event.start.dateTime),
-              to: event.end && (event.end.dateTime),
-              summary: event.summary
+              from: event.start && (event.start.dateTime) || -1,
+              to: event.end && (event.end.dateTime) || -1,
+              summary: event.summary,
+              link: event.htmlLink
             })
           }
         }
@@ -308,21 +351,22 @@
         }
         return G_CAL.URL.BASE + 'calendars/' + encodeURIComponent(listId) +
           '/events?timeMax=' + getDate(this.nextDateTimeStamp)['iso'] +
-          '&timeMin=' + this.currentDate.iso + "&fields=items(id,status,start,end,summary)"
+          '&timeMin=' + this.currentDate.iso +
+          '&orderBy=startTime&singleEvents=true&fields=items(id,status,start,end,summary,iCalUID,htmlLink)'
       },
       nextDate() {
         this.isLoading = true
         this.now = new Date(this.now.getTime() + 86400000)
-        this.maxHeight = '3.36rem'
         this.getEvents().then(() => {
+          this.scrollToCurrentEvent()
           this.isLoading = false
         })
       },
       prevDate() {
         this.isLoading = true
         this.now = new Date(this.now.getTime() - 86400000)
-        this.maxHeight = '3.36rem'
         this.getEvents().then(() => {
+          this.scrollToCurrentEvent()
           this.isLoading = false
         })
       },
@@ -355,6 +399,9 @@
       },
       nextDateTimeStamp() {
         return this.currentDateTimeStamp + 86400000
+      },
+      maxHeightValue() {
+        return this.maxHeight + 'rem'
       }
     }
   }
@@ -382,13 +429,17 @@
 
   .calendar-events {
     overflow-y: auto;
-    max-height: 14.5rem;
-    transition: max-height 0.5s linear;
+    transition: max-height 0.2s ease-out;
   }
 
   .calendar-event {
-    width: calc(100% - 40px);
-    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .calendar-event:hover {
+    background-color: rgba(204, 204, 204, 0.5);
   }
 
   .calendar-event:not(:last-of-type) {
@@ -410,5 +461,10 @@
   }
   #g-cal-events {
     overflow-y: auto;
+  }
+  .event-title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 </style>

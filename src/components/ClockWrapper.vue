@@ -35,10 +35,12 @@
     },
     mounted() {
       EventBus.$on('calendar', e => {
-        if (!this.settings.calendar.isPinned || e.force) {
-          this.showCalendar = e.message === 'open';
+        if (e.force) {
+          this.showCalendar = e.message === 'open'
+          return
         }
-      });
+        this.showCalendar = this.settings.calendar.isPinned || e.message === 'open'
+      })
     },
     components: {
       Clock,
