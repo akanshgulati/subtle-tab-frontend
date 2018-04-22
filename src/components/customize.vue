@@ -513,8 +513,8 @@
           },
           openIntegration() {
             let url
-            url = constants.URL.G_CAL_INTEGRATION
-            window.chrome.tabs.create({url: url, active: true})
+            url = constants.URL.G_CAL_KB_INTEGRATION
+            chrome.tabs.create({url: url, active: true})
           }
         },
         props:['settings']

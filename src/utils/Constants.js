@@ -1,4 +1,16 @@
 const BASE_API = 'https://api.subtletab.com/'
+
+export const G_CAL = {
+  URL: {
+    BASE: 'https://www.googleapis.com/calendar/v3/',
+    LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+    REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
+    ORIGIN: 'https://www.googleapis.com/',
+    KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/calendar',
+    INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/calendar'
+  }
+}
+
 const constants = {
     THEME: {
         NATURE: 'nature',
@@ -32,17 +44,11 @@ const constants = {
     ],
     URL : {
         WHATS_NEW : BASE_API + 'whatsnew',
-      G_CAL_INTEGRATION: 'https://subtletab.com/#/integrations/calendar'
+      G_CAL_KB_INTEGRATION: G_CAL.URL.KB_INTEGRATION_SUBTLE,
+      G_CAL_INTEGRATION: G_CAL.URL.INTEGRATION_SUBTLE
     }
 };
-export const G_CAL = {
-    URL: {
-      BASE: 'https://www.googleapis.com/calendar/v3/',
-      LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-      REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
-      ORIGIN: 'https://www.googleapis.com/',
-    }
-}
+
 export default constants
 
 export const STORAGE = constants.STORAGE

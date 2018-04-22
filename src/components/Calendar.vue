@@ -373,6 +373,10 @@
       integration() {
         Set(STORAGE.CURRENT_CUSTOMIZATION_TAB, 'clock')
         EventBus.$emit('app', {message: 'OpenCustomize'})
+        chrome.tabs.create({
+          url: G_CAL.URL.INTEGRATION_SUBTLE,
+          active: true
+        })
       }
     },
     computed: {
