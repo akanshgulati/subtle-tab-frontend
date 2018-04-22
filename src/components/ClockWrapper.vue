@@ -31,6 +31,7 @@
     methods: {
       toggleCalendar() {
         this.showCalendar = !this.showCalendar
+        this.$ga.event('clock', 'clicked', this.showCalendar? 'open': 'close')
       },
     },
     mounted() {

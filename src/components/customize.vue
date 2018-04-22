@@ -451,11 +451,13 @@
             }
           },
           calendarAuthSuccess(){
+            this.$ga.event('customize', 'g_integration', 'success')
             storage.set(constants.STORAGE.G_CAL_AUTH, this.calendar.authCode)
             this.calendar.isAuthSaved = true
             this.calendar.saveMsg = `<span class="success">Authentication done successfully.</span>`
           },
           calendarAuthFailed(message) {
+            this.$ga.event('customize', 'g_integration', 'failed', message)
             storage.remove(constants.STORAGE.G_CAL_AUTH)
             this.calendar.isAuthSaved = false
             this.calendar.saveMsg =

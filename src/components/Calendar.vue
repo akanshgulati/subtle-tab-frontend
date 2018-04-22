@@ -187,6 +187,7 @@
           // call error state when issue comes due to unknown reason
           this.errorState()
         }
+        this.$ga.event('calendar', 'error', e.status + navigator.onLine)
       },
       errorState() {
         if (!navigator.onLine) {
@@ -208,10 +209,12 @@
       skip(){
         this.settings.isPinned = false
         EventBus.$emit('calendar', {message: 'close'})
+        this.$ga.event('calendar', 'isSkipped')
       },
       togglePin() {
         if (this.settings) {
           this.settings.isPinned = !this.settings.isPinned
+          this.$ga.event('calendar', 'isPinned', this.settings.isPinned)
         }
       },
       refreshAuth() {
@@ -361,6 +364,7 @@
           this.scrollToCurrentEvent()
           this.isLoading = false
         })
+        this.$ga.event('calendar', 'clicked', 'nextDate')
       },
       prevDate() {
         this.isLoading = true
@@ -369,10 +373,12 @@
           this.scrollToCurrentEvent()
           this.isLoading = false
         })
+        this.$ga.event('calendar', 'clicked', 'prevDate')
       },
       integration() {
         Set(STORAGE.CURRENT_CUSTOMIZATION_TAB, 'clock')
         EventBus.$emit('app', {message: 'OpenCustomize'})
+        this.$ga.event('calendar', 'clicked', 'integrate')
         chrome.tabs.create({
           url: G_CAL.URL.INTEGRATION_SUBTLE,
           active: true
