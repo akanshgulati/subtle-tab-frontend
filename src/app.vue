@@ -136,7 +136,7 @@
 
           EventBus.$on('app', e => {
             if (e.message === 'OpenCustomize') {
-              self.toggleCustomizeMenu()
+              self.toggleCustomizeMenu(true)
             }
           })
 
