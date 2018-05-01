@@ -26,8 +26,8 @@
                     <div class="change-description">Sticky notes to <br/> keep important content.  </div>
                 </div>
                 <div class="col s3 center">
-                    <div class="change-heading">Remain Synced</div>
-                    <div class="change-description">Keep your settings <br> and notes synced </div>
+                    <div class="change-heading">Google Calendar Integration</div>
+                    <div class="change-description">Access calendar events <br> easily on new tab</div>
                 </div>
             </div>
         </div>
