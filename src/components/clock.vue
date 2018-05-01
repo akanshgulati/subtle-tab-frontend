@@ -1,9 +1,12 @@
 <template>
-    <div id="clock">
-        <div class="time">{{hrs}}:{{min}}</div>
+    <div class="flex flex-center">
         <transition>
-            <div class="date" v-if="settings.showDay">{{day}}, {{month}} {{date}}</div>
+            <div v-if="settings.showDay" class="date flex flex-flow-column mr-10">
+                <span class="semi-bold">{{day}}</span>
+                <span class="semi-bold">{{date}} {{month}}</span>
+            </div>
         </transition>
+        <div class="time">{{hrs}}:{{min}}</div>
     </div>
 </template>
 
@@ -35,9 +38,9 @@
                     this.hrs = (this.hrs !== 0 && this.hrs !== 12) ? this.hrs % 12 : 12;
                 }
                 this.min = this.getZeroPad(current.getMinutes());
-                this.day = dayArr[current.getDay()];
+                this.day = dayArr[current.getDay()]
                 this.date = current.getDate();
-                this.month = monthArr[current.getMonth()];
+                this.month = monthArr[current.getMonth()]
             },
             getZeroPad (n) {
                 return (parseInt(n, 10) >= 10 ? '' : '0') + n

@@ -13,7 +13,7 @@
   },
   "permissions": [
     "geolocation",
-    "http://*.subtletab.com/",
+    "https://*.subtletab.com/",
     "storage"
   ],
   "browser_action": {
@@ -24,6 +24,7 @@
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png"
   },
+  "optional_permissions": ["https://www.googleapis.com/"],
   "offline_enabled": true,
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2

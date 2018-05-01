@@ -297,6 +297,10 @@ function updateLocalStorage(){
         if (CommonUtils.isUndefined(sharedData.notes)) {
             sharedData.notes = config.defaultCustomization.notes
         }
+      if (sharedData.clock && CommonUtils.isUndefined(sharedData.clock.calendar)) {
+        sharedData.clock.calendar = config.defaultCustomization.clock.calendar
+      }
+
     }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {

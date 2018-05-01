@@ -37,17 +37,18 @@ module.exports = {
             }
         ]
     },
-    node: false
+    node: false,
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+            }
+        })
+    ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-    console.log('RUNNING PRODUCTION')
-    module.exports.plugins = [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
+    module.exports.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -58,7 +59,7 @@ if (process.env.NODE_ENV === 'production') {
             },
             exclude: [/\.min\.js$/gi]
         })
-    ]
+    )
 } else {
     module.exports.devtool = '#source-map'
 }

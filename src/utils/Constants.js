@@ -1,4 +1,16 @@
 const BASE_API = 'https://api.subtletab.com/'
+
+export const G_CAL = {
+  URL: {
+    BASE: 'https://www.googleapis.com/calendar/v3/',
+    LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+    REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
+    ORIGIN: 'https://www.googleapis.com/',
+    KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/calendar',
+    INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/calendar'
+  }
+}
+
 const constants = {
     THEME: {
         NATURE: 'nature',
@@ -23,15 +35,20 @@ const constants = {
         NOTES_META: 'notes_meta',
         WHATS_NEW: 'whats_new',
         CURRENT_CUSTOMIZATION_TAB: 'current_c_tab',
-        SUBTLE_USER: 'subtle_user'
+        SUBTLE_USER: 'subtle_user',
+        G_CAL_AUTH: 'g_cal_auth'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
         'notes_meta', 'notes-', 'bg-custom', 'bg-seen-custom', 'misc_settings', 'subtle_user'
     ],
     URL : {
-        WHATS_NEW : BASE_API + 'whatsnew'
+        WHATS_NEW : BASE_API + 'whatsnew',
+      G_CAL_KB_INTEGRATION: G_CAL.URL.KB_INTEGRATION_SUBTLE,
+      G_CAL_INTEGRATION: G_CAL.URL.INTEGRATION_SUBTLE
     }
 };
 
 export default constants
+
+export const STORAGE = constants.STORAGE

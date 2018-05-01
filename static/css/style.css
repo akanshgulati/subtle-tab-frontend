@@ -26,6 +26,11 @@ body {
     overflow: auto;
 }
 
+a, a:active, a:visited {
+    cursor: pointer;
+    color: rgb(2, 124, 183);
+}
+
 [type="radio"]:checked + label:after {
     border: 2px solid rgb(122, 184, 0);
     background-color: rgb(122, 184, 0);
@@ -251,10 +256,6 @@ svg #customize_btn, svg #note_btn {
     transition: all 0.2s ease-in-out;
 }
 
-.nav-bar-opener {
-    margin-left: 1.5rem;
-}
-
 .nav-bar-opener svg {
     padding: 0.20rem;
     transition: all 0.2s ease-in-out;
@@ -294,10 +295,11 @@ svg:hover #close_btn {
 }
 #customize .save-button{
     background: rgb(122, 184, 0);
-    padding: 1px 4px;
+    padding: 0 10px;
     color: white;
     margin-left: 0.3rem;
 }
+
 #customize .save-button:disabled{
     background: grey;
 }
@@ -579,14 +581,13 @@ svg:hover #close_btn {
 }
 
 .time {
-    font-size: 7.5rem;
-    line-height: 7.5rem;
-    letter-spacing: -0.2rem;
+    font-size: 3rem;
+    line-height: 3rem;
 }
 
 .date {
-    font-size: 2.5rem;
-    line-height: 3rem;
+    font-size: 1rem;
+    line-height: 1.4rem;
     overflow: hidden;
 }
 
@@ -638,8 +639,6 @@ svg:hover #close_btn {
 
 /*NOTE*/
 .notes-widget{
-    border-right: 2px solid rgba(255, 255, 255, 0.2);
-    padding-right: 1.5rem;
 }
 /*.notes-icon:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -660,12 +659,13 @@ svg:hover #close_btn {
 
 #notes {
     position: absolute;
-    right: 0rem;
-    width: 24vw;
-    min-width: 330px;
+    right: 0;
+    width: 22vw;
+    min-width: 300px;
     margin-top: 1rem;
-    min-height: 25rem;
-    height: 43vh;
+    min-height: 20rem;
+    height: 40vh;
+    max-height: 40vh;
 }
 
 .full-height {
@@ -683,6 +683,11 @@ svg:hover #close_btn {
 .no-padding {
     padding: 0 !important;
 }
+.widget {
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: #fff;
+}
 .widget-header{
     justify-content: space-between;
     padding: 0.5rem 1rem;
@@ -690,12 +695,12 @@ svg:hover #close_btn {
     box-shadow: -1px 0.33rem 3px -4px #ccc;
     background: #fff;
     border-radius: 3px 3px 0 0;
+    min-height: 36px;
 }
 
 .widget-heading{
     font-size: 1rem;
     font-weight: 500;
-    margin-left: 1rem !important;
 }
 
 #notes .add-note {
@@ -895,18 +900,16 @@ svg:hover #close_btn {
 .create_note_img{
     width: 10rem;
 }
-
-.create_note {
-    font-size: 1rem;
-    border: 1px solid #cbcbcb;
-    padding: 0.5rem 1rem;
+.first-create {
+    border: 1px solid rgb(51, 51, 51);
     border-radius: 21px;
-    transition: all 0.3s ease-in-out;
-    margin-top: 2rem;
+    color: rgb(51, 51, 51);
+    background: none;
+    text-transform: none;
 }
 
-.create_note:hover{
-    color: #161616;
+.first-create:hover {
+    color: #333;
 }
 
 #notes .flip-list-move {
@@ -918,7 +921,7 @@ svg:hover #close_btn {
 }
 .notes-arrow_box:before {
     bottom: 100%;
-    right: 2rem;
+    right: 0.8rem;
     border: solid transparent;
     content: " ";
     height: 0;
@@ -975,6 +978,13 @@ svg:hover #close_btn {
     animation: fade_in 0.3s;
     font-family: 'Open Sans', sans-serif !important;
     letter-spacing: 0.04rem;
+}
+
+.tooltip-left:hover:after {
+    right: 0 !important;
+}
+.tooltip-right {
+    left: 0;
 }
 
 .v-enter-active {

@@ -4,13 +4,13 @@
             <div v-if="isLoading" class="weather-loading" key="loading">Loading..</div>
             <div v-else id="weather" @click="toggle('showWeatherInfo')" key="notLoading" class="flex flex-center">
                 <transition mode="out-in" name="fast-fade">
-                    <div :key="weatherCity + temp">
+                    <div :key="weatherCity + temp" class="flex flex-center pr-10">
                         <div class="temperature" v-if="temp">
                             <div class="temperature-value">{{temp}}</div>
                             <sup class="temperature-unit" v-if="this.settings.unit === 'f'">&#8457;</sup>
                             <sup class="temperature-unit" v-if="this.settings.unit === 'c'">&#8451;</sup>
                         </div>
-                        <div class="weather-icon flex flex-center">
+                        <div class="weather-icon flex flex-center flex-flow-column">
                             <i class="wi" :class="'wi-'+weatherClass"></i>
                             <span class="weather-city">{{weatherCity}}</span>
                         </div>

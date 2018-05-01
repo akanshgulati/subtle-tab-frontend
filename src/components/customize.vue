@@ -166,13 +166,33 @@
                             <h4 class="font-medium text-black semi-bold">Custom List</h4>
                             <small>Add each image url in new line and press save list button. Image url should end with (.png, .jpg)</small>
                             <textarea name="" id="" cols="30" rows="15" v-model="currentBgCustom"></textarea>
-                            <button class="save-button font-xsmall mar-0" v-on:click.stop="saveCustomBg"
+                            <button class="save-button font-xsmall btn semi-bold" v-on:click.stop="saveCustomBg"
                                     :disabled="!currentBgCustom.trim().length">Save List</button>
                             <span v-html="isCustomBgSaveMsg"></span>
                         </div>
                     </section>
                     <section v-if="activeTab === 'clock'">
                         <div>
+                            <h4 class="font-medium text-black semi-bold">Integration: Google Calendar</h4>
+                            <small class="ph-10" v-if="!calendar.isAuthSaved">
+                              <strong>Authenticate Subtle tab to access your calendar data, <a class="semi-bold" @click.stop="openIntegration">click here</a> to start.</strong>
+                            </small>
+                            <div class="ph-10 flex" v-on:keydown.stop="">
+                                <input
+                                  type="text"
+                                  :readonly='calendar.isAuthSaved'
+                                  v-model="calendar.authCode"
+                                  class="mar-0 font-xsmall"
+                                  placeholder="Paste authentication code obtained from above link here">
+                              <button
+                                class="save-button font-xsmall btn semi-bold"
+                                :disabled="!calendar.authCode"
+                                @click="calendarAuth">
+                                {{calendar.isAuthSaved ? 'Revoke' : 'Save'}}
+                              </button>
+                            </div>
+                            <div class="ph-10 font-xsmall" v-html="calendar.saveMsg"/>
+
                             <h4 class="font-medium text-black semi-bold">Settings</h4>
                             <ul class="ph-10">
                                 <li class="inline-list-item">
@@ -231,7 +251,7 @@
                                     <div class="right flex">
                                         <input placeholder="e.g. Mumbai" type="text" v-model="customLocation" class="mar-0"
                                                :disabled="settings.weather.location.type==='geo'" v-on:keydown.stop="">
-                                        <button class="save-button font-xsmall" v-on:click.stop="updateCustomLocation"
+                                        <button class="btn save-button font-xsmall semi-bold" v-on:click.stop="updateCustomLocation"
                                                 :disabled="customLocation == settings.weather.location.name">Save</button>
                                     </div>
                                 </li>
@@ -266,7 +286,8 @@
                     <ul class="flex shortcut-bar">
                         <li><span class="shortcut-key">n</span> Open Notes</li>
                         <li><span class="shortcut-key">c</span> Open Customize</li>
-                        <li><span class="shortcut-key">w</span> Open Weather Forecast</li>
+                        <li><span class="shortcut-key">w</span> Open Forecast</li>
+                        <li><span class="shortcut-key">g</span> Open Calendar</li>
                         <li><span class="shortcut-key">esc</span> Close all</li>
                     </ul>
                 </div>
@@ -323,20 +344,29 @@
     import storage from '../utils/storage'
     import constants from '../utils/Constants'
     import WhatsNew from './whatsNew.vue'
+    import { DecryptAuth } from '../utils/common'
+    import { DefaultConfig } from '../utils/config'
+    import {EventBus} from '../utils/EventBus'
+    import {G_CAL} from '../utils/Constants'
 
     export default{
         components: {
             WhatsNew
         },
-        data: function(){
+        data(){
             return {
-                selectedTheme: this.settings.background.themeId,
-                themes: bgData.themes,
-                version: chrome.runtime.getManifest().version,
-                activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'general',
-                customLocation: '',
-                currentBgCustom: '',
-                isCustomBgSaveMsg: ''
+              selectedTheme: this.settings.background.themeId,
+              themes: bgData.themes,
+              version: chrome.runtime.getManifest().version,
+              activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'general',
+              customLocation: '',
+              currentBgCustom: '',
+              isCustomBgSaveMsg: '',
+              calendar: {
+                authCode: storage.get(constants.STORAGE.G_CAL_AUTH) || '',
+                isAuthSaved: !!storage.get(constants.STORAGE.G_CAL_AUTH),
+                saveMsg: ''
+              }
             };
         },
         mounted(){
@@ -353,77 +383,142 @@
             this.$ga.event('customize', 'open')
         },
         methods: {
-            isActiveTheme: function(index){
-                return this.settings.background.themeId === (index + 1);
-            },
-            selectActive(index){
-                this.settings.background.themeId = (index + 1);
-                this.$ga.event('customize', 'wallpaperCategoryChanged', this.themes[index].lValue)
-            },
-            closeCustomizeMenu(){
-                storage.remove(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
-                this.$emit('closeCustomizeMenu');
-            },
-            updateCustomLocation() {
-                if (this.customLocation !== this.settings.weather.location.name) {
-                    this.settings.weather.location.name = this.customLocation;
-                }
-            },
-            saveCustomBg(){
-                let validateImgUrls = (backgrounds)=> {
-                    for (let i = 0; i < backgrounds.length; i++) {
-                        if (backgrounds[i].match(/^(http?|https):\/\/.*(jpeg|png|gif|bmp|jpg)/g) === null) {
-                            this.isCustomBgSaveMsg = `<span class='error'>Wallpapers links are not in correct format.</span>`;
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-
-                let cleanUrls = (backgrounds)=> {
-                    return backgrounds.reduce((filtered, background) => {
-                        if (typeof background === 'string' && background.length > 5) {
-                            filtered.push(background.trim());
-                        }
-                        return filtered;
-                    }, []);
-                };
-
-                if(this.currentBgCustom){
-                    let backgrounds = this.currentBgCustom.split('\n');
-                    if(backgrounds && backgrounds.length && validateImgUrls(backgrounds)) {
-                        backgrounds = cleanUrls(backgrounds);
-                        storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgrounds);
-                        this.isCustomBgSaveMsg = `<span class='success'>Wallpapers saved successfully.</span>`;
-                    }
-                }else{
-                    this.isCustomBgSaveMsg = `<span class='error'>Wallpapers not saved</span>`;
-                }
-                setTimeout(()=>{
-                    this.isCustomBgSaveMsg = ''
-                }, 2000);
-            },
-            onChange(changeType) {
-                try {
-                    let value;
-                    if (changeType === 'backgroundInterval') {
-                        value = this.settings.background && this.settings.background.changeInterval;
-                    } else if (changeType === 'changeTab') {
-                        value = this.activeTab;
-                    } else if (changeType === 'backgroundType') {
-                        value = this.settings.background && this.settings.background.type;
-                    } else if (changeType === 'weatherLocationType') {
-                        value = this.settings.weather.location && this.settings.weather.location.type;
-                    }
-                    this.$ga.event('customize', changeType, value);
-                } catch (e) {
-
-                }
+          isActiveTheme: function(index) {
+            return this.settings.background.themeId === (index + 1);
+          },
+          selectActive(index) {
+            this.settings.background.themeId = (index + 1);
+            this.$ga.event('customize', 'wallpaperCategoryChanged', this.themes[index].lValue)
+          },
+          closeCustomizeMenu() {
+            storage.remove(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
+            this.$emit('closeCustomizeMenu');
+          },
+          updateCustomLocation() {
+            if (this.customLocation !== this.settings.weather.location.name) {
+              this.settings.weather.location.name = this.customLocation;
             }
-        },
-        props:['settings'],
-        computed: {
+          },
+          saveCustomBg() {
+            let validateImgUrls = (backgrounds) => {
+              for (let i = 0; i < backgrounds.length; i++) {
+                if (backgrounds[i].match(/^(http?|https):\/\/.*(jpeg|png|gif|bmp|jpg)/g) === null) {
+                  this.isCustomBgSaveMsg = `<span class='error'>Wallpapers links are not in correct format.</span>`;
+                  return false;
+                }
+              }
+              return true;
+            };
 
-        }
+            let cleanUrls = (backgrounds) => {
+              return backgrounds.reduce((filtered, background) => {
+                if (typeof background === 'string' && background.length > 5) {
+                  filtered.push(background.trim());
+                }
+                return filtered;
+              }, []);
+            };
+
+            if (this.currentBgCustom) {
+              let backgrounds = this.currentBgCustom.split('\n');
+              if (backgrounds && backgrounds.length && validateImgUrls(backgrounds)) {
+                backgrounds = cleanUrls(backgrounds);
+                storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgrounds);
+                this.isCustomBgSaveMsg = `<span class='success'>Wallpapers saved successfully.</span>`;
+              }
+            } else {
+              this.isCustomBgSaveMsg = `<span class='error'>Wallpapers not saved</span>`;
+            }
+            setTimeout(() => {
+              this.isCustomBgSaveMsg = ''
+            }, 2000);
+          },
+          onChange(changeType) {
+            try {
+              let value;
+              if (changeType === 'backgroundInterval') {
+                value = this.settings.background && this.settings.background.changeInterval;
+              } else if (changeType === 'changeTab') {
+                value = this.activeTab;
+              } else if (changeType === 'backgroundType') {
+                value = this.settings.background && this.settings.background.type;
+              } else if (changeType === 'weatherLocationType') {
+                value = this.settings.weather.location && this.settings.weather.location.type;
+              }
+              this.$ga.event('customize', changeType, value);
+            } catch (e) {
+
+            }
+          },
+          calendarAuthSuccess(){
+            this.$ga.event('customize', 'g_integration', 'success')
+            storage.set(constants.STORAGE.G_CAL_AUTH, this.calendar.authCode)
+            this.calendar.isAuthSaved = true
+            this.calendar.saveMsg = `<span class="success">Authentication done successfully.</span>`
+          },
+          calendarAuthFailed(message) {
+            this.$ga.event('customize', 'g_integration', 'failed', message)
+            storage.remove(constants.STORAGE.G_CAL_AUTH)
+            this.calendar.isAuthSaved = false
+            this.calendar.saveMsg =
+              `<span class="error">${message ?
+                message :
+                'Authentication code not copied properly. Try again or contact support.'}</span>`
+          },
+          calendarAuth() {
+            // case of remove
+            if (this.calendar.isAuthSaved) {
+              // resetting form data and removing auth code from storage
+              this.calendar.authCode = '';
+              storage.remove(constants.STORAGE.G_CAL_AUTH);
+              this.calendar.saveMsg = `<span class="success">Integration removed successfully</span>`
+              // closing calendar forcefully
+              EventBus.$emit('calendar', {message: 'close', force: 'true'});
+
+              // resetting calendar settings
+              if (this.settings.clock && this.settings.clock.calendar) {
+                this.settings.clock.calendar = DefaultConfig.clock.calendar;
+              }
+
+              this.calendar.isAuthSaved = false;
+
+              return;
+            }
+            // case of save
+            try {
+              let code = DecryptAuth(this.calendar.authCode);
+              if (code.access_token && code.refresh_token) {
+                // check for permissions
+                chrome.permissions.contains({origins: [G_CAL.URL.ORIGIN]}, result => {
+                  // returns a boolean when permission is there
+                  if (result) {
+                    this.calendarAuthSuccess();
+                  } else {
+                    chrome.permissions.request({origins: [G_CAL.URL.ORIGIN]}, granted => {
+                      // The callback argument will be true if the user granted the permissions.
+                      if (granted) {
+                        this.calendarAuthSuccess()
+                      } else {
+                        this.calendarAuthFailed('Integration process aborted.');
+                      }
+                    });
+                  }
+                });
+              } else {
+                this.calendarAuthFailed();
+              }
+            } catch (e) {
+              storage.remove(constants.STORAGE.G_CAL_AUTH)
+              this.calendar.saveMsg =
+                `<span class="error">Authentication code not copied properly. Try again or contact support.</span>`
+            }
+          },
+          openIntegration() {
+            let url
+            url = constants.URL.G_CAL_KB_INTEGRATION
+            chrome.tabs.create({url: url, active: true})
+          }
+        },
+        props:['settings']
     }
 </script>
