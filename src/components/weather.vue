@@ -79,7 +79,7 @@
                 if (!unit || !temp) {
                     return
                 }
-                return unit === "f" ? Math.round((5.0 / 9.0) * (temp - 32.0)) : temp
+                return unit === "f" ? Math.round((9.0 / 5.0) * temp + 32.0) : temp
             },
             getWeatherClass(code) {
                 if (!code) {
