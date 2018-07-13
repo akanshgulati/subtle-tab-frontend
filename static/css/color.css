@@ -1,0 +1,22 @@
+.text-green {
+    color: #7AB800;
+}
+
+.text-black {
+    color: #666;
+}
+
+.bg-green {
+    background-color: #7AB800;
+}
+
+.bg-light-grey {
+    background-color: #ebebeb;
+}
+
+.border-green {
+    border-color: #7AB800;
+}
+.bg-white {
+    background-color: #fff;
+}

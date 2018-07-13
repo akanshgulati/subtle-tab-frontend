@@ -3,12 +3,14 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        build: ['./src/main.js'],
-        subtle: ['./src/subtle.js']
+        'chrome/build': ['./src/main.js'],
+        'chrome/subtle': ['./src/subtle.js'],
+        'firefox/build': ['./src/main.js'],
+        'firefox/subtle': ['./src/subtle.js']
     },
     output: {
-        path: path.resolve(__dirname, './build'),
-        publicPath: '/build/',
+        path: path.resolve(__dirname),
+        publicPath: '/',
         filename: '[name].js'
     },
     module: {
@@ -23,29 +25,41 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg|ttf|eot|woff)$/,
                 loader: 'file-loader',
                 query: {
                     name: '[name].[ext]?[hash]'
                 }
+            },
+            {
+                test: /\.css$/,
+                loader: 'css-loader'
             }
         ]
-    }
-};
-
-if (process.env.NODE_ENV === 'production') {
-    module.exports.plugins = [
+    },
+    node: false,
+    plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             }
         })
     ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+    module.exports.plugins.push(
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            },
+            sourceMap: false,
+            output: {
+                comments: false,
+            },
+            exclude: [/\.min\.js$/gi]
+        })
+    )
 } else {
     module.exports.devtool = '#source-map'
 }

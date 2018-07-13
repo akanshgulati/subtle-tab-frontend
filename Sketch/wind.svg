@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="12px" viewBox="0 0 14 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>wind</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="wind" transform="translate(0.000000, 1.000000)" stroke="#333333">
+            <path d="M0.379940476,4.55183649 L10.4860459,4.55183649 C11.74239,4.55183649 12.7608929,3.53047666 12.7608929,2.27591824 C12.7608929,1.01885999 11.7395331,0 10.4849746,0 C9.22791635,0 8.20905639,1.01814576 8.20905639,2.27591824 M0.710989624,6.98476989 L6.45267548,6.98476989 C7.16645515,6.98476989 7.74510769,7.56504562 7.74510769,8.2778108 C7.74510769,8.99199626 7.16483201,9.57085171 6.45206683,9.57085171 C5.73788135,9.57085171 5.15902593,8.99240204 5.15902593,8.2778108" id="cloud-wind"></path>
+        </g>
+    </g>
+</svg>

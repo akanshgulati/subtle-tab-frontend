@@ -1,15 +1,16 @@
 <template>
-    <div id="notes" v-on:click.stop="" class="notes-arrow_box">
+    <div id="notes" class="notes-arrow_box">
         <div v-if="!notesMeta.count" class="col s12 note full-height relative no-padding flex flex-justify-center flex-flow-column flex-center">
             <div>
                 <img src="images/note_landing_page_icon.png">
             </div>
-            <h5 class="italics create_note pointer" v-on:click="createFirstNote">Create first note</h5>
+            <h5 class="btn btn-flat mt-15" v-on:click="createFirstNote">Create first note</h5>
         </div>
         <div v-if="notesMeta.count" class="full-height">
             <div class="note full-height no-padding relative flex-flow-column flex">
                 <header class="flex widget-header flex-center">
-                    <svg class="pointer flex-no-shrink" v-on:click="toggleNoteList" width="1.3rem" height="1rem" viewBox="0 0 23 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <svg class="pointer" v-on:click="toggleNoteList" width="1.3em" height="1em" viewBox="0 0 23 21" version="1.1">
+                        <defs></defs>
                         <g  stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
                                 <path d="M0.132183908,0 L22.8678161,0" id="XMLID_6_"></path>
@@ -18,10 +19,10 @@
                             </g>
                         </g>
                     </svg>
-                    <h4 class="widget-heading mar-0">Notes (N)</h4>
+                    <h4 class="widget-heading ml-10 mv-0">Notes (N)</h4>
                     <div class="button-section flex">
-                        <div>
-                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3rem" height="1.3rem" viewBox="0 0 49 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <div class="tooltip" rel="Create">
+                            <svg v-if="sortedNoted.length < 10" class="pointer" v-on:click="createNote" width="1.3em" height="1.3em" viewBox="0 0 49 51" version="1.1">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="create_note" transform="translate(0.000000, -4.000000)" fill-rule="nonzero" fill="#7d7d7d">
                                         <polyline id="XMLID_5_" points="12.0936873 10.8107459 12.0936873 21.4530518 1.13730207 21.4530518"></polyline>
@@ -34,18 +35,30 @@
                                 </g>
                             </svg>
                         </div>
-                        <div>
-                            <svg v-on:click="deleteNote" class="pointer" width="1.3rem" height="1.3rem" viewBox="0 0 30 36" version="1.1"
-                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <div class="tooltip" rel="Delete">
+                            <svg v-on:click="deleteNote" class="pointer" width="1.3em" height="1.3em" viewBox="0 0 30 36">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="delete_note" fill-rule="nonzero" fill="#7d7d7d">
                                         <polygon points="9.875 11.175 12.125 11.175 12.125 29.175 9.875 29.175" ></polygon>
                                         <polygon points="17.375 11.175 19.625 11.175 19.625 29.175 17.375 29.175" ></polygon>
                                         <polygon points="0.375 4.425 29.625 4.425 29.625 6.675 0.375 6.675" ></polygon>
-                                        <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"
-                                              ></path>
+                                        <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"></path>
                                         <path d="M21.75,35.925 L8.25,35.925 C6.45,35.925 4.875,34.425 4.725,32.625 L2.625,5.625 L4.875,5.475 L6.975,32.475 C7.05,33.15 7.65,33.675 8.25,33.675 L21.75,33.675 C22.425,33.675 23.025,33.075 23.025,32.475 L25.125,5.475 L27.375,5.625 L25.275,32.625 C25.125,34.5 23.55,35.925 21.75,35.925"></path>
                                     </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="tooltip tooltip-left" :rel="settings.isPinned?'Unpin':'Pin'">
+                            <svg viewBox="0 0 19 19" width="1.3em" height="1.3em" class="pointer" @click="togglePin">
+                                <g transform="translate(1.000000, 0.000000)" stroke="#7d7d7d" fill-rule="nonzero"
+                                   stroke-width="1" fill="none">
+                                    <transition>
+                                        <rect stroke-opacity="0.801007699" stroke-linecap="round"
+                                              transform="translate(10.960155, 10.960155) rotate(45.000000) translate(-10.960155, -10.960155)"
+                                              x="-3" y="9.96015511" width="23" height="1" rx="1" fill="#7d7d7d"
+                                              v-if="settings.isPinned"></rect>
+                                    </transition>
+                                    <path d="M7.00281655,13.1229233 L5.02119635,14.6064885 C2.80029168,16.6351126 1.71102055,17.5657233 1.3663145,17.6821377 C0.717957794,17.9011014 0.313245364,17.422429 0.463782908,16.7897514 L0.554073071,16.6003974 L4.87282785,10.9929336 L1.94236285,8.0624593 C1.80229043,7.92389304 1.69177273,7.7573543 1.61501465,7.57223164 C1.46332845,7.2057818 1.46332845,6.7922182 1.61568559,6.42415545 C1.76866074,6.05821492 2.05960746,5.76687235 2.42515545,5.61468559 C2.60729352,5.53854591 2.80269457,5.5 3,5.5 C5.09770613,5.5 6.54093376,5.16919277 7.9623932,4.4677864 C9.04738884,3.92528859 9.87551287,2.99917711 10.6230457,1.44324406 C10.6996323,1.24318117 10.8110815,1.06381172 10.9632597,0.911642801 C11.5519462,0.328947954 12.4998328,0.33172768 13.0834588,0.918354316 L13.0835662,0.918462371 L17.0786457,4.93654123 C17.6652723,5.52016722 17.668052,6.46805376 17.0852572,7.0568413 C16.9348715,7.20868708 16.755096,7.32085792 16.5919941,7.38093962 C14.9978136,8.14453096 14.0717905,8.97257596 13.5301435,10.0577468 C12.8318981,11.453145 12.5,12.8996296 12.5,15 C12.5,15.1964255 12.4603765,15.3933891 12.3855335,15.570902 C12.2343297,15.9391806 11.9424432,16.2302739 11.5748445,16.3833144 C11.3916194,16.4599085 11.1961257,16.5 11,16.5 C10.8038743,16.5 10.6083806,16.4599085 10.4264925,16.3838711 C10.2399036,16.3065049 10.0731494,16.1962259 9.93844661,16.0585534 L7.00281655,13.1229233 Z"></path>
                                 </g>
                             </svg>
                         </div>
@@ -56,7 +69,7 @@
                     <div class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar && notesMeta.count}">
                         <transition-group name="flip-list" tag="ul" id="note-list" class="note-list flex flex-flow-column flex-center">
                                 <li v-for="(note,index) in sortedNoted" class="flex flex-flow-column pointer" :class="{'active': isActiveNote(note.id)}"
-                                    v-on:click="setCurrentNote(note.id); showSidebar = false;" v-bind:key="note">
+                                    v-on:click="setCurrentNote(note.id); showSidebar = false;" v-bind:key="note.id">
                                     <p class="note-title" v-html="trimContent(note.content)"></p>
                                     <div class="note-data">{{note.createdOn | formatDate}}</div>
                                 </li>
@@ -85,7 +98,8 @@
                 currentNoteContent:'',
                 notesMeta: this.notesMeta,
                 errorMessage: null,
-                showSidebar: false
+                showSidebar: false,
+                isPinned: this.settings.isPinned
             }
         },
         mounted(){
@@ -94,6 +108,7 @@
             document.execCommand("DefaultParagraphSeparator", false, "p");
             this.populateNotes();
             this.addNoteLimit('note');
+            this.$ga.event('notes', 'open')
         },
         computed:{
             sortedNoted: function(){
@@ -180,7 +195,15 @@
                     }
                 }
                 this.errorMessage = null;
-                document.getElementById("note").innerHTML = this.currentNote.content;
+                const note = document.getElementById('note')
+                const parser = new DOMParser()
+                const parsed = parser.parseFromString(`<div>${this.currentNote.content}</div>`, `text/html`)
+                const tag = parsed.getElementsByTagName(`body`)[0]
+                note.innerHTML = ``
+                note.appendChild(tag.firstChild)
+
+                //document.getElementById("note").innerHTML = this.currentNote.content;
+                this.$ga.event('notes', 'change', 'click')
             },
             trimContent(value){
                 let ellipsis = '';
@@ -245,6 +268,7 @@
                     this.currentNote = this.notes[0];
                     this.setCurrentNote(this.currentNote.id);
                 }
+                this.$ga.event('notes', 'delete')
             },
             createNote(e){
                 e.stopPropagation();
@@ -258,16 +282,22 @@
                 this.notesMeta.count++;
                 storage.set('note-' + newNote.id, newNote);
                 setTimeout(() => this.setCurrentNote(newNote.id), 100);
+                this.$ga.event('notes', 'create')
             },
             createFirstNote(e){
                 let self = this;
                 this.createNote(e);
                 this.showSidebar = true;
+                this.$ga.event('notes', 'first')
                 setTimeout(()=>{
                     self.isolateScroll('note');
                 },100);
+            },
+            togglePin() {
+                this.settings.isPinned = !this.settings.isPinned
             }
         },
+        props:['settings'],
         watch:{
           notesMeta: {
               handler: function (newValue){
@@ -285,6 +315,9 @@
                 let now = +new Date();
                 return now - date >= 86400000 ? date.toLocaleDateString() : date.toLocaleTimeString();
             }
+        },
+        beforeDestroy(){
+            this.$ga.event('notes', 'close')
         }
     };
 </script>

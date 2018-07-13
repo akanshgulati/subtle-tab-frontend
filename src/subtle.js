@@ -2,6 +2,7 @@ import storage from './utils/storage';
 import constants from './utils/Constants';
 import config from './utils/config'
 import backgroundData from './utils/backgroundData'
+import CommonUtils from './utils/common'
 
 let tabsCount = 0;
 let prevTabsCount = 0;
@@ -75,7 +76,7 @@ let loadCurrentBackground = (url, callback) => {
     let defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
-    }, 2500);
+    }, 2000);
 };
 let loadCurrentCustomBackground = (url, callback) => {
     let defaultImageLoaded = false;
@@ -99,7 +100,6 @@ let loadCurrentCustomBackground = (url, callback) => {
 };
 let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
-        let xmlhttp = new XMLHttpRequest();
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
             let themePage = currentPage[theme.value] || 0;
 
@@ -109,32 +109,26 @@ let getBackground = (theme, changePage) => {
 
         let url = 'https://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
-        xmlhttp.open('GET', url);
-        xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                let response = JSON.parse(xmlhttp.responseText);
-                //responses will be other than seen, having good views and sizes
-                bgData = filterResponses(response);
-                //If all pages are empty;
-                if (themePage === response.pages) {
-                    themePage = 0;
-                }
 
-                if (changePage) {
-                    storage.set(constants.STORAGE['BACKGROUND_SEEN_' + theme.value.toUpperCase()], '');
-                }
-                currentPage[theme.value] = themePage;
-                storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
-
-                updateThemeStorage(bgData, theme);
-                resolve();
+        CommonUtils.http(url).then((response)=>{
+            //responses will be other than seen, having good views and sizes
+            bgData = filterResponses(response);
+            //If all pages are empty;
+            if (themePage === response.pages) {
+                themePage = 0;
             }
-        };
-        xmlhttp.onerror = () => {
-            reject(xmlhttp.status);
-        };
-        xmlhttp.send();
+
+            if (changePage) {
+                storage.set(constants.STORAGE['BACKGROUND_SEEN_' + theme.value.toUpperCase()], '');
+            }
+            currentPage[theme.value] = themePage;
+            storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
+
+            updateThemeStorage(bgData, theme);
+            resolve();
+        }, (error)=>{
+            reject(error);
+        })
     });
 };
 
@@ -214,9 +208,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 function getWeather(data) {
-    let xmlhttp = new XMLHttpRequest();
 
-    let url = 'https://api.subtletab.com/weather/new';
+    let url = 'https://api.subtletab.com/weather';
 
     if(data.type !== 'custom'){
         url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
@@ -224,22 +217,14 @@ function getWeather(data) {
         url += '?location=' + data.location + '&type=custom';
     }
 
-    xmlhttp.open('GET', url);
-    xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id));
-    xmlhttp.onreadystatechange = () => {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            let weather = JSON.parse(xmlhttp.responseText);
-            let now = +new Date();
-            let localWeather = [now, weather.temp, weather.alt.temp, weather.code, weather.city];
-            storage.set('weather', localWeather);
-        }
-    };
-    xmlhttp.send();
+    CommonUtils.http(url).then((weather) => {
+        storage.set(constants.STORAGE.WEATHER, weather)
+    });
 }
 
 function loadWeather(settings) {
     let options = {};
-    if (settings.weather.type !== 'custom') {
+    if (settings.weather.location.type !== 'custom') {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 options = {
@@ -254,7 +239,7 @@ function loadWeather(settings) {
         );
     } else {
         options = {
-            location: settings.weather.location,
+            location: settings.weather.location.name,
             type: 'custom'
         };
         getWeather(options);
@@ -274,7 +259,7 @@ function startWeather() {
                 } else {
                     stopWeather();
                 }
-            }, 300000)
+            }, 900000)
         }
     } else {
         stopWeather();
@@ -287,29 +272,50 @@ function stopWeather() {
 
 function updateLocalStorage(){
     let sharedData;
+    let miscSettings;
     // Show onboarding with latest features
+
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
     // Add feature of custom location in weather
-    if(sharedData && typeof sharedData === 'object'){
-        if(sharedData.weather && !sharedData.weather.location){
+    if(sharedData && CommonUtils.isObject(sharedData)){
+        if (sharedData.weather && CommonUtils.isUndefined(sharedData.weather.location)) {
+            let storedWeather = storage.get(constants.STORAGE.WEATHER);
+            // defining object of weather
             sharedData.weather.location = config.defaultCustomization.weather.location;
-            sharedData.weather.location.name = storage.get(constants.STORAGE.WEATHER)[4] || '';
+
+            if (CommonUtils.isObject(storedWeather) && !sharedData.weather.location.name) {
+                sharedData.weather.location.name = storedWeather[4] || storedWeather.city || '';
+            }
         }
-        if(sharedData.showUtilities && !sharedData.showUtilities.showNotes){
-            sharedData.showUtilities.showNotes = true;
+
+        if (sharedData.background) {
+            if (CommonUtils.isUndefined(sharedData.background.type)) {
+                sharedData.background.type = 'predefined'
+                storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
+            }
         }
-        if(sharedData.background && !sharedData.background.type){
-            sharedData.background.type = 'predefined';
-            storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds);
+        if (CommonUtils.isUndefined(sharedData.notes)) {
+            sharedData.notes = config.defaultCustomization.notes
         }
+      if (sharedData.clock && CommonUtils.isUndefined(sharedData.clock.calendar)) {
+        sharedData.clock.calendar = config.defaultCustomization.clock.calendar
+      }
+
+    }
+
+    if (miscSettings && CommonUtils.isObject(miscSettings)) {
+        miscSettings.update.isToBeFetched = true;
     }
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
+    storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
+
 function init() {
 
-    chrome.runtime.setUninstallURL('https://goo.gl/forms/hMD1i4sXIUVwkKtD2');
+    chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
 
     chrome.storage.sync.get(null, (data) => {
         for (let key in data) {

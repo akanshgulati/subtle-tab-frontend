@@ -7,9 +7,9 @@
                 </div>
                 <div class="col s6 flex flex-flow-column flex-justify-center">
                     <h1>Hi, Thank you for <br> choosing
-                        <span class="italics semi-bold relative">Subtle<span class="version">v{{version}}</span></span>
+                        <span class="italics semi-bold relative">Subtle tab<span class="version">v{{version}}</span></span>
                     </h1>
-                    <div class="onboarding-btn" v-on:click="closeOnboarding">Let's Start</div>
+                    <div class="onboarding-btn semi-bold" v-on:click="closeOnboarding">Explore Now</div>
                 </div>
             </div>
             <div class="row change-row">
@@ -26,8 +26,8 @@
                     <div class="change-description">Sticky notes to <br/> keep important content.  </div>
                 </div>
                 <div class="col s3 center">
-                    <div class="change-heading">Remain Synced</div>
-                    <div class="change-description">Keep your settings <br> and notes synced </div>
+                    <div class="change-heading">Google Calendar Integration</div>
+                    <div class="change-description">Access calendar events <br> easily on new tab</div>
                 </div>
             </div>
         </div>

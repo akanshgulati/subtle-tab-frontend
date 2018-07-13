@@ -1,7 +1,12 @@
 <template>
-    <div id="clock">
+    <div class="flex flex-center">
+        <transition>
+            <div v-if="settings.showDay" class="date flex flex-flow-column mr-10">
+                <span class="semi-bold">{{day}}</span>
+                <span class="semi-bold">{{date}} {{month}}</span>
+            </div>
+        </transition>
         <div class="time">{{hrs}}:{{min}}</div>
-        <div class="date" v-bind:class="{'fade_in' : settings.showDay}">{{day}}, {{month}} {{date}} </div>
     </div>
 </template>
 
@@ -29,20 +34,20 @@
             updateDateTime () {
                 let current = new Date();
                 this.hrs = current.getHours();
-                if(this.settings.showTwelveHour){
+                if(this.settings.type === 'twelve'){
                     this.hrs = (this.hrs !== 0 && this.hrs !== 12) ? this.hrs % 12 : 12;
                 }
                 this.min = this.getZeroPad(current.getMinutes());
-                this.day = dayArr[current.getDay()];
+                this.day = dayArr[current.getDay()]
                 this.date = current.getDate();
-                this.month = monthArr[current.getMonth()];
+                this.month = monthArr[current.getMonth()]
             },
             getZeroPad (n) {
                 return (parseInt(n, 10) >= 10 ? '' : '0') + n
             },
             concatAMPM () {
-                if(this.settings.showTwelveHour) {
-                    return this.hours >= 12 ? 'PM' : 'AM'
+                if(this.settings.type === 'twelve') {
+                    return this.hrs >= 12 ? 'PM' : 'AM'
                 }
             }
         }

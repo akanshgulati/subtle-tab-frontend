@@ -109,7 +109,7 @@
                     </li>
                 </transition-group>
                 <div v-if="!todos.length" id="no-todo" class="flex flex-flow-column flex-justify-center flex-center">
-                    <img src="/images/no-to-do.png" alt="No Todo" width="134px">
+                    <img src="images/todo-no-item.png" alt="No Todo" width="134px">
                     <em>No tasks to do in {{currentList.title}} list! <br>Create your first to-do</em>
                 </div>
 
@@ -153,8 +153,8 @@
             }
         },
         mounted() {
-            this.$parent.isolateScroll('todos-list');
-            this.$parent.isolateScroll('todo-sidebar');
+            this.isolateScroll('todos-list');
+            this.isolateScroll('todo-sidebar');
             this.getCurrentList();
             this.populateTodos();
         },
@@ -311,6 +311,19 @@
             updateTodo(){
                 storage.set(constants.STORAGE.TODO + this.currentTodo.id, this.currentTodo);
                 this.showTodoManager = false;
+            },
+            isolateScroll(elementId){
+              let el = document.getElementById(elementId);
+              if(!el){
+                return;
+              }
+              el.onmousewheel = function (e) {
+                el.scrollTop -= e.wheelDeltaY;
+                e = e || window.event;
+                if (e.preventDefault)
+                  e.preventDefault();
+                e.returnValue = false;
+              }
             }
         },
         watch: {
@@ -332,3 +345,9 @@
         }
     };
 </script>
+
+<style scoped>
+  #todo {
+    background: rgba(255, 255, 255, 0.85)
+  }
+</style>
