@@ -182,7 +182,9 @@
                         <div>
                             <h4 class="font-medium text-black semi-bold">Integration: Google Calendar</h4>
                             <small class="ph-10" v-if="!calendar.isAuthSaved">
-                              <strong>Authenticate Subtle tab to access your calendar data, <a class="semi-bold" @click.stop="openIntegration">click here</a> to start.</strong>
+                              <strong>Authenticate Subtle tab to access your calendar data, <a class="semi-bold"
+                                                                                               @click.stop="openIntegration('calendar')">click
+                                here</a> to start.</strong>
                             </small>
                             <div class="ph-10 flex" v-on:keydown.stop="">
                                 <input
@@ -281,24 +283,44 @@
                     </section>
                     <section v-if="activeTab === 'todo'">
                         <div>
-                            <h4>Settings</h4>
+                          <h4 class="font-medium text-black semi-bold">Settings</h4>
                             <ul class="inline-list">
                                 <li class="inline-list-item">
                                     <span class="sub-heading">Type</span>
                                     <div class="right">
-                                        <input type="radio" v-model="todosType" @change="todoTypeChange" id="defaultTodo"
+                                        <input type="radio" v-model="todos.type" @change="todoTypeChange" id="defaultTodo"
                                                class="filled-in" value="default"/>
                                         <label for="defaultTodo" class="inline-radio">Default</label>
-                                        <input type="radio" v-model="todosType" @change="todoTypeChange" id="wTodos"
+                                        <input type="radio" v-model="todos.type" @change="todoTypeChange" id="wTodos"
                                                class="filled-in" value="w"/>
                                         <label for="wTodos" class="inline-radio">Wunderlist</label>
                                     </div>
                                 </li>
                             </ul>
                         </div>
-                        <div v-if="isAuthCodeVisible || settings.todos.type == 'w'"
+                        <div v-if="todos.isAuthCodeBoxVisible || settings.todos.type == 'w'"
                              :class="{'fade_in': settings.todos.type === 'w'}">
-                            <h4>Setup Wunderlist</h4>
+                          <h4 class="font-medium text-black semi-bold">Integrate Wunderlist</h4>
+                          <small class="ph-10" v-if="!calendar.isAuthSaved">
+                            <strong>Integrate Wunderlist in Subtle tab,
+                              <a class="semi-bold" @click.stop="openIntegration('wunderlist')">click here</a> to start.
+                            </strong>
+                          </small>
+                          <div class="ph-10 flex" v-on:keydown.stop="">
+                            <input
+                              type="text"
+                              :readonly='todos.isAuthSaved'
+                              v-model="todos.authCode"
+                              class="mar-0 font-xsmall"
+                              placeholder="Paste authentication code obtained from above link here">
+                            <button
+                              class="save-button font-xsmall btn semi-bold"
+                              :disabled="!todos.authCode"
+                              @click="calendarAuth">
+                              {{todos.isAuthSaved ? 'Revoke' : 'Save'}}
+                            </button>
+                          </div>
+                          <div class="ph-10 font-xsmall" v-html="calendar.saveMsg"/>
                             <a href="https://www.subtletab.com/verify/wunderlist.php" target="_blank">
                                 Click here to setup
                             </a>
@@ -382,7 +404,9 @@
     import { DecryptAuth } from '../utils/common'
     import { DefaultConfig } from '../utils/config'
     import {EventBus} from '../utils/EventBus'
-    import {G_CAL} from '../utils/Constants'
+    import {G_CAL, WUNDERLIST} from '../utils/Constants'
+    import {getOriginPermission, removeOriginPermission} from '../utils/permissionUtils'
+    import {TodosType} from '../constants/Todos'
 
     export default{
         components: {
@@ -402,7 +426,13 @@
                 isAuthSaved: !!storage.get(constants.STORAGE.G_CAL_AUTH),
                 saveMsg: ''
               },
-              todosType: this.settings.todos.type,
+              todos: {
+                authCode: storage.get(constants.STORAGE.W_AUTH) || '',
+                isAuthSaved: !!storage.get(constants.STORAGE.W_AUTH),
+                saveMsg: '',
+                type: this.settings.todos.type,
+                isAuthCodeBoxVisible: false
+              },
               authCode: storage.get('w-auth-code'),
               saveMessage: '',
               isAuthCodeVisible : false
@@ -552,47 +582,48 @@
                 `<span class="error">Authentication code not copied properly. Try again or contact support.</span>`
             }
           },
-          openIntegration() {
+          openIntegration(type) {
             let url
-            url = constants.URL.G_CAL_KB_INTEGRATION
+            switch (type) {
+              case 'calendar':
+                url = constants.URL.G_CAL_KB_INTEGRATION
+              case 'wunderlist':
+                url = constants.URL.WUNDERLIST_KB_INTEGRATION
+            }
             chrome.tabs.create({url: url, active: true})
           },
           todoTypeChange() {
-            if (this.todosType === 'w') {
-              this.getPermission();
+            if (this.todos.type === TodosType.WUNDERLIST) {
+              // this.getWunderlistPermission()
+              this.todos.isAuthCodeBoxVisible = true
             } else {
-              storage.remove('w-auth-code');
-              this.settings.todos.type = this.todosType = 'default';
-              chrome.permissions.remove({origins: ['http://*.wunderlist.com/*']}, (removed) => {
-                if (removed) {
-                  console.log('removed');
-
-                }
-              });
+              // storage.remove(constants.STORAGE.W_AUTH)
+              this.settings.todos.type = this.todos.type = TodosType.DEFAULT
+              //removeOriginPermission(WUNDERLIST.URL.ORIGIN)
             }
           },
-          getPermission() {
-            let self = this;
-            chrome.permissions.request({origins: ['http://*.wunderlist.com/*']}, (granted) => {
-              // The callback argument will be true if the user granted the permissions.
+          getWunderlistPermission() {
+            getOriginPermission(WUNDERLIST.URL.ORIGIN).then(granted => {
               if (granted) {
-                console.log('granted');
-                this.isAuthCodeVisible = true;
-                //self.settings.todos.type = self.todosType = 'w'
+               // this.todos.isAuthCodeBoxVisible = true
+                this.settings.todos.type = this.todos.type = TodosType.WUNDERLIST
               } else {
-                console.log('notgranted' + chrome.runtime.lastError.message);
-                self.settings.todos.type = 'default';
+                console.log('not-granted ' + chrome.runtime.lastError.message)
+                this.settings.todos.type = TodosType.DEFAULT
               }
-            });
+            })
+          },
+          integrateWunderlist() {
+
           },
           saveAuthCode(type) {
-            if (type === 'w' && this.authCode && this.authCode.length === 60) {
-              storage.set('w-auth-code', this.authCode);
-              this.settings.todos.type = 'w';
-              this.saveMessage = `<span class='success'>Wunderlist Integrated</span>`;
+            if (type === TodosType.WUNDERLIST && this.todos.authCode && this.todos.authCode.length === 60) {
+              storage.set(constants.STORAGE.W_AUTH, this.todos.authCode);
+              this.settings.todos.type = TodosType.WUNDERLIST;
+              this.todos.saveMessage = `<span class='success'>Wunderlist Integrated</span>`;
             } else {
-              this.settings.todos.type = 'default';
-              this.saveMessage = `<span class='error'>Invalid auth code</span>`;
+              this.settings.todos.type = TodosType.DEFAULT;
+              this.todos.saveMsg = `<span class='error'>Invalid auth code</span>`;
             }
           },
         },

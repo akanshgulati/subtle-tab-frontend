@@ -1197,20 +1197,20 @@ ul.dropdown li:last-of-type{
 }
 #todos [type="checkbox"].filled-in:checked + label{
     text-decoration: line-through;
-    color: #ccc;
+    color: #666;
 }
-ul.todos{
+
+div.todos {
     flex: 1;
-    opacity: 0.75;
-    padding:1rem 0.2rem 1rem 1.4rem;
+    padding: 1rem 0.2rem 1rem 1.4rem;
     margin: 0;
     overflow-y: auto;
 }
-ul.todos li{
+div.todos ul li{
     padding: 0.3rem 0;
 }
 
-ul.todos li:hover > .todo-btn {
+div.todos ul li:hover > .todo-btn {
     opacity: 1;
 }
 
@@ -1236,7 +1236,7 @@ ul.todos li:hover > .todo-btn {
 .input-todo{
     background: white;
     box-shadow: -1px 0 16px 0px rgba(165, 165, 165, 0.32);
-    padding: 0 1rem;
+    padding: 0.3rem 1rem;
 }
 .input-todo input{
     margin: 0 !important;
@@ -1266,7 +1266,7 @@ input[type].no-focus:focus {
 }
 
 #todos .flip-list-move {
-    transition: transform 0.6s ease-out;
+    transition: transform 0.5s ease-out;
 }
 
 #todos header svg #todo-settings-btn {
@@ -1313,9 +1313,8 @@ input[type].no-focus:focus {
     background-color: rgba(122, 184, 0, 1);
 }
 #todos {
-    background: rgba(255,255,255,0.97);
+    /*background: rgba(255,255,255,0.97);*/
     box-shadow: 0 1rem 1.2rem rgba(0,0,0,0.2);
-    color: #2b2b2b;
     border-radius: 3px;
 }
 /*

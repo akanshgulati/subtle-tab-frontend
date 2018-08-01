@@ -10,7 +10,16 @@ export const G_CAL = {
     INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/calendar'
   }
 }
-
+export const WUNDERLIST = {
+  URL: {
+    BASE: 'https://a.wunderlist.com/api/v1',
+    LISTS: 'https://a.wunderlist.com/api/v1/lists',
+    TASKS: 'https://a.wunderlist.com/api/v1/tasks',
+    ORIGIN: 'https://*.wunderlist.com/',
+    KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/wunderlist',
+    INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/wunderlist'
+  }
+}
 const constants = {
     THEME: {
         NATURE: 'nature',
@@ -47,7 +56,8 @@ const constants = {
       W_LISTS: 'w-lists',
       W_TODOS: 'w-todos',
       W_TODO: 'w-todos-',
-      W_TODOS_META: 'w-todos_meta'
+      W_TODOS_META: 'w-todos_meta',
+      W_AUTH: 'w-auth'
     },
     SYNC: [
         'shared-data', 'bg-seen-nature', 'bg-seen-night', 'bg-seen-travel', 'bg-seen-building', 'current-page', 'nature', 'travel', 'building', 'night',
@@ -56,7 +66,9 @@ const constants = {
     URL : {
         WHATS_NEW : BASE_API + 'whatsnew',
       G_CAL_KB_INTEGRATION: G_CAL.URL.KB_INTEGRATION_SUBTLE,
-      G_CAL_INTEGRATION: G_CAL.URL.INTEGRATION_SUBTLE
+      G_CAL_INTEGRATION: G_CAL.URL.INTEGRATION_SUBTLE,
+      WUNDERLIST_KB_INTEGRATION: WUNDERLIST.URL.KB_INTEGRATION_SUBTLE,
+      WUNDERLIST_INTEGRATION: WUNDERLIST.URL.INTEGRATION_SUBTLE
     }
 };
 

@@ -90,3 +90,17 @@ export const DecryptAuth = (code) => {
     }
     return JSON.parse(window.atob(code))
 }
+
+export const isolateScroll = (elementId) => {
+  let el = document.getElementById(elementId)
+  if (!el) {
+    return
+  }
+  el.onmousewheel = function(e) {
+    el.scrollTop -= e.wheelDeltaY
+    e = e || window.event
+    if (e.preventDefault)
+      e.preventDefault()
+    e.returnValue = false
+  }
+}
