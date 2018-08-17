@@ -31,8 +31,8 @@ let CommonUtils = {
                     xmlhttp.setRequestHeader(option.headers[i].name, option.headers[i].value)
                 }
             }
-            if(option.method === 'POST'){
-                xmlhttp.setRequestHeader("Content-type", "application/json");
+            if (option.method === 'POST') {
+                xmlhttp.setRequestHeader('Content-type', 'application/json')
             }
 
             xmlhttp.onreadystatechange = () => {
@@ -76,7 +76,7 @@ export const getString = (s) => {
 export default CommonUtils
 
 export const generateId = () => {
-    return 'xxxxxxxx-xxxx-Sxxx-Uxxx-xxxxxxxxxxxx\n'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxxx-xxxx-Sxxx-Uxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
@@ -85,10 +85,15 @@ export const generateId = () => {
 export const Http = CommonUtils.Http;
 
 export const DecryptAuth = (code) => {
+    // TODO:: Send an event for decrypt failed along with code
     if (!code) {
         return false
     }
-    return JSON.parse(window.atob(code))
+    try {
+        return JSON.parse(window.atob(code))
+    } catch (e) {
+        return false
+    }
 }
 
 export const isolateScroll = (elementId) => {

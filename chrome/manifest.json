@@ -24,7 +24,7 @@
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png"
   },
-  "optional_permissions": ["https://www.googleapis.com/", "https://*.wunderlist.com/"],
+  "optional_permissions": ["https://www.googleapis.com/", "https://*.wunderlist.com/", "https://*.todoist.com/"],
   "offline_enabled": true,
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "manifest_version": 2

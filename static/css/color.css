@@ -3,9 +3,28 @@
 }
 
 .text-black {
-    color: #666;
+    color: #333;
 }
 
+.text-blue {
+    color: #2196F3;
+}
+
+.bg-blue {
+    background-color: #2196F3;
+}
+.svg-blue-fill {
+    fill: #2196F3
+}
+.text-light-grey {
+    color: #999;
+}
+.bg-light-grey {
+    background-color: #999;
+}
+.svg-fill-light-grey {
+    fill: #999;
+}
 .bg-green {
     background-color: #7AB800;
 }
@@ -17,6 +36,7 @@
 .border-green {
     border-color: #7AB800;
 }
+
 .bg-white {
     background-color: #fff;
 }

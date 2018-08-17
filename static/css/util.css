@@ -4,6 +4,9 @@
 .absolute{
     position: absolute;
 }
+.block {
+    display: block;
+}
 .mar-0 {
     margin: 0 !important;
 }
@@ -73,8 +76,12 @@
     margin-left: 0.72rem;
 }
 
+.ml-5, .mh-5 {
+    margin-left: 0.36rem;
+}
+
 .mr-10, .mh-10 {
-    margin-right: 0.72rem
+    margin-right: 0.72rem;
 }
 
 .mv-10, .mt-10 {

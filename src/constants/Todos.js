@@ -1,4 +1,5 @@
 export const TodosType = {
   WUNDERLIST: 'w',
-  DEFAULT: 'default'
+  DEFAULT: 'default',
+  TODOIST: 't'
 }

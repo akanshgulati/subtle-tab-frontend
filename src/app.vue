@@ -31,8 +31,7 @@
                                     </svg>
                                 </div>
                                 <template :class="{'fade_in': showTodos}" v-if="showTodos">
-                                    <todos v-if="sharedData.todos.type === 'default'"></todos>
-                                    <WTodos v-if="sharedData.todos.type === 'w'"/>
+                                    <TodoWrapper :type="sharedData.todos.type"/>
                                 </template>
                             </div>
 
@@ -114,8 +113,7 @@
     import Customize from './components/customize.vue'
     import Weather from './components/weather.vue'
     import Notes from './components/notes.vue'
-    import Todos from './components/todos.vue'
-    import WTodos from './components/WTodos.vue'
+    import TodoWrapper from './components/TodoWrapper.vue'
     import Onboarding from './components/onboarding.vue'
     import bgData from './utils/backgroundData'
     import { EventBus } from './utils/EventBus.js';
@@ -140,7 +138,7 @@
                 seenOnBoarding: this.seenOnBoarding,
                 miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: false
+                showTodos: true
             }
         },
         mounted() {
@@ -253,12 +251,6 @@
                 return v.toString(16);
               });
             },
-            toTitleCase(text) {
-              if (!text) {
-                return
-              }
-              return text.charAt(0).toUpperCase() + text.slice(1)
-            },
             weatherInfoStateChange (state){
             this.otherSettings.weather.showWeatherInfo = state
           },
@@ -287,8 +279,7 @@
             Weather,
             Onboarding,
             Notes,
-            Todos,
-            WTodos
+            TodoWrapper
         }
     }
 </script>
