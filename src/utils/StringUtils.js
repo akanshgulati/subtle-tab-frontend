@@ -1,6 +1,10 @@
 export const titleCase = (text) => {
-    if (!text) {
-        return
+    try {
+        if (!text) {
+            return
+        }
+        return text.charAt(0).toUpperCase() + text.slice(1)
+    } catch (e) {
+        // TODO :: Add a log here
     }
-    return text.charAt(0).toUpperCase() + text.slice(1)
 }

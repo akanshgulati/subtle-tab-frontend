@@ -35,7 +35,6 @@ export default {
     },
     methods: {
         changed(data) {
-            debugger;
             this.$emit('changed', data)
         }
     }

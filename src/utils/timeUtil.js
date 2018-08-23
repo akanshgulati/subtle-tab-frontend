@@ -15,5 +15,9 @@ export default {
         days = days ? days : 0;
         now = new Date(+now + 86400000 * days);
         return now.toISOString().substring(0,10);
+    },
+    getNextDay(){
+        const now = new Date();
+
     }
 }

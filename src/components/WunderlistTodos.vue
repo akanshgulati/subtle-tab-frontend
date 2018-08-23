@@ -1,7 +1,8 @@
 <template>
     <div id="todos" v-on:click.stop="" class="todos-arrow_box relative flex-flow-column flex text-black">
         <header class="flex widget-header flex-center">
-            <svg class="pointer flex-no-shrink" v-on:click="toggle('showSidebar'); showTodoManager = false;" width="1.3rem"
+            <svg class="pointer flex-no-shrink" v-on:click="toggle('showSidebar'); showTodoManager = false;"
+                 width="1.1rem"
                  height="1rem" viewBox="0 0 23 21" version="1.1">
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                     <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
@@ -12,42 +13,15 @@
                 </g>
             </svg>
             <h4 class="widget-heading ml-10 mv-0">To-do (T) : {{ titleCase(currentList.title)}}</h4>
-            <!--<div class="button-section flex flex-center">
-                <svg v-show="currentListId != 'inbox' && currentListId != 'today'" v-on:click.stop="deleteList" class="pointer" width="1.3rem" height="1.3rem" viewBox="0 0 30 36" version="1.1"
-                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="delete_note" fill-rule="nonzero" fill="#7d7d7d">
-                            <polygon points="9.875 11.175 12.125 11.175 12.125 29.175 9.875 29.175" ></polygon>
-                            <polygon points="17.375 11.175 19.625 11.175 19.625 29.175 17.375 29.175" ></polygon>
-                            <polygon points="0.375 4.425 29.625 4.425 29.625 6.675 0.375 6.675" ></polygon>
-                            <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"
-                            ></path>
-                            <path d="M21.75,35.925 L8.25,35.925 C6.45,35.925 4.875,34.425 4.725,32.625 L2.625,5.625 L4.875,5.475 L6.975,32.475 C7.05,33.15 7.65,33.675 8.25,33.675 L21.75,33.675 C22.425,33.675 23.025,33.075 23.025,32.475 L25.125,5.475 L27.375,5.625 L25.275,32.625 C25.125,34.5 23.55,35.925 21.75,35.925"></path>
-                        </g>
-                    </g>
-                </svg>
-            </div>-->
         </header>
 
-        <section class="flex relative todo-section flex-flow-column">
-            <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }">
-                <div class="sidebar-container">
-                    <transition-group name="flip-list" tag="ul" class="todo-lists pad-0 flex flex-flow-column flex-center">
-                        <li v-for="list in todoLists" v-bind:key="list.id"
-                            class="flex flex-flow-column pointer todo-list"
-                            :class="[currentListId == list.id? 'active':'']"
-                            v-on:click="setActiveList(list); showSidebar = false;">
-                            <a class="todo-list-title" :title="list.title">{{ titleCase(list.title)}}</a>
-                        </li>
-                    </transition-group>
-                    <!--<div class="flex todo-list relative pointer">
-                        <input type="text" placeholder="+ Create new list" class="create-todo-list no-focus" v-model="listTitle"
-                               @keyup.enter="createList">
-                    </div>-->
-                </div>
+        <section class="flex relative todo-section flex-flow-column" @click.stop="showSidebar=false; showTodoManager=false">
+            <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }" @click.stop="">
+                <TodoList :list="todoLists" :current="currentListId" v-on:changed="changedTodoList"
+                          :is-create-enabled="false"/>
             </div>
             <div id="todo-manager-sidebar" class="sidebar-right flex-flow-column flex"
-                 :class="{'show-right-sidebar': showTodoManager }">
+                 :class="{'show-right-sidebar': showTodoManager }" @click.stop="">
                 <div class="sidebar-container">
                     <div>
                         <p class="sidebar-heading">Todo Title</p>
@@ -58,12 +32,14 @@
                         <input type="date" class="input-todo-date no-focus" v-model="currentTodo.dueOn">
                     </div>
                     <div>
-                        <button class="btn" v-on:click="updateTodo">Done</button>
+                        <button class="btn" v-on:click.stop="updateTodo">Done</button>
                     </div>
                 </div>
             </div>
-            <div id="todo" v-on:click.stop="showSidebar = showTodoManager = false;" class="flex flex-flow-column"
-                 :class="{'flex-justify-center': isLoadingTodos}" style="background: rgba(255,255,255,0.9);">
+            <div id="todo"
+                 class="flex flex-flow-column"
+                 :class="{'flex-justify-center': isLoadingTodos, 'disable-pointer': showSidebar || showTodoManager}"
+                 style="background: rgba(255,255,255,0.9);">
                 <!--LOADING STATE-->
                 <div v-if="isLoadingTodos" id="loading-todo"
                      class="flex flex-flow-column flex-justify-center flex-center">
@@ -78,39 +54,9 @@
                         <TodosGroup
                             id="incomplete-todos-list" class="mar-0"
                             :todos="incompleteTodos"
-                            v-on:changed="checkedTodo"
+                            v-on:changed="changedTodo"
                         />
-                       <!-- <transition-group name="list-complete" tag="ul" id="incomplete-todos-list" class="mar-0"
-                                          mode="out-in">
-                            <li v-for="todo in incompleteTodos" class="todo flex list-complete-item" :key="todo.id">
-                                <input type="checkbox" v-model="todo.isCompleted"
-                                       class="browser-default todo&#45;&#45;checkbox filled-in"
-                                       :id="todo.id" @change="checkedTodo(todo)"/>
-                                <label class="todo&#45;&#45;name" :for="todo.id"> {{todo.title}}</label>
-                                <div class="todo-btn">
-                                    &lt;!&ndash;<svg height="25" width="23" class="star-rating" :class="{'starred':todo.starred}" v-on:click="starTodo(todo)">
-                                        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;" fill="#ccc"/>
-                                    </svg>&ndash;&gt;
-                                    <svg height="10" width="10" version="1.1" viewBox="0 0 21.9 21.9"
-                                         enable-background="new 0 0 21.9 21.9"
-                                         v-on:click.stop="deleteTodo(todo)" class="pointer">
-                                        <path
-                                            d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/>
-                                    </svg>
-                                    <svg height="16" width="16" version="1.1" x="0px" y="0px" viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve" v-on:click.stop="editTodo(todo)" class="pointer">
-                                <g fill="#a7a7a7" >
-                                    <path d="M30,16c4.411,0,8-3.589,8-8s-3.589-8-8-8s-8,3.589-8,8S25.589,16,30,16z"/>
-                                    <path d="M30,44c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,44,30,44z"/>
-                                    <path d="M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"/>
-                                </g>
-                            </svg>
-                                </div>
-                            </li>
-                        </transition-group>-->
 
-                        <!--<button @click="showCompletedTodos = !showCompletedTodos" class="btn">Show Completed Todos
-                        </button>&ndash;&gt;-->
-                        <!-- BUTTON TO SHOW COMPLETE TASKS-->
                         <AddTodo
                             class="pv-10"
                             v-on:create="createTodo"
@@ -122,35 +68,9 @@
                             id="complete-todos-list" class="mar-0"
                             :todos="completedTodos"
                             isCompletedList="true"
-                            v-on:changed="checkedTodo"
+                            v-on:changed="changedTodo"
                         />
-                   <!--     <transition-group v-show="showCompletedTodos" name="flip-list" tag="ul" id="complete-todos-list"
-                                          class="mar-0">
-                            <li v-for="todo in completedTodos" class="todo flex" :key="todo.id">
-                                <input type="checkbox" v-model="todo.isCompleted"
-                                       class="browser-default todo&#45;&#45;checkbox filled-in"
-                                       :id="todo.id" @change="checkedTodo(todo)"/>
-                                <label class="todo&#45;&#45;name" :for="todo.id"> {{todo.title}}</label>
-                                <div class="todo-btn">
-                                    &lt;!&ndash;<svg height="25" width="23" class="star-rating" :class="{'starred':todo.starred}" v-on:click="starTodo(todo)">
-                                        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;" fill="#ccc"/>
-                                    </svg>&ndash;&gt;
-                                    <svg height="10" width="10" version="1.1" viewBox="0 0 21.9 21.9"
-                                         enable-background="new 0 0 21.9 21.9"
-                                         v-on:click.stop="deleteTodo(todo)" class="pointer">
-                                        <path
-                                            d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/>
-                                    </svg>
-                                    <svg height="16" width="16" version="1.1" x="0px" y="0px" viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve" v-on:click.stop="editTodo(todo)" class="pointer">
-                                <g fill="#a7a7a7" >
-                                    <path d="M30,16c4.411,0,8-3.589,8-8s-3.589-8-8-8s-8,3.589-8,8S25.589,16,30,16z"/>
-                                    <path d="M30,44c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,44,30,44z"/>
-                                    <path d="M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"/>
-                                </g>
-                            </svg>
-                                </div>
-                            </li>
-                        </transition-group>-->
+
                     </div>
                     <!--SHOWING A NO TASK STATE-->
                     <div v-if="!todos.length" id="no-todo"
@@ -158,13 +78,6 @@
                         <img src="images/todo-no-item.png" alt="No Todo" width="134px">
                         <em>No tasks to do in {{currentList.title}} list! <br>Create your first to-do</em>
                     </div>
-                    <!--CREATE TASK STATE-->
-                   <!-- <div class="input-todo flex">
-                        <input type="text" placeholder="+ Create a new to-do" class="input-todo-title no-focus"
-                               v-model="newTodo.title"
-                               @keyup.enter="createTodo">
-                        &lt;!&ndash;<input type="date" value="" class="input-todo-date no-focus" v-model="newTodo.dueOn">&ndash;&gt;
-                    </div>-->
                 </template>
             </div>
         </section>
@@ -178,9 +91,11 @@
     import {isolateScroll} from '../utils/common'
     import {titleCase} from '../utils/StringUtils'
     import {DecryptAuth} from '../utils/common'
+    import {TodoItemAction, TodoListItemAction} from '../constants/Todos'
 
     import AddTodo from '../shared/AddTodo.vue'
     import TodosGroup from '../shared/TodosGroup.vue'
+    import TodoList from '../shared/TodoList.vue'
 
     let syncWunderlist
     export default {
@@ -194,8 +109,7 @@
                 currentTodo: '',
                 showSidebar: false,
                 showTodoManager: false,
-                newTodo: {},
-                currentList: '',
+                currentList: Get(STORAGE.W_CURRENT_TODO_LIST) || {},
                 isLoadingTodos: true,
                 wunderlistTaskUrl: WUNDERLIST.URL.TASKS,
                 syncTime: '',
@@ -213,7 +127,6 @@
             isolateScroll('incomplete-todos-list')
             isolateScroll('complete-todos-list')
             isolateScroll('todo-sidebar')
-            this.currentList = Get(STORAGE.W_CURRENT_TODO_LIST) || {}
             this.init()
 
             syncWunderlist = setInterval(this.sync, 5000)
@@ -236,6 +149,30 @@
             }
         },
         methods: {
+            changedTodoList(info) {
+                if (!info) {
+                    return
+                }
+                if (info.action === TodoListItemAction.SELECT) {
+                    this.setActiveList(info.list)
+                }
+            },
+            changedTodo(data) {
+                if (!data || !data.action) {
+                    return
+                }
+                switch (data.action) {
+                    case TodoItemAction.EDIT:
+                        this.editTodo(data.todo)
+                        return
+                    case TodoItemAction.DELETE:
+                        this.deleteTodo(data.todo)
+                        return
+                    case TodoItemAction.COMPLETE:
+                        this.checkedTodo(data)
+                        return
+                }
+            },
             toggleCompletedTodos(state) {
                 this.showCompletedTodos = state
             },
@@ -417,27 +354,29 @@
                     updatedOn: todo.completed_at ? +new Date(todo.completed_at) : +new Date(todo.created_at)
                 }
             },
-            createTodo() {
-                if (!this.newTodo.title) {
+            createTodo(data) {
+                if (!data || !data.title) {
                     return
                 }
-
-                let newTodo = this.newTodo
-                this.newTodo = {}
-                let todo = {
-                    title: newTodo.title,
-                    list_id: this.currentListId,
-                    due_date: newTodo.dueOn
+                const todo = {
+                    title: data.title,
+                    list_id: this.currentListId
                 }
                 this.http(this.wunderlistTaskUrl, 'POST', todo).then((_todo) => {
                     this.incompleteTodos.push(this.formatTodoResponse(_todo))
                     // this.todos.unshift(this.formatTodoResponse(_todo))
                 })
             },
-            checkedTodo(todo) {
-                // todo.updatedOn = todo.completed ? +new Date() : +new Date(todo.created_at)
+            checkedTodo(data) {
+                if (!data || !data.todo || !data.value) {
+                    return
+                }
+
+                const todo = data.todo;
+                todo.isCompleted = data.value;
+
                 this.patchTodo(todo.id, {completed: todo.isCompleted, revision: todo.revision}).then((_todo) => {
-                    let updatedTodo = this.formatTodoResponse(_todo)
+                    const updatedTodo = this.formatTodoResponse(_todo)
                     Object.assign(todo, updatedTodo)
                     if (todo.isCompleted) {
                         this.incompleteTodos.splice(this.incompleteTodos.indexOf(todo), 1)
@@ -446,11 +385,11 @@
                         this.completedTodos.splice(this.completedTodos.indexOf(todo), 1)
                         this.incompleteTodos.push(todo)
                     }
-                    // this.$set(this.todos, this.todos.indexOf(todo), this.formatTodoResponse(_todo))
                 })
             },
             setActiveList(list) {
                 this.isLoadingTodos = true
+                this.showSidebar = false
                 this.currentList = list
                 this.init()
             },
@@ -458,21 +397,15 @@
                 if (!confirm('Are you sure you want to delete this todo?')) {
                     return
                 }
-                todo.revision++
-                let url = this.wunderlistTaskUrl + '/' + todo.id
-                this.http(url, 'DELETE', {revision: todo.revision}).then(() => {
-                    // this.todos.splice(this.todos.indexOf(todo), 1)
+                const url = `${this.wunderlistTaskUrl}/${todo.id}?revision=${todo.revision}`
+
+                this.http(url, 'DELETE').then(() => {
                     if (todo.isCompleted) {
                         this.completedTodos.splice(this.completedTodos.indexOf(todo), 1)
                     } else {
                         this.incompleteTodos.splice(this.incompleteTodos.indexOf(todo), 1)
                     }
-                    // this.sortTodos()
                 })
-            },
-            patchTodo(id, data) {
-                let url = this.wunderlistTaskUrl + '/' + id
-                return this.http(url, 'PATCH', data)
             },
             editTodo(todo) {
                 if (this.showSidebar) {
@@ -491,7 +424,11 @@
                     this.$set(this.todos, this.currentTodoIndex, this.formatTodoResponse(_todo))
                     this.showTodoManager = false
                 })
-            }
+            },
+            patchTodo(id, data) {
+                let url = this.wunderlistTaskUrl + '/' + id
+                return this.http(url, 'PATCH', data)
+            },
         },
         watch: {
             todos: {
@@ -513,7 +450,8 @@
         },
         components: {
             AddTodo,
-            TodosGroup
+            TodosGroup,
+            TodoList
         },
         beforeDestroy() {
             clearInterval(syncWunderlist)

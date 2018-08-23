@@ -31,3 +31,7 @@ export const convertISOToTime = (ISOtime) => {
   const time = ISOtime && ISOtime !== -1 ? new Date(ISOtime) : new Date()
   return time.getHours() * 3600 + time.getMinutes() * 60 + time.getSeconds()
 }
+export const getISOToDate = (dateString) => {
+    const time = dateString && dateString !== -1 ? new Date(dateString) : new Date()
+    return time.toISOString().split('T')[0];
+}

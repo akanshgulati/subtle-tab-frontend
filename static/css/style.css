@@ -739,6 +739,10 @@ svg:hover #close_btn {
 .widget-heading {
     font-size: 1rem;
     font-weight: 500;
+    margin-left: 0.5rem !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 #notes .add-note {

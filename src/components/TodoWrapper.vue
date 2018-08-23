@@ -191,9 +191,5 @@
         border-bottom: 1px solid #f1f0f0;
     }
 
-    div.todos ul li:hover > .todo-btn {
-        opacity: 1;
-    }
-
 
 </style>

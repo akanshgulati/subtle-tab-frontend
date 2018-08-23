@@ -37,11 +37,12 @@
                        type="text"
                        class="mar-0 border-0 pad-0 title"
                        v-model="defaultTitle"
-                       @keyup.enter="create"
-                       @blur="cancel"
-                       @keyup.esc="cancel">
-                <Button text="Add" type="primary" v-on:click="create" v-if="!isEditMode"/>
-                <Button text="Update" type="primary" v-on:click="create" v-if="isEditMode"/>
+                       @keyup.enter.stop="create"
+                       @blur.stop="cancel"
+                       @keyup.esc.stop="cancel">
+                <Button text="Add" type="primary" @click.stop="create" v-if="!isEditMode"/>
+                <Button text="Save" type="primary" @click.stop="create" v-if="isEditMode"/>
+                <!--<Button text="x" type="primary" @click.stop="cancel"/>-->
             </div>
         </transition>
     </div>
@@ -71,9 +72,15 @@
         },
         methods: {
             create() {
-                this.$emit('create', {
-                    title: this.defaultTitle
-                })
+                if (this.isEditMode) {
+                    this.$emit('edit', {
+                        title: this.defaultTitle
+                    })
+                } else {
+                    this.$emit('create', {
+                        title: this.defaultTitle
+                    })
+                }
                 this.defaultTitle = '';
                 this.isTodoEditing = false
             },
@@ -113,6 +120,7 @@
         box-shadow: 0 1px 0 0 rgba(33, 150, 243, 0.31);
         padding: 0 0 3px !important;
         margin-left: 0.5rem !important;
+        font-size: 0.9rem;
     }
 
     input[type="text"].title:focus, input[type="text"].title:active {

@@ -1,6 +1,7 @@
 <template>
     <button
-        class="btn small primary semi-bold"
+        class="btn small semi-bold basic"
+        :class="{'primary': type === 'primary'}"
         :disabled="isDisabled">
         {{text}}
     </button>
@@ -42,10 +43,14 @@
         line-height: 20px;
         padding: 0 5px;
     }
+    .basic {
+        background: none;
+        color: #666;
+        border: none;
+        box-shadow: none;
+    }
     .primary {
         background-color: rgba(33, 150, 243, 0.21);
         color: #2196F3;
-        border: none;
-        box-shadow: none;
     }
 </style>
