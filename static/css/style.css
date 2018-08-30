@@ -734,6 +734,7 @@ svg:hover #close_btn {
     background: #fff;
     border-radius: 3px 3px 0 0;
     min-height: 36px;
+    z-index: 2;
 }
 
 .widget-heading {
@@ -743,6 +744,8 @@ svg:hover #close_btn {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    line-height: 1.5rem;
+    height: 1.5rem;
 }
 
 #notes .add-note {
@@ -1001,19 +1004,6 @@ header svg:hover #hamburger {
     overflow-y: auto;
 }
 
-.sidebar-container input {
-    margin-bottom: 1rem;
-    height: 2rem;
-    font-size: 0.8rem;
-}
-
-.sidebar-container select {
-    height: 2rem !important;
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-    background: rgb(247, 247, 247);
-}
-
 .sidebar-heading {
     font-weight: 900;
     margin: 0.5rem -0.3rem;
@@ -1065,7 +1055,6 @@ ul.dropdown li:last-of-type {
     height: 16px;
     display: inline-block;
     vertical-align: bottom;
-    margin-right: 5px;
     background-size: 16px;
 }
 
@@ -1115,20 +1104,6 @@ input[type].no-focus:focus {
     flex: 1;
 }
 
-#no-todo {
-    text-align: center;
-    flex: 1;
-}
-
-#no-todo img {
-    display: block;
-    margin-bottom: 20px;
-}
-
-#no-todo em {
-    font-size: 1rem;
-}
-
 #todos .flip-list-move {
     transition: transform 0.5s ease-out;
 }
@@ -1166,18 +1141,6 @@ input[type].no-focus:focus {
 .show-right-sidebar {
     right: 0;
     box-shadow: -1px 0px 3px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar-right button {
-    font-size: 0.8rem;
-    background-color: rgba(122, 184, 0, 0.85);
-    padding: 0 1rem;
-    height: 2.2rem;
-    line-height: 2.2rem;
-}
-
-.sidebar-right button:hover, .sidebar-right button:focus {
-    background-color: rgba(122, 184, 0, 1);
 }
 
 #todos {

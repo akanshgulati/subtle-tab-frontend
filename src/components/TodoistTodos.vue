@@ -12,58 +12,24 @@
                     </g>
                 </g>
             </svg>
-            <h4 class="widget-heading ml-10 mv-0">To-do (T) : {{ currentList ? titleCase(currentList.title): ''}}</h4>
-            <!--<div class="button-section flex flex-center">
-                <svg v-show="currentListId != 'inbox' && currentListId != 'today'" v-on:click.stop="deleteList" class="pointer" width="1.3rem" height="1.3rem" viewBox="0 0 30 36" version="1.1"
-                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="delete_note" fill-rule="nonzero" fill="#7d7d7d">
-                            <polygon points="9.875 11.175 12.125 11.175 12.125 29.175 9.875 29.175" ></polygon>
-                            <polygon points="17.375 11.175 19.625 11.175 19.625 29.175 17.375 29.175" ></polygon>
-                            <polygon points="0.375 4.425 29.625 4.425 29.625 6.675 0.375 6.675" ></polygon>
-                            <path d="M20.55,5.55 L18.45,5.55 L18.45,3.3 C18.45,2.625 17.925,2.1 17.25,2.1 L12.75,2.1 C12.075,2.1 11.55,2.625 11.55,3.3 L11.55,5.55 L9.45,5.55 L9.45,3.3 C9.45,1.5 10.95,0 12.75,0 L17.25,0 C19.05,0 20.55,1.5 20.55,3.3 L20.55,5.55"
-                            ></path>
-                            <path d="M21.75,35.925 L8.25,35.925 C6.45,35.925 4.875,34.425 4.725,32.625 L2.625,5.625 L4.875,5.475 L6.975,32.475 C7.05,33.15 7.65,33.675 8.25,33.675 L21.75,33.675 C22.425,33.675 23.025,33.075 23.025,32.475 L25.125,5.475 L27.375,5.625 L25.275,32.625 C25.125,34.5 23.55,35.925 21.75,35.925"></path>
-                        </g>
-                    </g>
-                </svg>
-            </div>-->
+            <i class="integrate-icon icon--todoist mh-5 flex-no-shrink"></i>
+            <h4 class="widget-heading ml-5 mv-0">{{ currentList ? titleCase(currentList.title): ''}}</h4>
         </header>
 
         <section class="flex relative todo-section flex-flow-column">
             <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }">
                 <div class="sidebar-container">
-                    <transition-group name="flip-list" tag="ul"
-                                      class="todo-lists pad-0 flex flex-flow-column flex-center">
-                        <li v-for="list in visibleLists" v-bind:key="list.id"
-                            class="flex flex-flow-column pointer todo-list"
-                            :class="[currentListId == list.id? 'active':'']"
-                            v-on:click="setActiveList(list); showSidebar = false;">
-                            <a class="todo-list-title" :title="list.title">{{ titleCase(list.title)}}</a>
-                        </li>
-                    </transition-group>
-                    <!--<div class="flex todo-list relative pointer">
-                        <input type="text" placeholder="+ Create new list" class="create-todo-list no-focus" v-model="listTitle"
-                               @keyup.enter="createList">
-                    </div>-->
+                    <TodoList :list="visibleLists"
+                              :current="currentListId"
+                              v-on:changed="changedTodoList"
+                              :show-todos-count="false"
+                              :is-create-enabled="false"/>
                 </div>
             </div>
 
             <div id="todo-manager-sidebar" class="sidebar-right flex-flow-column flex"
-                 :class="{'show-right-sidebar': showTodoManager }">
-                <div class="sidebar-container">
-                    <div>
-                        <p class="sidebar-heading">Todo Title</p>
-                        <input type="text" placeholder="" class="input-todo-title no-focus" v-model="currentTodo.title">
-                    </div>
-                    <div>
-                        <p class="sidebar-heading">Due Date</p>
-                        <input type="date" class="input-todo-date no-focus" v-model="currentTodo.dueOn">
-                    </div>
-                    <div>
-                        <button class="btn" v-on:click="updateTodo">Done</button>
-                    </div>
-                </div>
+                 :class="{'show-right-sidebar': showTodoManager }" @click.stop="">
+                <TodoManager :todo="currentTodo" @changed="updateTodo" v-if="showTodoManager"/>
             </div>
 
             <div id="todo"
@@ -79,27 +45,35 @@
                 <!--LIST OF TODOS-->
                 <template v-if="!isLoadingTodos">
                     <!--SHOWING TASKS STATE-->
-                    <div v-show="currentListIncompleteTodos.length" class="todos">
+                    <div class="todos">
                         <!--INCOMPLETE TASKS LOOP-->
                         <TodosGroup
+                            v-if="currentListIncompleteTodos.length"
                             id="incomplete-todos-list" class="mar-0"
                             :todos="sortByOrder(currentListIncompleteTodos)"
-                            v-on:changed="checkedTodo"
+                            @changed="changedTodo"
                         />
                         <AddTodo
                             class="pv-10"
                             :is-sticky="isAddTodoSticky"
                             v-on:create="createTodo"
-                            :is-completed-enabled="true"
+                            :is-completed-enabled="false"
                             v-on:toggleCompleted="toggleCompletedTodos"/>
-                        <!--COMPLETE TASKS LOOP-->
+                        <!-- NO ITEM LEFT TO DO -->
+                        <transition>
+                            <NoTodo
+                                :current-list-title="currentList.title"
+                                v-if="!currentListIncompleteTodos.length && !showCompletedTodos"
+                            />
+                        </transition>
+                        <!--&lt;!&ndash;COMPLETE TASKS LOOP&ndash;&gt;
                         <TodosGroup
                             v-if="showCompletedTodos"
                             id="complete-todos-list" class="mar-0"
                             :todos="sortByOrder(currentListCompleteTodos, true)"
                             isCompletedList="true"
                             v-on:changed="checkedTodo"
-                        />
+                        />-->
                        <!-- <transition-group v-show="showCompletedTodos" name="flip-list" tag="ul" id="complete-todos-list"
                                           class="mar-0">
                             <li v-for="todo in sortByOrder(currentListCompleteTodos, true)" class="todo flex" :key="todo.id">
@@ -128,13 +102,6 @@
                             </li>
                         </transition-group>-->
                     </div>
-                    <!--SHOWING A NO TASK STATE-->
-
-                    <div v-if="!currentListIncompleteTodos.length" id="no-todo"
-                         class="flex flex-flow-column flex-justify-center flex-center">
-                        <img src="images/todo-no-item.png" alt="No Todo" width="134px">
-                        <em>No tasks to do in {{currentList.title}} list! <br>Create your first to-do</em>
-                    </div>
 
                 </template>
             </div>
@@ -144,14 +111,18 @@
 </template>
 
 <script>
+    import AddTodo from '../shared/AddTodo.vue'
+    import TodosGroup from '../shared/TodosGroup.vue'
+    import NoTodo from '../shared/NoTodo.vue'
+    import TodoList from '../shared/TodoList.vue'
+    import TodoManager from '../shared/TodoManager.vue'
+
     import {Get, Set} from '../utils/storage'
     import {TODOIST, STORAGE} from '../utils/Constants'
     import {isolateScroll, Http, DecryptAuth, generateId} from '../utils/common'
     import TodoUtil from '../utils/TodoUtil'
     import {titleCase} from '../utils/StringUtils'
-    import {TodosType} from '../constants/Todos'
-    import AddTodo from '../shared/AddTodo.vue'
-    import TodosGroup from '../shared/TodosGroup.vue'
+    import {TodosType, TodoListItemAction, TodoItemAction} from '../constants/Todos'
 
     let syncList
     export default {
@@ -181,13 +152,11 @@
             isolateScroll('incomplete-todos-list')
             isolateScroll('complete-todos-list')
             isolateScroll('todo-sidebar')
-            this.checkForAddTodoSticky();
             this.init()
             syncList = setInterval(this.sync, 5000)
         },
         computed: {
             currentListId() {
-                this.checkForAddTodoSticky();
                 return this.currentList.id
             },
             tokenType() {
@@ -213,12 +182,6 @@
             }
         },
         methods: {
-            checkForAddTodoSticky(){
-                /*this.$nextTick(() => {
-                    const todosEl = document.querySelector('.todos')
-                    this.isAddTodoSticky = todosEl && todosEl.scrollHeight > todosEl.offsetHeight
-                });*/
-            },
             toggleCompletedTodos(state) {
                 this.showCompletedTodos = state
             },
@@ -265,7 +228,6 @@
                         this.todos = localTodos
                         this.todoLists = localLists
                         this.isLoadingTodos = false;
-                        this.checkForAddTodoSticky();
                         return
                     }
                 }
@@ -352,7 +314,6 @@
                     // setting sync token to new value
                     self.syncToken = data.sync_token
                     self.isLoadingTodos = false
-                    this.checkForAddTodoSticky();
                 })
             },
             formatTodoResponse(todo) {
@@ -376,6 +337,17 @@
             },
             setActiveList(list) {
                 this.currentList = list
+                this.showSidebar = false;
+            },
+            changedTodoList(info) {
+                if (!info) {
+                    return
+                }
+                if (info.action === TodoListItemAction.SELECT) {
+                    this.setActiveList(info.list)
+                } else if (info.action === TodoListItemAction.DELETE) {
+                    this.deleteList(info.list)
+                }
             },
             patchTodo(type, args) {
                 const uuid = generateId()
@@ -384,10 +356,11 @@
 
                 this.syncCall(TODOIST.URL.BASE, {commands}).then((response) => {
                     if (response.sync_status[uuid] === 'ok') {
-                        this.sync();
+                        this.sync()
                     }
-                    this.checkForAddTodoSticky();
-                    this.isLoadingTodos = false;
+                    this.showSidebar = false;
+                    this.showTodoManager = false;
+                    this.isLoadingTodos = false
                 })
             },
             createTodo(todo) {
@@ -402,15 +375,30 @@
                 }
                 this.patchTodo('item_add', _todo)
             },
+            changedTodo(info){
+                if (!info || !info.action) {
+                    return
+                }
+                switch (info.action) {
+                    case TodoItemAction.COMPLETE:
+                        this.checkedTodo(info)
+                        return
+                    case TodoItemAction.EDIT:
+                        this.editTodo(info.todo)
+                        return
+                    case TodoItemAction.DELETE:
+                        this.deleteTodo(info.todo)
+                        return
+                }
+            },
             checkedTodo(todoData) {
                 const todo = todoData.todo;
-                const action = todoData.action;
                 const value = todoData.value;
                 const type = value ? 'item_complete': 'item_uncomplete';
                 this.patchTodo(type, {'ids': [todo.id]})
             },
             deleteTodo(todo) {
-                if (!confirm('Are you sure you want to delete this todo?')) {
+                if (!todo || !confirm('Are you sure you want to delete this todo?')) {
                     return
                 }
                 todo.isDeleted = true;
@@ -424,8 +412,20 @@
                 this.currentTodoIndex = this.todos.indexOf(todo)
                 this.currentTodo = Object.assign({}, todo)
             },
-            updateTodo() {
+            updateTodo(data) {
+                if (data.action === TodoItemAction.EDIT) {
+                    const updatedTodo = data.todo
+                    // updating it to current for below logic
+                    this.patchTodo('item_update', {'id': updatedTodo.id, content: updatedTodo.title})
 
+                }
+            },
+            deleteList(list) {
+                if (!list || !confirm(`Are you sure you want to delete ${list.title}?`)) {
+                    return
+                }
+                list.isDeleted = true
+                this.patchTodo('project_delete', {'ids': [list.id]});
             }
         },
         watch: {
@@ -433,7 +433,6 @@
                 handler: function(newValue) {
                     if (newValue && newValue.length) {
                         this.setLocalTodos(newValue)
-                        this.checkForAddTodoSticky();
                     }
                 },
                 deep: true
@@ -464,7 +463,10 @@
         },
         components: {
             AddTodo,
-            TodosGroup
+            TodosGroup,
+            NoTodo,
+            TodoManager,
+            TodoList
         },
         beforeDestroy() {
             clearInterval(syncList)

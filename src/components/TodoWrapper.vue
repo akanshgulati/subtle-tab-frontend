@@ -27,100 +27,6 @@
     #todo {
         background-color: rgba(255, 255, 255, 0.9);
     }
-    .todo-list:first-child {
-        border-top: 1px solid #e4e5e8;
-    }
-
-    .todo-list {
-        font-size: 0.9rem;
-        transition: all 0.3s ease-in;
-        box-shadow: 0 0.35rem 7px -5px #e4e5e8;
-        width: 100%;
-        background: #fff;
-        height: 3.5rem;
-        line-height: 3.1rem;
-        padding: 0.2rem 0.4rem 0.2rem 1.1rem;
-        border-bottom: 1px solid #e4e5e8;
-
-    }
-
-    .todo-list:hover {
-        background-color: #f0f1f4 !important;
-    }
-
-    .todo-list-title:before {
-        content: '';
-        padding: 0.1rem;
-        border-radius: 50%;
-        height: 1rem;
-        width: 1rem;
-        display: inline-block;
-        margin-right: 0.4rem;
-        position: relative;
-        top: 2px;
-        border: 0.2rem solid;
-    }
-
-    .todo-list:nth-of-type(10n+1) .todo-list-title:before {
-        border-color: #c0392b;
-    }
-
-    .todo-list:nth-of-type(10n+2) .todo-list-title:before {
-        border-color: #8e44ad;
-    }
-
-    .todo-list:nth-of-type(10n+3) .todo-list-title:before {
-        border-color: #00695C;
-    }
-
-    .todo-list:nth-of-type(10n+4) .todo-list-title:before {
-        border-color: orange;
-    }
-
-    .todo-list:nth-of-type(10n+5) .todo-list-title:before {
-        border-color: #2980b9;
-    }
-
-    .todo-list:nth-of-type(10n+6) .todo-list-title:before {
-        border-color: #2ecc71;
-    }
-
-    .todo-list:nth-of-type(10n+7) .todo-list-title:before {
-        border-color: #e67e22;
-    }
-
-    .todo-list:nth-of-type(10n+8) .todo-list-title:before {
-        border-color: #3F51B5;
-    }
-
-    .todo-list:nth-of-type(10n+9) .todo-list-title:before {
-        border-color: #9b59b6;
-    }
-
-    .todo-list:nth-of-type(10n) .todo-list-title:before {
-        border-color: #795548;
-    }
-
-    .todo-list.active {
-        font-weight: 500;
-    }
-
-    .todo-list-count {
-        color: #666;
-        font-size: 0.8rem;
-    }
-
-    #todos input.create-todo-list {
-        border: none;
-        outline: 0;
-        margin: 0;
-        height: 2.5rem;
-    }
-
-    #todos input.create-todo-list:focus {
-        border: 0;
-        box-shadow: none;
-    }
     #todo {
         height: 100%;
         border: 0;
@@ -138,14 +44,6 @@
         font-weight: 500;
         font-size: 1rem;
         padding: 1rem 0.2rem 0 1.4rem;
-    }
-    .todo-list-title {
-        margin: 0;
-        flex: 1;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        color: inherit;
     }
 
     #todos [type="checkbox"] + label {
@@ -181,7 +79,7 @@
     }
 
     div.todos {
-        padding-top: 1rem;
+        padding-top: 0.7rem;
         margin: 0;
         overflow-y: auto;
     }

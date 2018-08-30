@@ -105,7 +105,7 @@
 }
 
 .ml-5, .mh-5 {
-    margin-left: 0.36rem;
+    margin-left: 0.36rem !important;
 }
 
 .mr-10, .mh-10 {

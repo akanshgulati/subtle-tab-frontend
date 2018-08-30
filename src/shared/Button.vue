@@ -42,6 +42,7 @@
         height: 20px;
         line-height: 20px;
         padding: 0 5px;
+        font-size: 0.9rem;
     }
     .basic {
         background: none;

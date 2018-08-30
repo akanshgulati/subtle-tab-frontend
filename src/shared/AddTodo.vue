@@ -2,16 +2,16 @@
     <div class="full-width" :class="{'sticky': isSticky, 'add-todo': !isEditMode}">
         <transition mode="out-in" name="fast-fade">
             <!--BUTTON SECTION-->
-            <div class="flex flex-center semi-bold pointer flex-justify-space-between" key="add" v-if="!isTodoEditing">
+            <div class="flex flex-center semi-bold flex-justify-space-between" key="add" v-if="!isTodoEditing">
                 <!-- ADD ITEM BUTTON -->
-                <div @click="type" class="flex flex-center">
+                <div @click="type" class="flex flex-center pointer">
                     <svg class="svg-blue-fill" focusable="false" xmlns="http://www.w3.org/2000/svg" width="18"
                          height="18" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M20 11h-7V4c0-.553-.447-1-1-1-.552 0-1 .447-1 1v7H4c-.552 0-1 .447-1 1 0 .553.448 1 1 1h7v7c0 .553.448 1 1 1 .553 0 1-.447 1-1v-7h7c.553 0 1-.447 1-1 0-.553-.447-1-1-1"></path>
                     </svg>
-                    <span class="text-blue block text-block">Add a to-do</span>
+                    <span class="text-blue block text-block text-blue-underlined">Add todo</span>
                 </div>
-                <div @click="toggleCompleted" class="flex flex-center" v-if="isCompletedEnabled" >
+                <div @click="toggleCompleted" class="flex flex-center pointer" v-if="isCompletedEnabled" >
                     <svg class="svg-fill-light-grey" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507.289 507.289" style="enable-background:new 0 0 507.289 507.289;" width="18" height="18">
                         <g>
                             <path d="M153.712,375.691l-24,21.248c7.642,8.598,15.944,16.585,24.832,23.888l20.288-24.8     C167.265,389.818,160.203,383.018,153.712,375.691z"/>
@@ -20,13 +20,17 @@
                             <polygon points="267.312,109.627 267.312,285.627 337.712,338.427 356.912,312.827 299.312,269.627 299.312,109.627"/>
                         </g>
                     </svg>
-                    <span class="text-light-grey block text-block font-xsmall">{{showCompleted ? 'Hide': 'Show'}} Completed</span>
+                    <transition mode="out-in" name="fast-fade">
+                        <span class="text-light-grey block text-block font-xsmall"
+                              v-if="showCompleted">Hide completed</span>
+                        <span class="text-light-grey block text-block font-xsmall" v-else>Show completed</span>
+                    </transition>
                 </div>
             </div>
 
             <!--EDIT MODE -->
             <div class="flex flex-center" v-else key="edit">
-                <button class="circle" title="Add a to-do">
+                <button class="circle" title="Add todo">
                     <svg class="svg-fill-light-grey" focusable="false" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" >
                         <g fill-rule="evenodd">
                             <path d="M3 12c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9-9-4.037-9-9zm-2 0c0 6.065 4.935 11 11 11s11-4.935 11-11S18.065 1 12 1 1 5.935 1 12z"></path>
@@ -40,7 +44,7 @@
                        @keyup.enter.stop="create"
                        @blur.stop="cancel"
                        @keyup.esc.stop="cancel">
-                <Button text="Add" type="primary" @click.stop="create" v-if="!isEditMode"/>
+                <Button text="Add" type="primary" @click.stop="create" v-if="!isEditMode" class="text-blue-hover"/>
                 <Button text="Save" type="primary" @click.stop="create" v-if="isEditMode"/>
                 <!--<Button text="x" type="primary" @click.stop="cancel"/>-->
             </div>
@@ -82,7 +86,7 @@
                     })
                 }
                 this.defaultTitle = '';
-                this.isTodoEditing = false
+                this.isTodoEditing = true
             },
             type() {
                 this.isTodoEditing = true

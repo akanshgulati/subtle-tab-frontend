@@ -8,6 +8,16 @@
 
 .text-blue {
     color: #2196F3;
+    transition: color 0.23s ease-in;
+}
+
+.text-blue-hover:hover {
+    color: #2179d6;
+}
+
+.text-blue-underlined:hover {
+    text-decoration: underline;
+    text-decoration-color: #2179d6;
 }
 
 .bg-blue {

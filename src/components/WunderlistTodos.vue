@@ -1,6 +1,7 @@
 <template>
     <div id="todos" v-on:click.stop="" class="todos-arrow_box relative flex-flow-column flex text-black">
         <header class="flex widget-header flex-center">
+            <!-- HAMBURGER ICON -->
             <svg class="pointer flex-no-shrink" v-on:click="toggle('showSidebar'); showTodoManager = false;"
                  width="1.1rem"
                  height="1rem" viewBox="0 0 23 21" version="1.1">
@@ -12,30 +13,25 @@
                     </g>
                 </g>
             </svg>
-            <h4 class="widget-heading ml-10 mv-0">To-do (T) : {{ titleCase(currentList.title)}}</h4>
+            <i class="integrate-icon icon--wunderlist mh-5 flex-no-shrink"></i>
+            <h4 class="widget-heading ml-5 mv-0">{{ titleCase(currentList.title)}}</h4>
         </header>
 
         <section class="flex relative todo-section flex-flow-column" @click.stop="showSidebar=false; showTodoManager=false">
+            <!-- TO-DO SIDEBAR -->
             <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }" @click.stop="">
-                <TodoList :list="todoLists" :current="currentListId" v-on:changed="changedTodoList"
+                <TodoList :list="todoLists"
+                          :current="currentListId"
+                          v-on:changed="changedTodoList"
+                          :show-todos-count="false"
                           :is-create-enabled="false"/>
             </div>
+            <!-- TO-DO MANAGER -->
             <div id="todo-manager-sidebar" class="sidebar-right flex-flow-column flex"
                  :class="{'show-right-sidebar': showTodoManager }" @click.stop="">
-                <div class="sidebar-container">
-                    <div>
-                        <p class="sidebar-heading">Todo Title</p>
-                        <input type="text" placeholder="" class="input-todo-title no-focus" v-model="currentTodo.title">
-                    </div>
-                    <div>
-                        <p class="sidebar-heading">Due Date</p>
-                        <input type="date" class="input-todo-date no-focus" v-model="currentTodo.dueOn">
-                    </div>
-                    <div>
-                        <button class="btn" v-on:click.stop="updateTodo">Done</button>
-                    </div>
-                </div>
+                <TodoManager :todo="currentTodo" @changed="updateTodo" v-if="showTodoManager"/>
             </div>
+
             <div id="todo"
                  class="flex flex-flow-column"
                  :class="{'flex-justify-center': isLoadingTodos, 'disable-pointer': showSidebar || showTodoManager}"
@@ -49,9 +45,10 @@
                 <!--LIST OF TODOS-->
                 <template v-if="!isLoadingTodos">
                     <!--SHOWING TASKS STATE-->
-                    <div v-show="todos.length" class="todos">
+                    <div class="todos">
                         <!--INCOMPLETE TASKS LOOP-->
                         <TodosGroup
+                            v-if="incompleteTodos.length"
                             id="incomplete-todos-list" class="mar-0"
                             :todos="incompleteTodos"
                             v-on:changed="changedTodo"
@@ -60,24 +57,31 @@
                         <AddTodo
                             class="pv-10"
                             v-on:create="createTodo"
-                            :is-completed-enabled="true"
+                            :is-completed-enabled="!!(completedTodos && completedTodos.length)"
                             v-on:toggleCompleted="toggleCompletedTodos"/>
                         <!--COMPLETE TASKS LOOP-->
-                        <TodosGroup
-                            v-if="showCompletedTodos"
-                            id="complete-todos-list" class="mar-0"
-                            :todos="completedTodos"
-                            isCompletedList="true"
-                            v-on:changed="changedTodo"
-                        />
+                        <transition mode="out-in" name="fast-fade">
+                            <!--SHOWING A NO TASK STATE-->
+                            <NoTodo key="no" :currentListTitle="currentListTitle"
+                                    v-if="!incompleteTodos.length && !showCompletedTodos"/>
+
+                            <TodosGroup
+                                key="incomplete-todos"
+                                v-if="showCompletedTodos && completedTodos && completedTodos.length"
+                                id="complete-todos-list" class="mar-0"
+                                :todos="completedTodos"
+                                isCompletedList="true"
+                                v-on:changed="changedTodo"
+                            />
+                        </transition>
 
                     </div>
-                    <!--SHOWING A NO TASK STATE-->
-                    <div v-if="!todos.length" id="no-todo"
+
+                    <!--<div v-if="!todos.length" id="no-todo"
                          class="flex flex-flow-column flex-justify-center flex-center">
                         <img src="images/todo-no-item.png" alt="No Todo" width="134px">
-                        <em>No tasks to do in {{currentList.title}} list! <br>Create your first to-do</em>
-                    </div>
+                        <em>No tasks to do in {{currentList.title}} list!</em>
+                    </div>-->
                 </template>
             </div>
         </section>
@@ -96,6 +100,8 @@
     import AddTodo from '../shared/AddTodo.vue'
     import TodosGroup from '../shared/TodosGroup.vue'
     import TodoList from '../shared/TodoList.vue'
+    import TodoManager from '../shared/TodoManager.vue'
+    import NoTodo from '../shared/NoTodo.vue'
 
     let syncWunderlist
     export default {
@@ -146,6 +152,9 @@
                 arr = arr.concat(this.completedTodos)
                 arr = arr.concat(this.incompleteTodos)
                 return arr
+            },
+            currentListTitle() {
+                return this.currentList && this.currentList.title
             }
         },
         methods: {
@@ -155,6 +164,8 @@
                 }
                 if (info.action === TodoListItemAction.SELECT) {
                     this.setActiveList(info.list)
+                } else if (info.action === TodoListItemAction.DELETE) {
+                    this.deleteList(info.list)
                 }
             },
             changedTodo(data) {
@@ -393,6 +404,16 @@
                 this.currentList = list
                 this.init()
             },
+            deleteList(list) {
+                if (!confirm(`Are you sure you want to delete ${list.title} list?`)) {
+                    return
+                }
+                const url = `${WUNDERLIST.URL.LISTS}/${list.id}?revision=${list.revision}`
+
+                this.http(url, 'DELETE').then(() => {
+                    this.setActiveList(this.todoLists[0]);
+                })
+            },
             deleteTodo(todo) {
                 if (!confirm('Are you sure you want to delete this todo?')) {
                     return
@@ -415,15 +436,19 @@
                 this.currentTodoIndex = this.todos.indexOf(todo)
                 this.currentTodo = Object.assign({}, todo)
             },
-            updateTodo() {
-                this.patchTodo(this.currentTodo.id, {
-                    title: this.currentTodo.title,
-                    due_date: this.currentTodo.dueOn,
-                    revision: this.currentTodo.revision
-                }).then((_todo) => {
-                    this.$set(this.todos, this.currentTodoIndex, this.formatTodoResponse(_todo))
-                    this.showTodoManager = false
-                })
+            updateTodo(data) {
+                if (data.action === TodoItemAction.EDIT) {
+                    const updatedTodo = data.todo
+                    // updating it to current for below logic
+                    this.patchTodo(this.currentTodo.id, {
+                        title: updatedTodo.title,
+                        due_date: updatedTodo.dueOn,
+                        revision: this.currentTodo.revision
+                    }).then((_todo) => {
+                        this.$set(this.todos, this.currentTodoIndex, this.formatTodoResponse(_todo))
+                        this.showTodoManager = false
+                    })
+                }
             },
             patchTodo(id, data) {
                 let url = this.wunderlistTaskUrl + '/' + id
@@ -451,7 +476,9 @@
         components: {
             AddTodo,
             TodosGroup,
-            TodoList
+            TodoList,
+            TodoManager,
+            NoTodo
         },
         beforeDestroy() {
             clearInterval(syncWunderlist)
