@@ -72,9 +72,11 @@
                     <li>
                         <input type="radio" v-model="activeTab" value="todo"
                                id="tab5">
-                        <label for="tab5" class="flex-center"
+                        <label for="tab5" class="flex-center fill"
                                :class="{'active': activeTab === 'todo'}">
-                            <img src="images/icons/todo-icon.png">
+                            <svg viewBox="0 0 512 512" class="fill">
+                                <use xlink:href="#icon-todo"></use>
+                            </svg>
                             <span>Todos</span>
                         </label>
                     </li>
@@ -566,6 +568,16 @@
                             r="1"></circle>
                     <circle fill-rule="nonzero" cx="13.9450495" cy="9.03592685"
                             r="1"></circle>
+                </g>
+                <g id="icon-todo">
+                    <path
+                        d="M370,95.4V53.9h-62.2V12.5H204.2v41.5H142v41.5H69.5v404.1h373.1V95.4H370z M224.9,33.2h62.2v20.7h-62.2V33.2z M162.7,74.7h186.5v62.2H162.7V74.7z M421.8,478.8H90.2V116.1H142v41.4h228v-41.4h51.8V478.8z"/>
+                    <rect width="20.7" x="131.6" y="222.8" height="20.7"/>
+                    <rect width="20.7" x="131.6" y="307.8" height="20.7"/>
+                    <rect width="20.7" x="131.6" y="393.8" height="20.7"/>
+                    <rect width="207.3" x="173.1" y="222.8" height="20.7"/>
+                    <rect width="207.3" x="173.1" y="307.8" height="20.7"/>
+                    <rect width="207.3" x="173.1" y="393.8" height="20.7"/>
                 </g>
             </defs>
         </svg>

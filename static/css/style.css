@@ -350,9 +350,19 @@ svg:hover #close_btn {
     fill: none;
     stroke: #666;
 }
+.csidebar svg.fill {
+    width: 1.5rem;
+    margin-right: 0.5rem;
+    height: 1.5rem;
+    fill: #666;
+}
 
 .csidebar label:hover:not(.active) svg, .csidebar label:hover:not(.active) span {
     stroke: #7AB800;
+    color: #7AB800;
+}
+.csidebar label.fill:hover:not(.active) svg, .csidebar label.fill:hover:not(.active) span {
+    fill: #7AB800;
     color: #7AB800;
 }
 

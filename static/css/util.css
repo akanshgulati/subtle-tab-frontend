@@ -199,3 +199,11 @@
 .btn-no-border:hover {
     border: none !important;
 }
+
+.one-rem-width {
+    width: 1rem;
+}
+
+.one-rem-height {
+    height: 1rem;
+}

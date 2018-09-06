@@ -2,9 +2,8 @@
     <div id="todos" v-on:click.stop="" class="todos-arrow_box relative flex-flow-column flex text-black">
         <header class="flex widget-header flex-center">
             <!-- HAMBURGER ICON -->
-            <svg class="pointer flex-no-shrink" v-on:click="toggle('showSidebar'); showTodoManager = false;"
-                 width="1.1rem"
-                 height="1rem" viewBox="0 0 23 21" version="1.1">
+            <svg class="pointer flex-no-shrink one-rem-height one-rem-width" v-on:click="toggle('showSidebar'); showTodoManager = false;"
+                 viewBox="0 0 23 21" version="1.1">
                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                     <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
                         <path d="M0.132183908,0 L22.8678161,0" id="XMLID_6_"></path>

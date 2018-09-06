@@ -17,7 +17,7 @@
                             <!-- TO-DO SECTION -->
                             <div class="todo-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showTodos">
                                 <div class="todo-icon pointer" v-on:click.stop="toggleTodos">
-                                    <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8rem">
+                                    <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8em">
                                         <g>
                                             <g id="todo_btn">
                                                 <path d="M370,95.4V53.9h-62.2V12.5H204.2v41.5H142v41.5H69.5v404.1h373.1V95.4H370z M224.9,33.2h62.2v20.7h-62.2V33.2z M162.7,74.7h186.5v62.2H162.7V74.7z M421.8,478.8H90.2V116.1H142v41.4h228v-41.4h51.8V478.8z"/>
