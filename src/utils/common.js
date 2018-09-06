@@ -24,17 +24,42 @@ let CommonUtils = {
         return new Promise((resolve, reject) => {
             const xmlhttp = new XMLHttpRequest()
             const method = option.method || 'GET'
-            xmlhttp.open(method, url)
+            let isContentTypeHeaderPresent = false;
+            let isContentTypeFormHeader = false;
+            const data = option.data;
+            xmlhttp.open(method, url);
 
             if (option.headers) {
                 for (let i = 0; i < option.headers.length; i++) {
+                    if (option.headers[i].name && option.headers[i].name.toLowerCase() === 'content-type') {
+                        isContentTypeHeaderPresent = true;
+                    }
+                    if (option.headers[i].name && option.headers[i].value.toLowerCase().indexOf('x-www-form-urlencoded') > -1) {
+                        isContentTypeFormHeader = true;
+                    }
                     xmlhttp.setRequestHeader(option.headers[i].name, option.headers[i].value)
                 }
             }
-            if (option.method === 'POST') {
-                xmlhttp.setRequestHeader('Content-type', 'application/json')
-            }
 
+
+            if (option.method === 'POST') {
+                if (!isContentTypeHeaderPresent) {
+                    xmlhttp.setRequestHeader('Content-type', 'application/json')
+                }
+
+                if (isContentTypeFormHeader) {
+                    // form data header
+                    let form_data = new FormData();
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            form_data.append(key, data[key])
+                        }
+                    }
+                    option.data = form_data
+                } else {
+                    option.data = JSON.stringify(option.data);
+                }
+            }
             xmlhttp.onreadystatechange = () => {
                 if (xmlhttp.readyState === 4) {
                     if (xmlhttp.responseText && xmlhttp.status >= 200 && xmlhttp.status < 300) {
@@ -46,11 +71,11 @@ let CommonUtils = {
                         reason: getString(xmlhttp.responseText)
                     })
                 }
-            }
+            };
             xmlhttp.onerror = () => {
                 reject(xmlhttp.status)
-            }
-            xmlhttp.send(JSON.stringify(option.data))
+            };
+            xmlhttp.send(option.data)
         })
     },
     isObject(data) {
@@ -80,7 +105,43 @@ export const generateId = () => {
         let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
-}
+};
+
+export const POST = (url, option) => {
+    option.headers = option.headers || new Headers();
+    let {data, headers} = option;
+
+    const isContentTypeHeaderPresent = headers && headers.has('content-type');
+    const isFormEncodedData = isContentTypeHeaderPresent &&
+        headers.get('content-type').indexOf('x-www-form-urlencoded') > -1;
+    if (!isContentTypeHeaderPresent) {
+        headers.set('content-type', 'application/json');
+       data = JSON.stringify(option.data);
+    }
+
+    if (isFormEncodedData) {
+        // form data header
+        let form_data = new FormData();
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                form_data.append(key, data[key])
+            }
+        }
+        data = form_data
+    }
+
+    const request = new Request(url, {
+        method: 'POST',
+        body: data,
+        headers
+    });
+    return fetch(request).then(response => {
+        if (!response.ok) {
+            throw response
+        }
+        return response.json()
+    })
+};
 
 export const Http = CommonUtils.Http;
 
@@ -109,3 +170,9 @@ export const isolateScroll = (elementId) => {
     e.returnValue = false
   }
 }
+
+export const isArray = CommonUtils.isArray;
+
+export const isObject = CommonUtils.isObject;
+
+export const isUndefined = CommonUtils.isUndefined;

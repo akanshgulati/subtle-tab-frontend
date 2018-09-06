@@ -1,6 +1,7 @@
 import {STORAGE} from './Constants'
 import {Get, Remove, Set} from './storage'
 import {TodosType} from '../constants/Todos'
+import {isArray} from './common'
 
 export const getLocalKeys = (type) => {
     let todoMetaKey, todoInitial, listInitial, listMetaKey
@@ -23,10 +24,10 @@ export const getLocalKeys = (type) => {
 export const unsetLocalTodos = (type) => {
     const localKeys = getLocalKeys(type)
     let localMetaArr = Get(localKeys.todoMetaKey)
-    Remove(localKeys.todoMetaKey)
-    if (!localMetaArr) {
-        return
+    if (!localMetaArr || !isArray(localMetaArr)) {
+        return;
     }
+    Remove(localKeys.todoMetaKey)
     localMetaArr.map(localTodoId => {
         return Remove(localKeys.todoInitial + localTodoId)
     })
@@ -48,8 +49,8 @@ export const setLocalTodos = (type, todos) => {
 export const getLocalTodos = (type) => {
     const localKeys = getLocalKeys(type)
     let localTodoMetaArr = Get(localKeys.todoMetaKey)
-    if (!localTodoMetaArr) {
-        return
+    if (!localTodoMetaArr || !isArray(localTodoMetaArr)) {
+        return;
     }
     return localTodoMetaArr.map(localTodoId => {
         return Get(localKeys.todoInitial + localTodoId)
@@ -84,7 +85,7 @@ export const setLocalLists = (type, lists) => {
 export const getLocalLists = (type) => {
     const localKeys = getLocalKeys(type)
     let localListMetaArr = Get(localKeys.listMetaKey)
-    if (!localListMetaArr) {
+    if (!localListMetaArr || !isArray(localListMetaArr)) {
         return
     }
     return localListMetaArr.map(localListId => {
@@ -107,11 +108,19 @@ export const unsetThirdPartyTodoData = () => {
     Remove(STORAGE.T_CURRENT_TODO_LIST);
     Remove(STORAGE.W_CURRENT_TODO_LIST);
 }
+export const unsetTodoTypeLocalData = (type) => {
+    if (!type) {
+        return
+    }
+    unsetLocalLists(type)
+    unsetLocalTodos(type)
+}
 export default {
     unsetLocalTodos,
     setLocalTodos,
     getLocalTodos,
     getLocalLists,
     setLocalLists,
-    unsetLocalLists
+    unsetLocalLists,
+    unsetTodoTypeLocalData
 }

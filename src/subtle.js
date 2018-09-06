@@ -31,6 +31,7 @@ function filterResponses(response) {
         return result;
     }
 }
+
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
         if (request.query === 'getBackground') {
@@ -49,9 +50,9 @@ chrome.runtime.onMessage.addListener(
             _console(request.value);
         } else if (request.query === 'startWeather') {
             startWeather();
-        } else if (request.query === 'loadCurrentCustomBackground'){
+        } else if (request.query === 'loadCurrentCustomBackground') {
             loadCurrentCustomBackground(request.url, sendResponse);
-        } else if (request.query === 'loadNextCustomBackground'){
+        } else if (request.query === 'loadNextCustomBackground') {
             loadNextBackground(request.url)
         }
         return true;
@@ -101,7 +102,7 @@ let loadCurrentCustomBackground = (url, callback) => {
 let getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
-            let themePage = currentPage[theme.value] || 0;
+        let themePage = currentPage[theme.value] || 0;
 
         if (changePage) {
             themePage++;
@@ -110,7 +111,7 @@ let getBackground = (theme, changePage) => {
         let url = 'https://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
 
-        CommonUtils.http(url).then((response)=>{
+        CommonUtils.http(url).then((response) => {
             //responses will be other than seen, having good views and sizes
             bgData = filterResponses(response);
             //If all pages are empty;
@@ -126,7 +127,7 @@ let getBackground = (theme, changePage) => {
 
             updateThemeStorage(bgData, theme);
             resolve();
-        }, (error)=>{
+        }, (error) => {
             reject(error);
         })
     });
@@ -148,7 +149,7 @@ let updateThemeStorage = (bgData, theme) => {
 };
 
 let previousURL;
-let loadNextBackground = function (url) {
+let loadNextBackground = function(url) {
     previousURL = previousURL || url;
     if (previousURL !== url) {
         _console('BG: Load Next Background for', url);
@@ -164,7 +165,7 @@ let _console = (log) => {
     }
 };
 
-chrome.runtime.onInstalled.addListener(function (details) {
+chrome.runtime.onInstalled.addListener(function(details) {
     if (details && details.reason && details.reason === 'install') {
         let sharedData;
 
@@ -185,7 +186,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
     }
 });
 
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.browserAction.onClicked.addListener(function(tab) {
     chrome.tabs.create({});
 });
 
@@ -196,7 +197,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         if (!changes.hasOwnProperty(key)) {
             continue;
         }
-        _console("Storage Changed" + JSON.stringify(changes[key]));
+        _console('Storage Changed' + JSON.stringify(changes[key]));
         if (typeof changes[key].newValue !== undefined) {
             storage.setLocal(key, changes[key].newValue);
         } else {
@@ -211,7 +212,7 @@ function getWeather(data) {
 
     let url = 'https://api.subtletab.com/weather';
 
-    if(data.type !== 'custom'){
+    if (data.type !== 'custom') {
         url += '?lat=' + data.lat + '&long=' + data.long + '&type=geo';
     } else {
         url += '?location=' + data.location + '&type=custom';
@@ -245,6 +246,7 @@ function loadWeather(settings) {
         getWeather(options);
     }
 }
+
 let weatherInterval;
 
 function startWeather() {
@@ -270,7 +272,7 @@ function stopWeather() {
     clearInterval(weatherInterval);
 }
 
-function updateLocalStorage(){
+function updateLocalStorage() {
     let sharedData;
     let miscSettings;
     // Show onboarding with latest features
@@ -279,7 +281,7 @@ function updateLocalStorage(){
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
     // Add feature of custom location in weather
-    if(sharedData && CommonUtils.isObject(sharedData)){
+    if (sharedData && CommonUtils.isObject(sharedData)) {
         if (sharedData.weather && CommonUtils.isUndefined(sharedData.weather.location)) {
             let storedWeather = storage.get(constants.STORAGE.WEATHER);
             // defining object of weather
@@ -296,12 +298,17 @@ function updateLocalStorage(){
                 storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
             }
         }
+
         if (CommonUtils.isUndefined(sharedData.notes)) {
             sharedData.notes = config.defaultCustomization.notes
         }
-      if (sharedData.clock && CommonUtils.isUndefined(sharedData.clock.calendar)) {
-        sharedData.clock.calendar = config.defaultCustomization.clock.calendar
-      }
+        if (sharedData.clock && CommonUtils.isUndefined(sharedData.clock.calendar)) {
+            sharedData.clock.calendar = config.defaultCustomization.clock.calendar
+        }
+        if (CommonUtils.isUndefined(sharedData.todos)) {
+            sharedData.todos = config.defaultCustomization.todos;
+            sharedData.showUtilities.showTodos = true;
+        }
 
     }
 
@@ -326,7 +333,7 @@ function init() {
         }
     });
 
-    chrome.tabs.onCreated.addListener(function () {
+    chrome.tabs.onCreated.addListener(function() {
         prevTabsCount = tabsCount;
         tabsCount++;
         if (tabsCount === 2) {
@@ -334,4 +341,5 @@ function init() {
         }
     });
 }
+
 init();

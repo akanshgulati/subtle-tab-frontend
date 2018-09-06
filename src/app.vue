@@ -14,7 +14,8 @@
                     </div>
                     <div id="position--top-right" v-on:click.stop="" @mousedown.stop="">
                         <div class="flex flex-center">
-                            <div class="todo-widget relative" v-on:keydown.stop="">
+                            <!-- TO-DO SECTION -->
+                            <div class="todo-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showTodos">
                                 <div class="todo-icon pointer" v-on:click.stop="toggleTodos">
                                     <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8rem">
                                         <g>
@@ -31,10 +32,10 @@
                                     </svg>
                                 </div>
                                 <template :class="{'fade_in': showTodos}" v-if="showTodos">
-                                    <TodoWrapper :type="sharedData.todos.type"/>
+                                    <TodoWrapper :type="sharedData.todos.type" :settings="sharedData.todos"/>
                                 </template>
                             </div>
-
+                            <!-- NOTE SECTION -->
                             <div class="notes-widget relative" v-on:keydown.stop=""  v-if="sharedData.showUtilities.showNotes">
                                 <div class="notes-icon pointer" v-on:click.stop="showNotes = !showNotes">
                                     <svg x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8em" >
@@ -123,11 +124,7 @@
             this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
             this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
             this.showNotes = this.sharedData.notes.isPinned;
-            if (this.sharedData && !this.sharedData.todos) {
-              this.sharedData.todos = {
-                type: 'default',
-              };
-            }
+            this.showTodos = this.sharedData.todos.isPinned;
         },
         data() {
             return {
@@ -138,7 +135,7 @@
                 seenOnBoarding: this.seenOnBoarding,
                 miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: true
+                showTodos: this.showTodos
             }
         },
         mounted() {
@@ -242,8 +239,10 @@
                 }, 0)
             },
             toggleTodos() {
-              this.showNotes = false;
-              this.showTodos = !this.showTodos;
+                this.showTodos = !this.showTodos;
+                if (!this.showTodos) {
+                    this.showNotes = this.sharedData.notes.isPinned
+                }
             },
             generateId() {
               return 'xxxxxxxx3-0xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

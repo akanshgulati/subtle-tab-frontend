@@ -144,6 +144,20 @@
                                     </label>
                                 </div>
                             </li>
+                            <li class="inline-list-item">
+                                <div>
+                                    <div class="font-small semi-bold">Todos widget
+                                    </div>
+                                    <small>Show/hide todos widget</small>
+                                </div>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox"
+                                               v-model="settings.showUtilities.showTodos">
+                                        <span class="lever mar-0"></span>
+                                    </label>
+                                </div>
+                            </li>
                         </ul>
                     </div>
 
@@ -778,43 +792,45 @@
                 chrome.tabs.create({url: url, active: true})
             },
             saveAuthCode(bypassRevoke) {
-                let type = this.todos.type
+                let type = this.todos.type;
                 // REVOKE PROCESS
                 if (this.todos.isAuthSaved && !bypassRevoke) {
                     // resetting form data and removing auth code from storage
-                    this.todos.authCode = ''
-                    this.todos.saveMsg = `<span class="success">Integration removed successfully</span>`
+                    this.todos.authCode = '';
+                    this.todos.saveMsg = `<span class="success">Integration removed successfully</span>`;
 
                     // resetting calendar settings
-                    if (this.settings.clock && this.settings.clock.calendar) {
-                        this.settings.clock.calendar = DefaultConfig.clock.calendar
+                    if (this.settings.todos && this.settings.todos) {
+                        this.settings.todos.type = DefaultConfig.todos.type
                     }
-                    this.calendar.isAuthSaved = false
+                    this.calendar.isAuthSaved = false;
 
                     return
                 }
                 // Verify if auth code is right
                 const isAuthCodeCorrect = validateAuthCode(this.todos.type, this.todos.authCode);
                 if (!isAuthCodeCorrect) {
-                    this.todos.saveMsg = `<span class='error'>Incorrect authentication code, contact support.</span>`
+                    this.todos.saveMsg = `<span class='error'>Incorrect authentication code, contact support.</span>`;
                     return
                 }
                 // ask user for permission of origin url
                 getPermission(type).then(() => {
                     if (type === TodosType.WUNDERLIST) {
-                        this.todos.saveMsg = `<span class='success'>Wunderlist Integrated</span>`
+                        this.todos.saveMsg = `<span class='success'>Wunderlist Integrated</span>`;
                         this.settings.todos.type = type;
                         CustomizeUtil.storeAuthCode(type, this.todos.authCode);
                         this.todos.isAuthSaved = true;
                     } else if (type === TodosType.TODOIST) {
                         this.settings.todos.type = type;
-                        this.todos.saveMsg = `<span class='success'>Todoist Integrated</span>`
+                        this.todos.saveMsg = `<span class='success'>Todoist Integrated</span>`;
                         CustomizeUtil.storeAuthCode(type, this.todos.authCode);
                         this.todos.isAuthSaved = true;
                     }
+                    EventBus.$emit('todosWrapper', {message: 'refresh'});
                 }, () => {
-                    this.todos.type = this.settings.todos.type = TodosType.DEFAULT
-                    this.todos.saveMsg = `<span class='error'>Invalid auth code</span>`
+                    this.todos.type = this.settings.todos.type = TodosType.DEFAULT;
+                    this.todos.saveMsg = `<span class='error'>Invalid auth code</span>`;
+                    EventBus.$emit('todosWrapper', {message: 'refresh'});
                 })
             }
         },

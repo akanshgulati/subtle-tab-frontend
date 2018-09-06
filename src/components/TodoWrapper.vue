@@ -1,20 +1,34 @@
 <template>
-    <Todos v-if="type === TodosType.DEFAULT"/>
-    <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST"/>
-    <TodoistTodos v-else-if="type === TodosType.TODOIST"/>
+    <Todos v-if="type === TodosType.DEFAULT && showTodosSection"/>
+    <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST && showTodosSection"/>
+    <TodoistTodos v-else-if="type === TodosType.TODOIST && showTodosSection"/>
 </template>
 <script>
     import Todos from './Todos.vue'
     import WunderlistTodos from './WunderlistTodos.vue'
     import TodoistTodos from './TodoistTodos.vue'
+
     import {TodosType} from '../constants/Todos'
+    import {EventBus} from '../utils/EventBus'
 
     export default {
-        props: ['type'],
+        props: ['type', 'settings'],
         data() {
             return {
-                TodosType
+                TodosType,
+                showTodosSection: true
             }
+        },
+        mounted() {
+            const self = this;
+            EventBus.$on('todosWrapper', e => {
+                if (e.message === 'refresh') {
+                    this.showTodosSection = false;
+                    setTimeout(() => {
+                        self.showTodosSection = true;
+                    }, 100)
+                }
+            })
         },
         components: {
             Todos,
@@ -27,6 +41,7 @@
     #todo {
         background-color: rgba(255, 255, 255, 0.9);
     }
+
     #todo {
         height: 100%;
         border: 0;

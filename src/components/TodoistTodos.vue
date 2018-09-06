@@ -1,5 +1,6 @@
 <template>
     <div id="todos" v-on:click.stop="" class="todos-arrow_box relative flex-flow-column flex text-black">
+
         <header class="flex widget-header flex-center">
             <svg class="pointer flex-no-shrink" v-on:click="toggle('showSidebar'); showTodoManager = false;"
                  width="1.1rem"
@@ -13,16 +14,19 @@
                 </g>
             </svg>
             <i class="integrate-icon icon--todoist mh-5 flex-no-shrink"></i>
-            <h4 class="widget-heading ml-5 mv-0">{{ currentList ? titleCase(currentList.title): ''}}</h4>
+            <h4 class="widget-heading ml-5 mv-0">Todo {{ currentList ? ': '+ titleCase(currentList.title): ''}}</h4>
         </header>
 
-        <section class="flex relative todo-section flex-flow-column">
-            <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }">
+        <section class="flex relative todo-section flex-flow-column"
+                 @click.stop="showTodoManager = showSidebar = false">
+            <div id="todo-sidebar" class="sidebar flex-flow-column flex" :class="{'show-sidebar': showSidebar }"
+                 @click.stop="">
                 <div class="sidebar-container">
                     <TodoList :list="visibleLists"
                               :current="currentListId"
                               v-on:changed="changedTodoList"
                               :show-todos-count="false"
+                              :is-delete-enabled="true"
                               :is-create-enabled="false"/>
                 </div>
             </div>
@@ -32,10 +36,17 @@
                 <TodoManager :todo="currentTodo" @changed="updateTodo" v-if="showTodoManager"/>
             </div>
 
+            <TodoError
+                v-if="errorState"
+                :error-state="errorState"
+                v-on:click.stop="showSidebar = showTodoManager = false"
+            />
+
             <div id="todo"
+                 v-if="!errorState"
                  v-on:click.stop="showSidebar = showTodoManager = false"
                  class="flex flex-flow-column"
-                 :class="{'flex-justify-center': isLoadingTodos}">
+                 :class="{'flex-justify-center': isLoadingTodos, 'disable-pointer': showSidebar || showTodoManager}">
                 <!--LOADING STATE-->
                 <div v-if="isLoadingTodos" id="loading-todo"
                      class="flex flex-flow-column flex-justify-center flex-center">
@@ -66,41 +77,6 @@
                                 v-if="!currentListIncompleteTodos.length && !showCompletedTodos"
                             />
                         </transition>
-                        <!--&lt;!&ndash;COMPLETE TASKS LOOP&ndash;&gt;
-                        <TodosGroup
-                            v-if="showCompletedTodos"
-                            id="complete-todos-list" class="mar-0"
-                            :todos="sortByOrder(currentListCompleteTodos, true)"
-                            isCompletedList="true"
-                            v-on:changed="checkedTodo"
-                        />-->
-                       <!-- <transition-group v-show="showCompletedTodos" name="flip-list" tag="ul" id="complete-todos-list"
-                                          class="mar-0">
-                            <li v-for="todo in sortByOrder(currentListCompleteTodos, true)" class="todo flex" :key="todo.id">
-                                <input type="checkbox" v-model="todo.isCompleted"
-                                       class="browser-default todo&#45;&#45;checkbox filled-in"
-                                       :id="todo.id" @change="checkedTodo(todo)"/>
-                                <label class="todo&#45;&#45;name" :for="todo.id"> {{todo.title}}</label>
-                                <div class="todo-btn">
-                                    &lt;!&ndash;<svg height="25" width="23" class="star-rating" :class="{'starred':todo.starred}" v-on:click="starTodo(todo)">
-                                        <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;" fill="#ccc"/>
-                                    </svg>&ndash;&gt;
-                                    <svg height="10" width="10" version="1.1" viewBox="0 0 21.9 21.9"
-                                         enable-background="new 0 0 21.9 21.9"
-                                         v-on:click.stop="deleteTodo(todo)" class="pointer">
-                                        <path
-                                            d="M14.1,11.3c-0.2-0.2-0.2-0.5,0-0.7l7.5-7.5c0.2-0.2,0.3-0.5,0.3-0.7s-0.1-0.5-0.3-0.7l-1.4-1.4C20,0.1,19.7,0,19.5,0  c-0.3,0-0.5,0.1-0.7,0.3l-7.5,7.5c-0.2,0.2-0.5,0.2-0.7,0L3.1,0.3C2.9,0.1,2.6,0,2.4,0S1.9,0.1,1.7,0.3L0.3,1.7C0.1,1.9,0,2.2,0,2.4  s0.1,0.5,0.3,0.7l7.5,7.5c0.2,0.2,0.2,0.5,0,0.7l-7.5,7.5C0.1,19,0,19.3,0,19.5s0.1,0.5,0.3,0.7l1.4,1.4c0.2,0.2,0.5,0.3,0.7,0.3  s0.5-0.1,0.7-0.3l7.5-7.5c0.2-0.2,0.5-0.2,0.7,0l7.5,7.5c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3l1.4-1.4c0.2-0.2,0.3-0.5,0.3-0.7  s-0.1-0.5-0.3-0.7L14.1,11.3z"/>
-                                    </svg>
-                                    <svg height="16" width="16" version="1.1" x="0px" y="0px" viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve" v-on:click.stop="editTodo(todo)" class="pointer">
-                                <g fill="#a7a7a7" >
-                                    <path d="M30,16c4.411,0,8-3.589,8-8s-3.589-8-8-8s-8,3.589-8,8S25.589,16,30,16z"/>
-                                    <path d="M30,44c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,44,30,44z"/>
-                                    <path d="M30,22c-4.411,0-8,3.589-8,8s3.589,8,8,8s8-3.589,8-8S34.411,22,30,22z"/>
-                                </g>
-                            </svg>
-                                </div>
-                            </li>
-                        </transition-group>-->
                     </div>
 
                 </template>
@@ -116,15 +92,17 @@
     import NoTodo from '../shared/NoTodo.vue'
     import TodoList from '../shared/TodoList.vue'
     import TodoManager from '../shared/TodoManager.vue'
+    import TodoError from '../shared/TodoError.vue'
 
-    import {Get, Set} from '../utils/storage'
+    import {Get, Set, Remove} from '../utils/storage'
     import {TODOIST, STORAGE} from '../utils/Constants'
-    import {isolateScroll, Http, DecryptAuth, generateId} from '../utils/common'
+    import {isolateScroll, Http, DecryptAuth, generateId, POST} from '../utils/common'
     import TodoUtil from '../utils/TodoUtil'
     import {titleCase} from '../utils/StringUtils'
     import {TodosType, TodoListItemAction, TodoItemAction} from '../constants/Todos'
 
     let syncList
+    const TodoType = TodosType.TODOIST;
     export default {
         data() {
             return {
@@ -142,22 +120,24 @@
                 syncTime: '',
                 showCompletedTodos: false,
                 isAddTodoSticky: false,
-                syncToken: Get(STORAGE.T_SYNC_TOKEN) || '*'
+                syncToken: Get(STORAGE.T_SYNC_TOKEN) || '*',
+                errorState: ''
             }
         },
         mounted() {
             if (!this.authCode) {
-                return
+                this.manageError({statusText: 'No Auth Code', status: 403});
+                return;
             }
-            isolateScroll('incomplete-todos-list')
-            isolateScroll('complete-todos-list')
-            isolateScroll('todo-sidebar')
+            isolateScroll('incomplete-todos-list');
+            isolateScroll('complete-todos-list');
+            isolateScroll('todo-sidebar');
             this.init()
             syncList = setInterval(this.sync, 5000)
         },
         computed: {
             currentListId() {
-                return this.currentList.id
+                return this.currentList && this.currentList.id
             },
             tokenType() {
                 return this.auth.token_type
@@ -175,33 +155,30 @@
                 return this.todoLists.filter(list => !list.isDeleted && !list.isArchived)
             },
             currentListIncompleteTodos() {
-                return this.todos.filter(todo => todo.listId === this.currentListId && !todo.isCompleted && !todo.isDeleted)
+                return this.todos.filter(
+                    todo => todo.listId === this.currentListId && !todo.isCompleted && !todo.isDeleted)
             },
             currentListCompleteTodos() {
-                return this.todos.filter(todo => todo.listId === this.currentListId && todo.isCompleted && !todo.isDeleted)
+                return this.todos.filter(
+                    todo => todo.listId === this.currentListId && todo.isCompleted && !todo.isDeleted)
             }
         },
         methods: {
             toggleCompletedTodos(state) {
                 this.showCompletedTodos = state
             },
-            sortByOrder(data, isDescendingOrder){
+            sortByOrder(data, isDescendingOrder) {
                 if (isDescendingOrder) {
                     return data.sort(function(a, b) {
                         return b.order - a.order
                     })
                 }
-                return data.sort(function (a, b) {
+                return data.sort(function(a, b) {
                     return a.order - b.order;
                 });
             },
             syncCall(url, data) {
-                url = url || TODOIST.URL.BASE
-                const headers = [
-                    {
-                        name: 'Content-type',
-                        value: 'application/json'
-                    }]
+                url = url || TODOIST.URL.BASE;
                 if (data) {
                     data = Object.assign({
                         token: this.authCode
@@ -213,9 +190,18 @@
                         resource_types: ['projects', 'items']
                     }
                 }
-                return Http(url, {headers, method: 'POST', data})
+                return POST(url, {data}).then(response => {
+                    this.errorState = '';
+                    return response;
+                }).catch(error => {
+                    console.log(error);
+                    this.manageError(error);
+                })
             },
             toggle(field) {
+                if (this.errorState) {
+                    return
+                }
                 this[field] = !this[field]
             },
             init() {
@@ -237,22 +223,29 @@
                 if (!this.syncToken) {
                     return
                 }
-                const baseUrl = TODOIST.URL.BASE
+                const baseUrl = TODOIST.URL.BASE;
 
                 return this.syncCall(baseUrl).then(data => {
+                    if (!data || !data.projects || !data.items) {
+                        return
+                    }
                     if (data.projects.length > 0) {
-                        this.updateLists(data.projects)
+                        this.updateLists(data.projects);
                         this.syncToken = data.sync_token
                     }
                     if (data.items.length > 0) {
-                        this.updateTodos(data.items)
+                        this.updateTodos(data.items);
                         this.syncToken = data.sync_token
                     }
                 })
-
             },
             getLocalTodos() {
-                return TodoUtil.getLocalTodos(TodosType.TODOIST)
+                try {
+                    this.errorState = '';
+                    return TodoUtil.getLocalTodos(TodosType.TODOIST)
+                } catch (error) {
+                    this.manageError({error})
+                }
             },
             setLocalTodos(todos) {
                 return TodoUtil.setLocalTodos(TodosType.TODOIST, todos)
@@ -261,13 +254,18 @@
                 TodoUtil.unsetLocalTodos(TodosType.TODOIST)
             },
             getLocalLists() {
-                return TodoUtil.getLocalLists(TodosType.TODOIST)
+                try {
+                    this.errorState = '';
+                    return TodoUtil.getLocalLists(TodosType.TODOIST)
+                } catch (error) {
+                    this.manageError({error})
+                }
             },
             setLocalLists(lists) {
-               return TodoUtil.setLocalLists(TodosType.TODOIST, lists)
+                return TodoUtil.setLocalLists(TodosType.TODOIST, lists)
             },
             unsetLocalLists() {
-                TodoUtil.unsetLocalLists(type)
+                TodoUtil.unsetLocalLists(TodosType.TODOIST)
             },
             updateLists(lists) {
                 let formattedTodoLists = lists.map(list => this.formatListResponse(list))
@@ -304,13 +302,16 @@
                 let todoLists, todos
                 const self = this;
                 return this.syncCall(baseUrl).then(data => {
-                    todoLists = data.projects
+                    if (!data) {
+                        return;
+                    }
+                    todoLists = data.projects;
                     todos = data.items
                     self.todoLists = todoLists.map(list => self.formatListResponse(list))
                     self.todos = data.items.filter(todo => !todo.is_deleted && !todo.in_history && !todo.is_archived).
                         map(todo => self.formatTodoResponse(todo))
                     // setting active current list
-                    self.currentList = self.currentList  || self.todoLists[0]
+                    self.currentList = self.currentList || self.todoLists[0]
                     // setting sync token to new value
                     self.syncToken = data.sync_token
                     self.isLoadingTodos = false
@@ -350,17 +351,23 @@
                 }
             },
             patchTodo(type, args) {
-                const uuid = generateId()
-                const temp_id = generateId()
+                const uuid = generateId();
+                const temp_id = generateId();
                 const commands = [{type, uuid, args, temp_id}];
 
                 this.syncCall(TODOIST.URL.BASE, {commands}).then((response) => {
-                    if (response.sync_status[uuid] === 'ok') {
-                        this.sync()
+                    if (!response) {
+                        return;
+                    }
+                    const status = response.sync_status[uuid];
+                    if (status === 'ok') {
+                        this.sync();
+                    } else if (status) {
+                        this.manageError(status)
                     }
                     this.showSidebar = false;
                     this.showTodoManager = false;
-                    this.isLoadingTodos = false
+                    this.isLoadingTodos = false;
                 })
             },
             createTodo(todo) {
@@ -375,7 +382,7 @@
                 }
                 this.patchTodo('item_add', _todo)
             },
-            changedTodo(info){
+            changedTodo(info) {
                 if (!info || !info.action) {
                     return
                 }
@@ -394,7 +401,7 @@
             checkedTodo(todoData) {
                 const todo = todoData.todo;
                 const value = todoData.value;
-                const type = value ? 'item_complete': 'item_uncomplete';
+                const type = value ? 'item_complete' : 'item_uncomplete';
                 this.patchTodo(type, {'ids': [todo.id]})
             },
             deleteTodo(todo) {
@@ -426,6 +433,34 @@
                 }
                 list.isDeleted = true
                 this.patchTodo('project_delete', {'ids': [list.id]});
+            },
+            manageError(errorInfo) {
+                if (!navigator.onLine || (errorInfo && errorInfo.stack && errorInfo.stack.indexOf('TypeError') > -1)) {
+                    this.errorState = 'offline';
+                    return
+                }
+                // Response type gives read only properties
+                if (!(errorInfo instanceof Response)) {
+                    // errorInfo can be read only
+                    errorInfo = errorInfo || {};
+                    // Handling case when sync fails
+                    errorInfo.status = errorInfo.status || errorInfo.http_code;
+                    errorInfo.statusText = errorInfo.statusText || errorInfo.error;
+                }
+                // case when re-authenticate
+                if (errorInfo.status > 400 && errorInfo.status < 500) {
+                    this.errorState = 'reIntegrate';
+                    clearInterval(syncList);
+                    Remove(STORAGE.T_AUTH);
+                    Remove(STORAGE.T_SYNC_TOKEN);
+                    this.unsetLocalTodos();
+                    this.unsetLocalLists();
+                } else if ([501, 503].indexOf(errorInfo.status) > -1) {
+                    this.errorState = 'serverIssue';
+                }
+                this.isLoadingTodos = false;
+                Set(`Todoist-Error-${+(new Date())}`, errorInfo);
+                this.$ga.event(TodoType, 'error', `${errorInfo.statusText}-${errorInfo.status}-${errorInfo.error_tag}`)
             }
         },
         watch: {
@@ -466,24 +501,11 @@
             TodosGroup,
             NoTodo,
             TodoManager,
-            TodoList
+            TodoList,
+            TodoError
         },
         beforeDestroy() {
             clearInterval(syncList)
         }
     }
 </script>
-<style>
-    .list-complete-item {
-        transition: all 0.5s ease-in;
-    }
-
-    .list-complete-enter {
-        opacity: 0;
-        transform: translateY(33px);
-    }
-
-    .list-complete-leave-to {
-        transition: all 0.5s ease-out !important;
-    }
-</style>

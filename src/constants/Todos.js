@@ -1,7 +1,7 @@
 export const TodosType = {
-  WUNDERLIST: 'w',
-  DEFAULT: 'default',
-  TODOIST: 't'
+    WUNDERLIST: 'w',
+    DEFAULT: 'default',
+    TODOIST: 't'
 }
 export const TodoItemAction = {
     COMPLETE: 'completion',

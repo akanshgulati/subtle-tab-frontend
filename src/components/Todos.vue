@@ -109,7 +109,7 @@
                 currentTodoContent: '',
                 todosMeta: this.todosMeta,
                 errorMessage: null,
-                showSidebar: true,
+                showSidebar: false,
                 showTodoManager: false,
                 listTitle: '',
                 currentListId: Get(STORAGE.CURRENT_TODO_LIST) || 'inbox',

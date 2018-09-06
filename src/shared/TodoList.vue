@@ -8,7 +8,7 @@
                     <a class="todo-list-title" :title="listItem.title">{{titleCase(listItem.title)}}</a>
                     <span class="todo-list-count ml-10" v-if="showTodosCount">{{getTodosCount(listItem.id)}}</span>
                 </div>
-                <div @click.stop="deleteList(listItem)" class="mr-5">
+                <div @click.stop="deleteList(listItem)" class="mr-5" v-if="isDeleteEnabled">
                     <svg v-show="showDeleteIcon(listItem)"
                          class="delete-list-icon pointer" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 482.428 482.429" style="enable-background:new 0 0 482.428 482.429;" xml:space="preserve">
                         <g>
@@ -68,6 +68,9 @@
             current: {},
             isCreateEnabled: {
                 default: true
+            },
+            isDeleteEnabled: {
+              default: true
             },
             count: {
                 type: Object
