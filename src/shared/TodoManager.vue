@@ -6,6 +6,7 @@
                 placeholder=""
                 class="todo-title no-focus bold mar-0"
                 required
+                @input="isSubmitDisable = false"
                 v-model="_todo.title"
             >
         </div>
@@ -96,18 +97,8 @@
                 </transition>
             </div>
         </div>
-        <!--<div class="flex-center">
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 490 490" style="enable-background:new 0 0 490 490;" xml:space="preserve" width="18px" height="18px">
-                <g>
-                    <g>
-                        <path d="M53.8,444.15h382.4c29.7,0,53.8-24.1,53.8-53.8v-228.7c0-29.7-24.1-53.8-53.8-53.8h-111c-6.8,0-12.3,5.5-12.3,12.3    s5.5,12.3,12.3,12.3h111c16.2,0,29.3,13.1,29.3,29.3v228.7c0,16.2-13.1,29.3-29.3,29.3H53.8c-16.2,0-29.3-13.1-29.3-29.3v-228.8    c0-16.2,13.1-29.3,29.3-29.3h161.6l-41.1,41.1c-4.8,4.8-4.8,12.5,0,17.3c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l62-62    c4.8-4.8,4.8-12.5,0-17.3l-62-62c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l41.1,41.1H53.8c-29.7,0-53.8,24.1-53.8,53.8v228.7    C0,419.95,24.1,444.15,53.8,444.15z" fill="#666666"/>
-                    </g>
-                </g>
-            </svg>
-            <span>Repeat</span>
-        </div>-->
         <div class="ml-5">
-            <Button class="btn text-blue-hover ml-10 mt-10" text="Save" type="primary" :is-disabled="isSubmitDisable"/>
+            <Button class="btn text-blue-hover ml-10 mt-10" text="Save" type="save" size="medium" :is-disabled="isSubmitDisable"/>
         </div>
     </form>
 </template>
@@ -127,7 +118,6 @@
         },
         methods: {
             update() {
-                debugger;
                 this.$emit('changed', {
                     action: 'edit',
                     todo: this._todo

@@ -15,6 +15,11 @@ export const getLocalKeys = (type) => {
         todoInitial = STORAGE.W_TODO
         listInitial = STORAGE.W_LIST
         listMetaKey = STORAGE.W_LISTS_META
+    } else if (type === TodosType.DEFAULT) {
+        todoMetaKey = STORAGE.TODOS_META;
+        todoInitial = STORAGE.TODO;
+        listInitial = STORAGE.TODO_LIST;
+        listMetaKey = STORAGE.TODO_LISTS_META;
     }
     return {
         todoMetaKey, todoInitial, listInitial, listMetaKey
@@ -22,52 +27,85 @@ export const getLocalKeys = (type) => {
 }
 
 export const unsetLocalTodos = (type) => {
-    const localKeys = getLocalKeys(type)
-    let localMetaArr = Get(localKeys.todoMetaKey)
-    if (!localMetaArr || !isArray(localMetaArr)) {
+    const localKeys = getLocalKeys(type);
+    const localTodosMetaArr = Get(localKeys.todoMetaKey);
+    if (!localTodosMetaArr) {
+        return true;
+    }
+    if (localTodosMetaArr && !isArray(localTodosMetaArr)) {
+        return false;
+    }
+    Remove(localKeys.todoMetaKey);
+    localTodosMetaArr.forEach(localTodoId => {
+        Remove(localKeys.todoInitial + localTodoId)
+    });
+    return true;
+};
+
+export const unsetLocalTodo = (type, todoId) => {
+    if (!type || !todoId) {
         return;
     }
-    Remove(localKeys.todoMetaKey)
-    localMetaArr.map(localTodoId => {
-        return Remove(localKeys.todoInitial + localTodoId)
-    })
-}
-export const setLocalTodos = (type, todos) => {
-    if (!type || !todos || !todos.length) {
-        return
-    }
-    const localKeys = getLocalKeys(type)
-    unsetLocalTodos(type)
-    let todosMetaArr = []
-    todos.forEach(todo => {
-        todosMetaArr.push(todo.id)
-        Set(localKeys.todoInitial + todo.id, todo)
-    })
-    Set(localKeys.todoMetaKey, todosMetaArr)
-    return true
-}
-export const getLocalTodos = (type) => {
-    const localKeys = getLocalKeys(type)
-    let localTodoMetaArr = Get(localKeys.todoMetaKey)
+    const localKeys = getLocalKeys(type);
+    let localTodoMetaArr = Get(localKeys.todoMetaKey);
     if (!localTodoMetaArr || !isArray(localTodoMetaArr)) {
         return;
     }
-    return localTodoMetaArr.map(localTodoId => {
-        return Get(localKeys.todoInitial + localTodoId)
-    })
-}
+    Remove(localKeys.todoInitial + todoId);
+    localTodoMetaArr.splice(localTodoMetaArr.indexOf(todoId), 1);
+    Set(localKeys.todoMetaKey, localTodoMetaArr);
+};
+
+export const setLocalTodos = (type, todos) => {
+    try {
+        if (!type || !todos || !todos.length) {
+            return
+        }
+        const localKeys = getLocalKeys(type);
+        if (unsetLocalTodos(type)) {
+            let todosMetaArr = [];
+            todos.forEach(todo => {
+                todosMetaArr.push(todo.id);
+                Set(localKeys.todoInitial + todo.id, todo)
+            });
+            Set(localKeys.todoMetaKey, todosMetaArr);
+            return true;
+        }
+    } catch (e) {}
+};
+export const getLocalTodos = (type) => {
+    try {
+        let todos = [];
+        const localKeys = getLocalKeys(type);
+        let localTodoMetaArr = Get(localKeys.todoMetaKey);
+        if (!localTodoMetaArr || !isArray(localTodoMetaArr)) {
+            return todos;
+        }
+        localTodoMetaArr.forEach(localTodoId => {
+            const todo = Get(localKeys.todoInitial + localTodoId);
+            if (todo && todo.id) {
+                todos.push(todo);
+            }
+        });
+        return todos;
+    } catch (e) {}
+};
 
 export const unsetLocalLists = (type) => {
-    const localKeys = getLocalKeys(type)
-    let localMetaArr = Get(localKeys.listMetaKey)
-    Remove(localKeys.listMetaKey)
+    const localKeys = getLocalKeys(type);
+    let localMetaArr = Get(localKeys.listMetaKey);
     if (!localMetaArr) {
-        return
+        return true;
     }
-    localMetaArr.map(localListId => {
-        return Remove(localKeys.listInitial + localListId)
-    })
-}
+    if (localMetaArr && !isArray(localMetaArr)) {
+        return false;
+    }
+    localMetaArr.forEach(localListId => {
+        Remove(localKeys.listInitial + localListId)
+    });
+    Remove(localKeys.listMetaKey);
+    return true;
+};
 export const setLocalLists = (type, lists) => {
     if (!type || !lists || !lists.length) {
         return
@@ -83,15 +121,20 @@ export const setLocalLists = (type, lists) => {
     return true
 }
 export const getLocalLists = (type) => {
-    const localKeys = getLocalKeys(type)
-    let localListMetaArr = Get(localKeys.listMetaKey)
+    let lists = [];
+    const localKeys = getLocalKeys(type);
+    let localListMetaArr = Get(localKeys.listMetaKey);
     if (!localListMetaArr || !isArray(localListMetaArr)) {
-        return
+        return lists;
     }
-    return localListMetaArr.map(localListId => {
-        return Get(localKeys.listInitial + localListId)
-    })
-}
+    localListMetaArr.forEach(localListId => {
+        const list = Get(localKeys.listInitial + localListId);
+        if (list && list.id) {
+            lists.push(list);
+        }
+    });
+    return lists;
+};
 
 export const unsetAllTodos = () => {
     unsetLocalTodos(TodosType.TODOIST);
@@ -115,12 +158,58 @@ export const unsetTodoTypeLocalData = (type) => {
     unsetLocalLists(type)
     unsetLocalTodos(type)
 }
+export const unsetLocalList = (type, listId) => {
+    if (!type || !listId) {
+        return;
+    }
+    const localKeys = getLocalKeys(type);
+    let localListMetaArr = Get(localKeys.listMetaKey);
+    if (!localListMetaArr || !isArray(localListMetaArr)) {
+        return
+    }
+    // remove list from meta lists
+    localListMetaArr.splice(localListMetaArr.indexOf(listId), 1);
+    Set(localKeys.listMetaKey, localListMetaArr);
+
+    // remove particular list
+    Remove(localKeys.listInitial + listId);
+
+    // remove all todos of that list
+    let localTodoMetaArr = Get(localKeys.todoMetaKey);
+    let newTodoMetaArr = [];
+    if (!localTodoMetaArr || !isArray(localTodoMetaArr)) {
+        return;
+    }
+    localTodoMetaArr.forEach(todoId => {
+        const todoKey = localKeys.todoInitial + todoId;
+        const todo = Get(todoKey);
+        if (todo.list === listId) {
+            Remove(todoKey);
+            return;
+        }
+        // adding all todos id of other than listId
+        newTodoMetaArr.push(todoId);
+    });
+    // update todos meta array
+    Set(localKeys.todoMetaKey, newTodoMetaArr);
+};
+export const showDeleteIcon = (listTitle) => {
+    if (!listTitle) {
+        return
+    }
+    const disableDelete = ['inbox', 'today', 'due today'];
+    const title = listTitle.toLowerCase();
+    return disableDelete.indexOf(title) === -1;
+};
 export default {
     unsetLocalTodos,
+    unsetLocalTodo,
     setLocalTodos,
     getLocalTodos,
     getLocalLists,
     setLocalLists,
     unsetLocalLists,
-    unsetTodoTypeLocalData
+    unsetLocalList,
+    unsetTodoTypeLocalData,
+    showDeleteIcon
 }

@@ -17,6 +17,7 @@
                     </svg>
                 </transition>
             </button>
+
             <span class="todo-title" @click.stop="editMode(todo)"> {{todo.title}}</span>
 
             <div class="todo-btn">
@@ -207,18 +208,9 @@
     .todo-btn {
         margin-left: auto;
     }
-
-    svg.delete-icon {
-        fill: #767678;
-        transition: all 0.23s ease-in;
-    }
     svg.edit-icon {
         fill: #767678;
         transition: all 0.23s ease-in;
-    }
-
-    svg.delete-icon:hover {
-        fill: #e56161
     }
 
     svg.edit-icon:hover {

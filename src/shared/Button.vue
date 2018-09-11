@@ -1,7 +1,8 @@
 <template>
     <button
-        class="btn small semi-bold basic"
-        :class="{'primary': type === 'primary'}"
+        @click.stop="clicked"
+        class="btn semi-bold basic"
+        :class="computedClass"
         :disabled="isDisabled">
         {{text}}
     </button>
@@ -29,6 +30,17 @@
                 default: false
             },
             size: String
+        },
+        computed: {
+            computedClass() {
+                return `${this.sizeClass} ${this.typeClass}`;
+            },
+            sizeClass() {
+                return this.size ? this.size : 'small'
+            },
+            typeClass() {
+                return this.type === 'primary' ? 'primary' : this.type === 'save' ? 'save' : '';
+            }
         }
     }
 </script>
@@ -38,11 +50,17 @@
         color: white;
         margin-left: 0.3rem;
     }
+
     .small {
         height: 20px;
         line-height: 20px;
         padding: 0 5px;
         font-size: 0.9rem;
+    }
+    .medium {
+        padding: 5px 10px;
+        line-height: 20px;
+        height: 29px;
     }
     .basic {
         background: none;
@@ -50,8 +68,13 @@
         border: none;
         box-shadow: none;
     }
+
     .primary {
         background-color: rgba(33, 150, 243, 0.21);
         color: #2196F3;
+    }
+    .save {
+        background-color: #2196f3;
+        color: #fff;
     }
 </style>

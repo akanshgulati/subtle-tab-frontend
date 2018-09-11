@@ -1,7 +1,7 @@
 <template>
-    <Todos v-if="type === TodosType.DEFAULT && showTodosSection"/>
-    <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST && showTodosSection"/>
-    <TodoistTodos v-else-if="type === TodosType.TODOIST && showTodosSection"/>
+    <Todos v-if="type === TodosType.DEFAULT && showTodosSection" :settings="settings"/>
+    <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST && showTodosSection" :settings="settings"/>
+    <TodoistTodos v-else-if="type === TodosType.TODOIST && showTodosSection" :settings="settings"/>
 </template>
 <script>
     import Todos from './Todos.vue'

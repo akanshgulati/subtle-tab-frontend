@@ -2,14 +2,16 @@
     <div class="sidebar-container" v-if="list && list.length > 0">
         <!--<p class="sidebar-heading pointer">Lists</p>-->
         <transition-group name="flip-list" tag="ul" class="todo-lists pad-0">
-            <li v-for="listItem in list" :key="listItem.id" class="flex flex-center flex-justify-space-between pointer todo-list"
+            <li v-for="listItem in list" :key="listItem.id"
+                class="flex flex-center flex-justify-space-between pointer todo-list"
                 :class="{'active': currentListItemId == listItem.id}" @click="itemSelected(listItem)">
                 <div class="flex flex-center" style="width:80%;">
                     <a class="todo-list-title" :title="listItem.title">{{titleCase(listItem.title)}}</a>
                     <span class="todo-list-count ml-10" v-if="showTodosCount">{{getTodosCount(listItem.id)}}</span>
                 </div>
+
                 <div @click.stop="deleteList(listItem)" class="mr-5" v-if="isDeleteEnabled">
-                    <svg v-show="showDeleteIcon(listItem)"
+                    <svg v-show="_showDeleteIcon(listItem)"
                          class="delete-list-icon pointer one-rem-width one-rem-height" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 482.428 482.429" style="enable-background:new 0 0 482.428 482.429;" xml:space="preserve">
                         <g>
                             <g>
@@ -21,9 +23,9 @@
                         </g>
                     </svg>
                 </div>
+
             </li>
         </transition-group>
-
 
         <!-- CREATE LIST-->
         <div v-if="isCreateEnabled">
@@ -33,8 +35,9 @@
                     <path fill-rule="evenodd"
                           d="M20 11h-7V4c0-.553-.447-1-1-1-.552 0-1 .447-1 1v7H4c-.552 0-1 .447-1 1 0 .553.448 1 1 1h7v7c0 .553.448 1 1 1 .553 0 1-.447 1-1v-7h7c.553 0 1-.447 1-1 0-.553-.447-1-1-1"></path>
                 </svg>
-                <span class="text-blue block text-block ml-5">Create list</span>
+                <span class="text-blue block text-block ml-5 semi-bold">Create list</span>
             </div>
+
             <div v-else class="flex todo-list relative pointer">
                 <input type="text" class="create-todo-list no-focus"
                        placeholder="Enter list name"
@@ -50,6 +53,7 @@
 <script>
     import {TodoListItemAction} from '../constants/Todos'
     import {titleCase} from '../utils/StringUtils'
+    import {showDeleteIcon} from '../utils/TodoUtil'
 
     export default {
         data() {
@@ -70,7 +74,7 @@
                 default: true
             },
             isDeleteEnabled: {
-              default: true
+                default: true
             },
             count: {
                 type: Object
@@ -81,13 +85,11 @@
             }
         },
         methods: {
-            showDeleteIcon(listItem) {
+            _showDeleteIcon(listItem) {
                 if (!listItem || !listItem.title) {
                     return
                 }
-                const disableDelete = ['inbox', 'today', 'due today'];
-                const title = listItem.title.toLowerCase();
-                return disableDelete.indexOf(title) === -1;
+                return showDeleteIcon(listItem.title);
             },
             itemSelected(listItem) {
                 this.currentListItemId = listItem.id
@@ -108,13 +110,13 @@
             },
             type() {
                 this.isEditing = true
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.$nextTick(() => {
                         this.$refs.list.focus()
                     })
                 }, 400)
             },
-            cancel(){
+            cancel() {
                 this.isEditing = false;
             },
             getTodosCount(listId) {
@@ -149,8 +151,9 @@
     }
 
     .todo-list:hover {
-        background-color: #f0f1f4 !important;
+        background-color: #f3f6ff !important;
     }
+
     .todo-list-title {
         margin: 0;
         overflow: hidden;
@@ -158,6 +161,7 @@
         text-overflow: ellipsis;
         color: inherit;
     }
+
     .todo-list-title:before {
         content: '';
         padding: 0.1rem;
@@ -213,6 +217,7 @@
 
     .todo-list.active {
         font-weight: 500;
+        background-color: #f3f6ff !important;
     }
 
     .todo-list-count {
@@ -233,17 +238,16 @@
         box-shadow: none;
     }
 
-    .todo-list:hover svg.delete-list-icon {
-        opacity: 1;
+    .todo-list:hover svg.delete-list-icon:not(:hover) {
+        fill: #767678;
     }
 
     svg.delete-list-icon {
-        opacity: 0;
-        fill: #767678;
-        transition: all 0.23s ease-in;
+        fill: transparent;
+        transition: fill 0.23s ease-in;
     }
 
     svg.delete-list-icon:hover {
-        fill: #e56161
+        fill: #e56161;
     }
 </style>

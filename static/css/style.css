@@ -1240,3 +1240,12 @@ input[type].no-focus:focus {
 .fast-fade-enter, .fast-fade-leave-to {
     opacity: 0;
 }
+
+svg.delete-icon {
+    fill: #767678;
+    transition: all 0.23s ease-in;
+}
+
+svg.delete-icon:hover {
+    fill: #e56161
+}

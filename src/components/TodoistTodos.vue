@@ -1,20 +1,11 @@
 <template>
     <div id="todos" v-on:click.stop="" class="todos-arrow_box relative flex-flow-column flex text-black">
 
-        <header class="flex widget-header flex-center">
-            <svg class="pointer flex-no-shrink one-rem-height one-rem-width" v-on:click="toggle('showSidebar'); showTodoManager = false;"
-                 viewBox="0 0 23 21" version="1.1">
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="hamburger" transform="translate(0.000000, 2.000000)" stroke="#7d7d7d" stroke-width="4">
-                        <path d="M0.132183908,0 L22.8678161,0" id="XMLID_6_"></path>
-                        <polyline id="XMLID_9_" points="0.132183908 16.8 20.0697663 16.8 22.8678161 16.8"></polyline>
-                        <path d="M0.132183908,8.4 L22.8678161,8.4" id="XMLID_8_"></path>
-                    </g>
-                </g>
-            </svg>
-            <i class="integrate-icon icon--todoist mh-5 flex-no-shrink"></i>
-            <h4 class="widget-heading ml-5 mv-0">Todo {{ currentList ? ': '+ titleCase(currentList.title): ''}}</h4>
-        </header>
+        <TodoHeader
+            :current-list="currentList"
+            todo-type="t"
+            v-on:changed="todoHeaderChanged"
+            :is-pinned="settings.isPinned"/>
 
         <section class="flex relative todo-section flex-flow-column"
                  @click.stop="showTodoManager = showSidebar = false">
@@ -92,6 +83,7 @@
     import TodoList from '../shared/TodoList.vue'
     import TodoManager from '../shared/TodoManager.vue'
     import TodoError from '../shared/TodoError.vue'
+    import TodoHeader from '../shared/TodoHeader.vue'
 
     import {Get, Set, Remove} from '../utils/storage'
     import {TODOIST, STORAGE} from '../utils/Constants'
@@ -100,7 +92,7 @@
     import {titleCase} from '../utils/StringUtils'
     import {TodosType, TodoListItemAction, TodoItemAction} from '../constants/Todos'
 
-    let syncList
+    let syncList;
     const TodoType = TodosType.TODOIST;
     export default {
         data() {
@@ -163,6 +155,23 @@
             }
         },
         methods: {
+            todoHeaderChanged(data) {
+                if (!data || !data.action) {
+                    return;
+                }
+                switch (data.action) {
+                    case 'pinned':
+                        this.settings.isPinned = !this.settings.isPinned;
+                        return;
+                    case TodoListItemAction.DELETE:
+                        this.deleteList(this.currentList);
+                        return;
+                    case 'viewList':
+                        this.toggle('showSidebar');
+                        this.showTodoManager = false;
+                        return;
+                }
+            },
             toggleCompletedTodos(state) {
                 this.showCompletedTodos = state
             },
@@ -193,7 +202,7 @@
                     this.errorState = '';
                     return response;
                 }).catch(error => {
-                    console.log(error);
+                    // console.log(error);
                     this.manageError(error);
                 })
             },
@@ -236,6 +245,7 @@
                         this.updateTodos(data.items);
                         this.syncToken = data.sync_token
                     }
+                    return true;
                 })
             },
             getLocalTodos() {
@@ -336,7 +346,7 @@
                 }
             },
             setActiveList(list) {
-                this.currentList = list
+                this.currentList = list;
                 this.showSidebar = false;
             },
             changedTodoList(info) {
@@ -354,32 +364,38 @@
                 const temp_id = generateId();
                 const commands = [{type, uuid, args, temp_id}];
 
-                this.syncCall(TODOIST.URL.BASE, {commands}).then((response) => {
+                return this.syncCall(TODOIST.URL.BASE, {commands}).then((response) => {
                     if (!response) {
                         return;
                     }
                     const status = response.sync_status[uuid];
-                    if (status === 'ok') {
-                        this.sync();
-                    } else if (status) {
-                        this.manageError(status)
-                    }
                     this.showSidebar = false;
                     this.showTodoManager = false;
                     this.isLoadingTodos = false;
-                })
+
+                    if (status === 'ok') {
+                        return this.sync();
+                    } else if (status) {
+                        this.manageError(status)
+                    }
+                });
             },
             createTodo(todo) {
                 if (!todo.title) {
                     return
                 }
-                this.newTodo = {}
+                this.newTodo = {};
                 const _todo = {
                     content: todo.title,
                     project_id: this.currentListId,
                     due_date: todo.dueOn
-                }
-                this.patchTodo('item_add', _todo)
+                };
+                this.patchTodo('item_add', _todo).then(() => {
+                    this.$nextTick(() => {
+                        const todo = document.querySelector('.todos');
+                        todo.scroll({left: 0, top: todo.scrollHeight, behaviour: 'smooth'});
+                    });
+                })
             },
             changedTodo(info) {
                 if (!info || !info.action) {
@@ -423,15 +439,16 @@
                     const updatedTodo = data.todo
                     // updating it to current for below logic
                     this.patchTodo('item_update', {'id': updatedTodo.id, content: updatedTodo.title})
-
                 }
             },
             deleteList(list) {
-                if (!list || !confirm(`Are you sure you want to delete ${list.title}?`)) {
+                if (!list || !confirm(`Are you sure you want to delete ${list.title} list?`)) {
                     return
                 }
-                list.isDeleted = true
-                this.patchTodo('project_delete', {'ids': [list.id]});
+                this.patchTodo('project_delete', {'ids': [list.id]}).then(() => {
+                    list.isDeleted = true;
+                    this.setActiveList(this.todoLists[0]);
+                });
             },
             manageError(errorInfo) {
                 if (!navigator.onLine || (errorInfo && errorInfo.stack && errorInfo.stack.indexOf('TypeError') > -1)) {
@@ -501,10 +518,14 @@
             NoTodo,
             TodoManager,
             TodoList,
-            TodoError
+            TodoError,
+            TodoHeader
         },
         beforeDestroy() {
             clearInterval(syncList)
+        },
+        props: {
+            settings: Object
         }
     }
 </script>

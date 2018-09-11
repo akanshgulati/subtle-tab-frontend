@@ -207,7 +207,7 @@
         Remove(STORAGE.G_CAL_AUTH)
       },
       skip(){
-        this.settings.isPinned = false
+        this.settings.isPinned = false;
         EventBus.$emit('calendar', {message: 'close'})
         this.$ga.event('calendar', 'isSkipped')
       },

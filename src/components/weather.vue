@@ -148,7 +148,7 @@
                             this.getWeather(options)
                         },
                         (error) => {
-                            //console.log(error)
+                            // console.log(error)
                         },
                         {
                             timeout: 10000

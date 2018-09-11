@@ -13,7 +13,7 @@ let CommonUtils = {
                     }
                     reject(xmlhttp.status)
                 }
-            }
+            };
             xmlhttp.onerror = () => {
                 reject(xmlhttp.status)
             }
@@ -22,8 +22,8 @@ let CommonUtils = {
     },
     Http(url, option) {
         return new Promise((resolve, reject) => {
-            const xmlhttp = new XMLHttpRequest()
-            const method = option.method || 'GET'
+            const xmlhttp = new XMLHttpRequest();
+            const method = option.method || 'GET';
             let isContentTypeHeaderPresent = false;
             let isContentTypeFormHeader = false;
             const data = option.data;
@@ -41,8 +41,7 @@ let CommonUtils = {
                 }
             }
 
-
-            if (option.method === 'POST') {
+            if (option.method.toLowerCase() === 'post' || option.method.toLowerCase() === 'patch') {
                 if (!isContentTypeHeaderPresent) {
                     xmlhttp.setRequestHeader('Content-type', 'application/json')
                 }
@@ -63,7 +62,7 @@ let CommonUtils = {
             xmlhttp.onreadystatechange = () => {
                 if (xmlhttp.readyState === 4) {
                     if (xmlhttp.responseText && xmlhttp.status >= 200 && xmlhttp.status < 300) {
-                        resolve(getString(xmlhttp.responseText))
+                        resolve(getString(xmlhttp.responseText));
                         return;
                     }
                     reject({

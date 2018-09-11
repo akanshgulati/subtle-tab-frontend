@@ -11,7 +11,7 @@ const config = {
             showDay: true,
             type: 'twelve',
             calendar: {
-                isPinned: true
+                isPinned: false
             }
         },
         weather: {
