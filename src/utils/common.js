@@ -24,9 +24,10 @@ let CommonUtils = {
         return new Promise((resolve, reject) => {
             const xmlhttp = new XMLHttpRequest();
             const method = option.method || 'GET';
+            let data = option.data;
             let isContentTypeHeaderPresent = false;
             let isContentTypeFormHeader = false;
-            const data = option.data;
+
             xmlhttp.open(method, url);
 
             if (option.headers) {
@@ -41,7 +42,7 @@ let CommonUtils = {
                 }
             }
 
-            if (option.method.toLowerCase() === 'post' || option.method.toLowerCase() === 'patch') {
+            if (method && (method.toLowerCase() === 'post' || method.toLowerCase() === 'patch')) {
                 if (!isContentTypeHeaderPresent) {
                     xmlhttp.setRequestHeader('Content-type', 'application/json')
                 }
@@ -54,11 +55,12 @@ let CommonUtils = {
                             form_data.append(key, data[key])
                         }
                     }
-                    option.data = form_data
+                    data = form_data
                 } else {
-                    option.data = JSON.stringify(option.data);
+                    data = JSON.stringify(data);
                 }
             }
+
             xmlhttp.onreadystatechange = () => {
                 if (xmlhttp.readyState === 4) {
                     if (xmlhttp.responseText && xmlhttp.status >= 200 && xmlhttp.status < 300) {
@@ -74,7 +76,7 @@ let CommonUtils = {
             xmlhttp.onerror = () => {
                 reject(xmlhttp.status)
             };
-            xmlhttp.send(option.data)
+            xmlhttp.send(data);
         })
     },
     isObject(data) {
