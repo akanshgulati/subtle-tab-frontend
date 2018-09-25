@@ -3,21 +3,22 @@ const config = {
         showUtilities: {
             showWeather: true,
             showClock: true,
-            showNotes: true
+            showNotes: true,
+            showTodos: true
         },
         clock: {
             showTwelveHour: true,
             showDay: true,
             type: 'twelve',
-          calendar: {
-              isPinned: true
-          }
+            calendar: {
+                isPinned: false
+            }
         },
         weather: {
             unit: 'c',
             location: {
                 type: 'geo',
-                name : ''
+                name: ''
             },
             weatherInfo: {
                 isPinned: false
@@ -30,12 +31,16 @@ const config = {
         },
         notes: {
             isPinned: false
+        },
+        todos: {
+            type: 'default',
+            isPinned: false
         }
     },
     misc: {
         update: {
-            lastChecked : '0020',
-            isToBeFetched : true,
+            lastChecked: '0020',
+            isToBeFetched: true,
             isSeen: true
         }
     },
