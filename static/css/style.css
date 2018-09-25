@@ -681,12 +681,12 @@ svg:hover #close_btn {
 
 /*NOTE*/
 .todo-widget {
-    padding-right: 0.75rem;
-    border-right: 2px solid rgba(255, 255, 255, 0.1);
+    padding-right: 0.4rem;
 }
 
 .notes-widget {
-    margin-left: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 #note_btn {
@@ -758,6 +758,11 @@ svg:hover #close_btn {
     height: 1.5rem;
 }
 
+.widget-header-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
 #notes .add-note {
     padding: 0.5rem 0;
     width: 100%;
@@ -784,7 +789,9 @@ svg:hover #close_btn {
     left: -75%;
     z-index: 1;
 }
-
+#notes .sidebar {
+    background-color: rgb(234, 234, 234)
+}
 #notes .sidebar ul li {
     transition: all 0.5s;
     box-shadow: 0px 0.35rem 7px -5px #ccc;
@@ -998,7 +1005,6 @@ header svg:hover #hamburger {
     width: 0;
     position: absolute;
     pointer-events: none;
-    border: 0.7rem solid transparent;
     border-bottom-color: #fff;
 }
 

@@ -597,6 +597,7 @@
     import {TodosType} from '../constants/Todos'
     import CustomizeUtil from '../utils/CustomizeUtil'
     import {unsetThirdPartyTodoData} from '../utils/TodoUtil'
+    import {MessageTypeEnum, TodoWrapperMessage} from '../constants/Message';
 
     export default {
         components: {
@@ -789,31 +790,31 @@
                 }
             },
             openIntegration(type) {
-                let url
+                let url;
                 switch (type) {
                     case 'calendar':
-                        url = constants.URL.G_CAL_KB_INTEGRATION
-                        break
+                        url = constants.URL.G_CAL_KB_INTEGRATION;
+                        break;
                     case 'w':
-                        url = constants.URL.WUNDERLIST_INTEGRATION
-                        break
+                        url = constants.URL.WUNDERLIST_INTEGRATION;
+                        break;
                     case 't':
-                        url = constants.URL.TODOIST_INTEGRATION
-                        break
+                        url = constants.URL.TODOIST_INTEGRATION;
+                        break;
                 }
                 chrome.tabs.create({url: url, active: true})
             },
-            saveAuthCode(bypassRevoke) {
+            saveAuthCode() {
                 let type = this.todos.type;
                 // REVOKE PROCESS
-                if (this.todos.isAuthSaved && !bypassRevoke) {
+                if (this.todos.isAuthSaved) {
                     // resetting form data and removing auth code from storage
                     this.todos.authCode = '';
                     this.todos.saveMsg = `<span class="success">Integration removed successfully</span>`;
 
                     // resetting calendar settings
-                    if (this.settings.todos && this.settings.todos) {
-                        this.settings.todos.type = DefaultConfig.todos.type
+                    if (this.settings.todos && this.todos.type) {
+                        this.settings.todos.type = this.todos.type = DefaultConfig.todos.type
                     }
                     this.calendar.isAuthSaved = false;
 
@@ -838,11 +839,11 @@
                         CustomizeUtil.storeAuthCode(type, this.todos.authCode);
                         this.todos.isAuthSaved = true;
                     }
-                    EventBus.$emit('todosWrapper', {message: 'refresh'});
+                    EventBus.$emit(MessageTypeEnum.TODO_WRAPPER, {message: TodoWrapperMessage.REFRESH});
                 }, () => {
                     this.todos.type = this.settings.todos.type = TodosType.DEFAULT;
                     this.todos.saveMsg = `<span class='error'>Invalid auth code</span>`;
-                    EventBus.$emit('todosWrapper', {message: 'refresh'});
+                    EventBus.$emit(MessageTypeEnum.TODO_WRAPPER, {message: TodoWrapperMessage.REFRESH});
                 })
             }
         },
@@ -854,13 +855,13 @@
                         return
                     }
                     if (newValue === TodosType.DEFAULT) {
-                        unsetThirdPartyTodoData()
-                        this.todos.isAuthCodeBoxVisible = false
-                        this.settings.todos.type = newValue
+                        unsetThirdPartyTodoData();
+                        this.todos.isAuthCodeBoxVisible = false;
+                        this.settings.todos.type = newValue;
                         this.todos.authCode = ''
                     } else {
-                        this.todos.isAuthCodeBoxVisible = true
-                        this.todos.authCode = CustomizeUtil.getAuthCode(newValue)
+                        this.todos.isAuthCodeBoxVisible = true;
+                        this.todos.authCode = CustomizeUtil.getAuthCode(newValue);
                         this.todos.isAuthSaved = false;
                     }
                 }

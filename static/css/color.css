@@ -28,7 +28,7 @@
     fill: #2196F3
 }
 
-.svg-blue-fill-hover, .svg-blue-stroke-hover {
+.svg-blue-fill-hover, .svg-blue-stroke-hover, .svg-black-stroke-hover, .svg-black-fill-hover {
     transition: all 0.23s ease-in;
 }
 
@@ -40,6 +40,12 @@
     stroke: #2196F3 !important;
 }
 
+.svg-black-stroke-hover:hover {
+    stroke: #333 !important;
+}
+.svg-black-fill-hover:hover {
+    fill: #333 !important;
+}
 .text-light-grey {
     color: #999;
 }

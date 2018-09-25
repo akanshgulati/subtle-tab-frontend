@@ -4,41 +4,49 @@
         <div v-if="seenOnBoarding">
             <div class="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
-                <background :settings="sharedData.background" v-on:stopLoading="stopLoad" v-on:startLoading="startLoad"></background>
+                <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
+                            v-on:startLoading="startLoad"></background>
                 <div id="utilities">
                     <div id="position--bottom-right">
                         <ClockWrapper
-                                :settings="sharedData.clock"
-                                v-if="sharedData.showUtilities.showClock"
-                                id="clock"/>
+                            :settings="sharedData.clock"
+                            v-if="sharedData.showUtilities.showClock"
+                            id="clock"/>
                     </div>
                     <div id="position--top-right" v-on:click.stop="" @mousedown.stop="">
                         <div class="flex flex-center">
                             <!-- TO-DO SECTION -->
-                            <div class="todo-widget relative" v-on:keydown.stop="" v-if="sharedData.showUtilities.showTodos">
-                                <div class="todo-icon pointer" v-on:click.stop="toggleTodos">
-                                    <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8em">
-                                        <g>
-                                            <g id="todo_btn">
-                                                <path d="M370,95.4V53.9h-62.2V12.5H204.2v41.5H142v41.5H69.5v404.1h373.1V95.4H370z M224.9,33.2h62.2v20.7h-62.2V33.2z M162.7,74.7h186.5v62.2H162.7V74.7z M421.8,478.8H90.2V116.1H142v41.4h228v-41.4h51.8V478.8z"/>
-                                                <rect width="20.7" x="131.6" y="222.8" height="20.7"/>
-                                                <rect width="20.7" x="131.6" y="307.8" height="20.7"/>
-                                                <rect width="20.7" x="131.6" y="393.8" height="20.7"/>
-                                                <rect width="207.3" x="173.1" y="222.8" height="20.7"/>
-                                                <rect width="207.3" x="173.1" y="307.8" height="20.7"/>
-                                                <rect width="207.3" x="173.1" y="393.8" height="20.7"/>
+                            <transition>
+                                <div class="todo-widget relative" v-on:keydown.stop=""
+                                     v-if="sharedData.showUtilities.showTodos">
+                                    <div class="todo-icon pointer" v-on:click.stop="toggleTodos()">
+                                        <svg viewBox="0 0 512 512" enable-background="new 0 0 512 512" width="1.8em">
+                                            <g>
+                                                <g id="todo_btn">
+                                                    <path
+                                                        d="M370,95.4V53.9h-62.2V12.5H204.2v41.5H142v41.5H69.5v404.1h373.1V95.4H370z M224.9,33.2h62.2v20.7h-62.2V33.2z M162.7,74.7h186.5v62.2H162.7V74.7z M421.8,478.8H90.2V116.1H142v41.4h228v-41.4h51.8V478.8z"/>
+                                                    <rect width="20.7" x="131.6" y="222.8" height="20.7"/>
+                                                    <rect width="20.7" x="131.6" y="307.8" height="20.7"/>
+                                                    <rect width="20.7" x="131.6" y="393.8" height="20.7"/>
+                                                    <rect width="207.3" x="173.1" y="222.8" height="20.7"/>
+                                                    <rect width="207.3" x="173.1" y="307.8" height="20.7"/>
+                                                    <rect width="207.3" x="173.1" y="393.8" height="20.7"/>
+                                                </g>
                                             </g>
-                                        </g>
-                                    </svg>
+                                        </svg>
+                                    </div>
+                                    <transition>
+                                        <TodoWrapper :type="sharedData.todos.type" :settings="sharedData.todos"
+                                                     v-if="showTodos"/>
+                                    </transition>
                                 </div>
-                                <template :class="{'fade_in': showTodos}" v-if="showTodos">
-                                    <TodoWrapper :type="sharedData.todos.type" :settings="sharedData.todos"/>
-                                </template>
-                            </div>
+                            </transition>
                             <!-- NOTE SECTION -->
-                            <div class="notes-widget relative" v-on:keydown.stop=""  v-if="sharedData.showUtilities.showNotes">
-                                <div class="notes-icon pointer" v-on:click.stop="showNotes = !showNotes">
-                                    <svg x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8em" >
+                            <transition>
+                                <div class="notes-widget relative" v-on:keydown.stop=""
+                                     v-if="sharedData.showUtilities.showNotes">
+                                    <div class="notes-icon pointer" v-on:click.stop="toggleNotes()">
+                                        <svg x="0px" y="0px" viewBox="0 0 58.27 58.27" style="enable-background:new 0 0 58.27 58.27;" xml:space="preserve" width="1.8em" >
                                         <g id="note_btn">
                                             <path d="M56.261,35.724l-2.849-2.85c-1.128-1.127-3.094-1.127-4.222,0L33.799,48.265l-2.121,7.779l-0.519,0.519   c-0.388,0.388-0.389,1.014-0.006,1.405l-0.005,0.02l0.019-0.005c0.194,0.19,0.446,0.288,0.699,0.288   c0.256,0,0.512-0.098,0.707-0.293l0.52-0.52l7.778-2.121l15.39-15.391C57.425,38.781,57.425,36.888,56.261,35.724z M36.108,48.784   l10.243-10.243l4.243,4.243L40.351,53.027L36.108,48.784z M35.206,50.71l3.22,3.22l-4.428,1.208L35.206,50.71z M54.847,38.531   l-2.839,2.839l-4.243-4.243l2.839-2.839c0.372-0.373,1.021-0.373,1.393,0l2.85,2.85C55.231,37.521,55.231,38.147,54.847,38.531z" />
                                             <path d="M8.135,36h26c0.552,0,1-0.447,1-1s-0.448-1-1-1h-26c-0.552,0-1,0.447-1,1S7.583,36,8.135,36z" />
@@ -52,11 +60,12 @@
                                             <path d="M26.135,56h-23V8h7v2c0,0.553,0.448,1,1,1h23c0.552,0,1-0.447,1-1V8h7v22c0,0.553,0.448,1,1,1s1-0.447,1-1V7   c0-0.553-0.448-1-1-1h-8V4c0-0.553-0.448-1-1-1h-6V1c0-0.553-0.448-1-1-1h-9c-0.552,0-1,0.447-1,1v2h-6c-0.552,0-1,0.447-1,1v2h-8   c-0.552,0-1,0.447-1,1v50c0,0.553,0.448,1,1,1h24c0.552,0,1-0.447,1-1S26.688,56,26.135,56z M19.135,2h7v2v2h-7V4V2z M12.135,5h5v2   c0,0.553,0.448,1,1,1h9c0.552,0,1-0.447,1-1V5h5v2v2h-21V7V5z" />
                                         </g>
                                     </svg>
+                                    </div>
+                                    <transition>
+                                        <notes :settings="sharedData.notes" v-if="showNotes"/>
+                                    </transition>
                                 </div>
-                                <transition>
-                                    <notes :settings="sharedData.notes" v-if="showNotes"/>
-                                </transition>
-                            </div>
+                            </transition>
                         </div>
                     </div>
                     <div id="position--top-left">
@@ -94,10 +103,13 @@
         <svg style="display: none;">
             <defs>
                 <g id="icon-next-arrow">
-                    <path d="M1.52721417,18.9863124 C1.39838969,19.1151369 1.2373591,19.1795491 1.06022544,19.1795491 C0.883091787,19.1795491 0.722061192,19.1151369 0.593236715,18.9863124 C0.335587762,18.7286634 0.335587762,18.3099839 0.593236715,18.0523349 L8.8057971,9.83977456 L0.593236715,1.62721417 C0.335587762,1.36956522 0.335587762,0.950885668 0.593236715,0.693236715 C0.850885668,0.435587762 1.26956522,0.435587762 1.52721417,0.693236715 L10.2067633,9.37278583 C10.4644122,9.63043478 10.4644122,10.0491143 10.2067633,10.3067633 L1.52721417,18.9863124 L1.52721417,18.9863124 Z"></path>
+                    <path
+                        d="M1.52721417,18.9863124 C1.39838969,19.1151369 1.2373591,19.1795491 1.06022544,19.1795491 C0.883091787,19.1795491 0.722061192,19.1151369 0.593236715,18.9863124 C0.335587762,18.7286634 0.335587762,18.3099839 0.593236715,18.0523349 L8.8057971,9.83977456 L0.593236715,1.62721417 C0.335587762,1.36956522 0.335587762,0.950885668 0.593236715,0.693236715 C0.850885668,0.435587762 1.26956522,0.435587762 1.52721417,0.693236715 L10.2067633,9.37278583 C10.4644122,9.63043478 10.4644122,10.0491143 10.2067633,10.3067633 L1.52721417,18.9863124 L1.52721417,18.9863124 Z"></path>
                 </g>
-                <g id="icon-widget-arrow" transform="translate(-25.000000, -50.000000)" stroke="rgba(255,255,255,0.5)" fill="rgba(255,255,255,0.5)" stroke-width="2" fill-rule="nonzero">
-                    <path d="M46.4347899,51.1140206 C45.950678,51.012669 45.6164104,51.012669 45.4319868,51.1140206 L36.6142361,55.969398 L27.7791956,51.1140206 C27.5025603,50.9619931 27.0530279,50.9619931 26.7763926,51.1140206 C26.4997572,51.2660481 26.4997572,51.5130927 26.7763926,51.6651202 L36.0955448,56.7865456 C36.2338625,56.8625594 36.4067596,56.9005662 36.5969463,56.9005662 C36.7698434,56.9005662 36.9600302,56.8625594 37.0983479,56.7865456 L46.4175001,51.6651202 C46.6134502,51.5637685 46.6192134,51.3800687 46.4347899,51.1140206 Z"></path>
+                <g id="icon-widget-arrow" transform="translate(-25.000000, -50.000000)" stroke="rgba(255,255,255,0.5)"
+                   fill="rgba(255,255,255,0.5)" stroke-width="2" fill-rule="nonzero">
+                    <path
+                        d="M46.4347899,51.1140206 C45.950678,51.012669 45.6164104,51.012669 45.4319868,51.1140206 L36.6142361,55.969398 L27.7791956,51.1140206 C27.5025603,50.9619931 27.0530279,50.9619931 26.7763926,51.1140206 C26.4997572,51.2660481 26.4997572,51.5130927 26.7763926,51.6651202 L36.0955448,56.7865456 C36.2338625,56.8625594 36.4067596,56.9005662 36.5969463,56.9005662 C36.7698434,56.9005662 36.9600302,56.8625594 37.0983479,56.7865456 L46.4175001,51.6651202 C46.6134502,51.5637685 46.6192134,51.3800687 46.4347899,51.1140206 Z"></path>
                 </g>
             </defs>
         </svg>
@@ -107,8 +119,12 @@
 <script>
     import config from './utils/config'
     import storage from './utils/storage'
-    import commonUtils from './utils/common'
+    import commonUtils, {isUndefined} from './utils/common'
     import Constants from './utils/Constants'
+    import bgData from './utils/backgroundData'
+    import {EventBus} from './utils/EventBus.js';
+    import {AppMessage, MessageTypeEnum} from './constants/Message';
+
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
     import Customize from './components/customize.vue'
@@ -116,36 +132,39 @@
     import Notes from './components/notes.vue'
     import TodoWrapper from './components/TodoWrapper.vue'
     import Onboarding from './components/onboarding.vue'
-    import bgData from './utils/backgroundData'
-    import { EventBus } from './utils/EventBus.js';
 
+    let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
         beforeCreate() {
-            this.sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
-            this.seenOnBoarding = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
-            this.showNotes = this.sharedData.notes.isPinned;
-            this.showTodos = this.sharedData.todos.isPinned;
+            _sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
+            _isOnBoardingSeen = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
+            _showNotes = _sharedData.notes.isPinned;
+            _showTodos = _sharedData.todos.isPinned;
         },
         data() {
             return {
-                sharedData: this.sharedData,
+                sharedData: _sharedData,
                 showCustomizeMenu: false,
-                showNotes: this.showNotes,
+                showNotes: _showNotes,
                 isLoading: true,
-                seenOnBoarding: this.seenOnBoarding,
-                miscSettings : storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
+                seenOnBoarding: _isOnBoardingSeen,
+                miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: this.showTodos
+                showTodos: _showTodos
             }
         },
         mounted() {
             let self = this;
             document.addEventListener('keydown', (e) => {
-                if (e.keyCode === 78) {
-                    self.showNotes = true;
+                if (e.keyCode === 84) {
+                    self.toggleTodos(true);
+                    this.$ga.event('app', 'keydown', 'todos')
+                }
+                else if (e.keyCode === 78) {
+                    self.toggleNotes(true);
                     this.$ga.event('app', 'keydown', 'notes')
                 } else if (e.keyCode === 67) {
-                    self.toggleCustomizeMenu(true)
+                    self.toggleCustomizeMenu(true);
                     this.$ga.event('app', 'keydown', 'customize')
                 } else if (e.keyCode === 27) {
                     self.closeWindows();
@@ -153,19 +172,30 @@
                 } else if (e.keyCode === 87) {
                     self.otherSettings.weather.showWeatherInfo = true;
                     this.$ga.event('app', 'keydown', 'weather')
-                } else if(e.keyCode === 71){
-                  this.$ga.event('app', 'keydown', 'calendar')
-                  EventBus.$emit('calendar', {message: 'open'})
+                } else if (e.keyCode === 71) {
+                    this.$ga.event('app', 'keydown', 'calendar');
+                    EventBus.$emit('calendar', {message: 'open'})
+                }
+            });
+            // App Messages
+            EventBus.$on(MessageTypeEnum.APP, e => {
+                if (!e || !e.message) {
+                    return;
+                }
+                switch (e.message) {
+                    case AppMessage.OPEN_CUSTOMIZE:
+                        if (e.tab) {
+                            storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, e.tab);
+                        }
+                        self.toggleCustomizeMenu(true);
+                        return;
+                    case AppMessage.PIN:
+                        this.toggleNotesTodoPin(e);
+                        return;
                 }
             });
 
-          EventBus.$on('app', e => {
-            if (e.message === 'OpenCustomize') {
-              self.toggleCustomizeMenu(true)
-            }
-          })
-
-            this.init()
+            this.init();
             this.initWhenIdle()
         },
         watch: {
@@ -176,7 +206,7 @@
                 deep: true
             },
             miscSettings: {
-                handler: function (newValue) {
+                handler: function(newValue) {
                     storage.set(Constants.STORAGE.MISC_SETTINGS, newValue);
                 },
                 deep: true
@@ -184,16 +214,30 @@
         },
         methods: {
             toggle(el, option) {
-              EventBus.$emit(el, option)
+                EventBus.$emit(el, option)
+            },
+            toggleNotesTodoPin(data) {
+                const widget = data.widget;
+                const value = data.value;
+                if (widget === 'todos' && this.sharedData.notes.isPinned) {
+                    this.sharedData.notes.isPinned = false;
+                    this.sharedData.todos.isPinned = true;
+                } else if (widget === 'notes' && this.sharedData.todos.isPinned) {
+                    this.sharedData.notes.isPinned = true;
+                    this.sharedData.todos.isPinned = false;
+                } else {
+                    this.sharedData[widget].isPinned = value;
+                }
             },
             toggleCustomizeMenu(state) {
-                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu: state
-                if(!this.miscSettings.update.isSeen) {
+                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state
+                if (!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
-                this.showNotes = state ? !state : this.sharedData.notes.isPinned
-                this.otherSettings.weather.showWeatherInfo = false
-              this.toggle('calendar', {message: 'close', force: state})
+                this.showNotes = state ? !state : this.sharedData.notes.isPinned;
+                this.showTodos = state ? !state : this.sharedData.todos.isPinned;
+                this.otherSettings.weather.showWeatherInfo = false;
+                this.toggle('calendar', {message: 'close', force: state})
             },
             stopLoad() {
                 this.isLoading = false
@@ -207,21 +251,21 @@
                 this.$ga.event('app', 'onboarding', 'close')
             },
             closeWindows() {
-                storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB)
+                storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB);
                 this.toggleCustomizeMenu(false)
             },
-            showUpdateNotification(newVersion){
+            showUpdateNotification(newVersion) {
                 if (!newVersion) {
                     return
                 }
-                let v = +newVersion.replace(/\./g,'')
-                if(+this.miscSettings.update.lastChecked < v){
+                let v = +newVersion.replace(/\./g, '')
+                if (+this.miscSettings.update.lastChecked < v) {
                     this.miscSettings.update.isSeen = false;
                     this.miscSettings.update.lastChecked = v;
                     storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, 'whatsnew')
                 }
             },
-            checkForUpdates (){
+            checkForUpdates() {
                 if (!this.miscSettings.update || !this.miscSettings.update.isToBeFetched) {
                     return
                 }
@@ -233,31 +277,39 @@
             },
             initWhenIdle() {
                 let self = this;
-                setTimeout(()=>{
+                setTimeout(() => {
                     self.checkForUpdates();
                     self.initAnalytics();
                 }, 0)
             },
-            toggleTodos() {
-                this.showTodos = !this.showTodos;
+            toggleNotes(state) {
+                this.showNotes = !isUndefined(state) ? state : !this.showNotes;
+                this.showTodos = false;
+                if (!this.showNotes) {
+                    this.showTodos = this.sharedData.todos.isPinned;
+                }
+            },
+            toggleTodos(state) {
+                this.showTodos = !isUndefined(state) ? state : !this.showTodos;
+                this.showNotes = false;
                 if (!this.showTodos) {
-                    this.showNotes = this.sharedData.notes.isPinned
+                    this.showNotes = this.sharedData.notes.isPinned;
                 }
             },
             generateId() {
-              return 'xxxxxxxx3-0xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-              });
+                return 'xxxxxxxx3-0xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
             },
-            weatherInfoStateChange (state){
-            this.otherSettings.weather.showWeatherInfo = state
-          },
+            weatherInfoStateChange(state) {
+                this.otherSettings.weather.showWeatherInfo = state
+            },
             init() {
                 // this is done for backgrounds
-                let bgCustom = storage.get(Constants.STORAGE.BACKGROUND_CUSTOM)
+                let bgCustom = storage.get(Constants.STORAGE.BACKGROUND_CUSTOM);
                 if (!bgCustom) {
-                    bgCustom = bgData.customBackgrounds
+                    bgCustom = bgData.customBackgrounds;
                     storage.set(Constants.STORAGE.BACKGROUND_CUSTOM, bgCustom)
                 }
             },
@@ -266,7 +318,7 @@
                     this.$ga.event('app', 'onboarding', 'shown')
                 } else if (navigator.userAgent.indexOf('Firefox') > -1) {
                     this.$ga.page('/firefox-app')
-                } else if(navigator.userAgent.indexOf('Chrome') > -1){
+                } else if (navigator.userAgent.indexOf('Chrome') > -1) {
                     this.$ga.page('/chrome-app')
                 }
             }

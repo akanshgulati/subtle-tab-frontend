@@ -377,7 +377,7 @@
       },
       integration() {
         Set(STORAGE.CURRENT_CUSTOMIZATION_TAB, 'clock')
-        EventBus.$emit('app', {message: 'OpenCustomize'})
+        EventBus.$emit('app', {message: 'OpenCustomize'});
         this.$ga.event('calendar', 'clicked', 'integrate')
         chrome.tabs.create({
           url: G_CAL.URL.INTEGRATION_SUBTLE,

@@ -160,13 +160,10 @@
                     return;
                 }
                 switch (data.action) {
-                    case 'pinned':
-                        this.settings.isPinned = !this.settings.isPinned;
-                        return;
                     case TodoListItemAction.DELETE:
                         this.deleteList(this.currentList);
                         return;
-                    case 'viewList':
+                    case TodoListItemAction.VIEWLIST:
                         this.toggle('showSidebar');
                         this.showTodoManager = false;
                         return;
@@ -291,15 +288,15 @@
                 })
             },
             updateTodos(todos) {
-                let formattedTodos = todos.map(todo => this.formatTodoResponse(todo))
+                let formattedTodos = todos.map(todo => this.formatTodoResponse(todo));
                 formattedTodos.forEach(todo => {
-                    let todoIndex = this.todosMeta.indexOf(todo.id)
+                    let todoIndex = this.todosMeta.indexOf(todo.id);
                     if (todoIndex > -1) {
-                        // if list is updated
+                        // if task is updated
                         this.todos.splice(todoIndex, 1);
                         this.$set(this.todos, this.todos.length, todo)
                     } else {
-                        // if list is new
+                        // if task is new
                         this.$set(this.todos, this.todos.length, todo)
                     }
                 })

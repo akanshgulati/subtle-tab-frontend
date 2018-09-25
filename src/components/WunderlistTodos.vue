@@ -159,15 +159,12 @@
                     return;
                 }
                 switch (data.action) {
-                    case 'pinned':
-                        this.settings.isPinned = !this.settings.isPinned;
-                        return;
                     case TodoListItemAction.DELETE:
                         if (this.currentList) {
                             this.deleteList(this.currentList);
                         }
                         return;
-                    case 'viewList':
+                    case TodoListItemAction.VIEWLIST:
                         this.toggle('showSidebar');
                         this.showTodoManager = false;
                         return;

@@ -8,10 +8,11 @@ export const TodoItemAction = {
     DELETE: 'delete',
     STARRED: 'starred',
     EDIT: 'edit'
-}
+};
 
 export const TodoListItemAction = {
     SELECT: 'select',
     DELETE: 'delete',
-    CREATE: 'create'
-}
+    CREATE: 'create',
+    VIEWLIST: 'viewList'
+};

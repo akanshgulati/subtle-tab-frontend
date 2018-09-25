@@ -1,7 +1,10 @@
 <template>
-    <Todos v-if="type === TodosType.DEFAULT && showTodosSection" :settings="settings"/>
-    <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST && showTodosSection" :settings="settings"/>
-    <TodoistTodos v-else-if="type === TodosType.TODOIST && showTodosSection" :settings="settings"/>
+    <transition>
+        <Todos v-if="type === TodosType.DEFAULT && showTodosSection" :settings="settings" key="default"/>
+        <WunderlistTodos v-else-if="type === TodosType.WUNDERLIST && showTodosSection" :settings="settings"
+                         key="wunderlist"/>
+        <TodoistTodos v-else-if="type === TodosType.TODOIST && showTodosSection" :settings="settings" key="todoist"/>
+    </transition>
 </template>
 <script>
     import Todos from './Todos.vue'
@@ -10,6 +13,7 @@
 
     import {TodosType} from '../constants/Todos'
     import {EventBus} from '../utils/EventBus'
+    import {MessageTypeEnum, TodoWrapperMessage} from '../constants/Message';
 
     export default {
         props: ['type', 'settings'],
@@ -21,8 +25,8 @@
         },
         mounted() {
             const self = this;
-            EventBus.$on('todosWrapper', e => {
-                if (e.message === 'refresh') {
+            EventBus.$on(MessageTypeEnum.TODO_WRAPPER, e => {
+                if (e.message === TodoWrapperMessage.REFRESH) {
                     this.showTodosSection = false;
                     setTimeout(() => {
                         self.showTodosSection = true;
