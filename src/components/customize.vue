@@ -359,7 +359,7 @@
                                         type
                                     </div>
                                     <small>Choose either default geo-location or
-                                        add custom location
+                                        add custom location.
                                     </small>
                                 </div>
                                 <div class="right">
@@ -434,13 +434,18 @@
                             Settings</h4>
                         <ul class="inline-list">
                             <li class="inline-list-item">
-                                <span class="sub-heading">Type</span>
+                                <div>
+                                    <div class="font-small semi-bold">Todo type</div>
+                                    <small>Integrate 3rd-party todo applications.</small>
+                                </div>
                                 <div class="right">
                                     <input type="radio" v-model="todos.type" id="defaultTodo" class="filled-in"
                                            value="default"/>
                                     <label for="defaultTodo" class="inline-radio">Default</label>
+
                                     <input type="radio" v-model="todos.type" id="wTodos" class="filled-in" value="w"/>
                                     <label for="wTodos" class="inline-radio">Wunderlist</label>
+
                                     <input type="radio" v-model="todos.type" id="todoistTodos" class="filled-in"
                                            value="t"/>
                                     <label for="todoistTodos" class="inline-radio">Todoist</label>
