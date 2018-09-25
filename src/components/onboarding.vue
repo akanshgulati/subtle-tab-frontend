@@ -22,8 +22,8 @@
                     <div class="change-description">Latest weather updates <br/>with date and time</div>
                 </div>
                 <div class="col s3 center">
-                    <div class="change-heading">Notes Widget</div>
-                    <div class="change-description">Sticky notes to <br/> keep important content.  </div>
+                    <div class="change-heading">Todo Widget</div>
+                    <div class="change-description">Manage tasks and <br/> use integrations</div>
                 </div>
                 <div class="col s3 center">
                     <div class="change-heading">Google Calendar Integration</div>
