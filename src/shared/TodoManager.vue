@@ -105,6 +105,7 @@
 <script>
     import DueDate from './DueDate.vue'
     import Button from './Button.vue'
+    import TimeUtil from '../utils/timeUtil'
 
     export default {
         mounted() {
@@ -136,7 +137,10 @@
         },
         computed: {
             _todo() {
-                return Object.assign({}, this.todo)
+                const date = TimeUtil.getDateInputTypeDate(this.todo.dueOn);
+                let todo =  Object.assign({}, this.todo);
+                todo.dueOn = date;
+                return todo;
             }
         }
     }
