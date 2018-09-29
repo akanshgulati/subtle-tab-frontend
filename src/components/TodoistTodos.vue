@@ -17,7 +17,7 @@
                               v-on:changed="changedTodoList"
                               :show-todos-count="false"
                               :is-delete-enabled="true"
-                              :is-create-enabled="false"/>
+                              :is-create-enabled="true"/>
                 </div>
             </div>
 
@@ -225,7 +225,6 @@
                     if (localLists && localTodos) {
                         this.todos = localTodos;
                         this.todoLists = localLists;
-                        console.log(this.todoLists);
                         this.isLoadingTodos = false;
                         return
                     }
@@ -366,6 +365,8 @@
                     this.setActiveList(info.list)
                 } else if (info.action === TodoListItemAction.DELETE) {
                     this.deleteList(info.list)
+                } else if (info.action === TodoListItemAction.CREATE) {
+                    this.createList(info.data && info.data.title);
                 }
             },
             patchTodo(type, args) {
@@ -459,6 +460,14 @@
                         {'id': updatedTodo.id, content: updatedTodo.title, date_string: updatedTodo.dueOn})
                 }
             },
+            createList(listTitle) {
+                if (!listTitle) {
+                    return;
+                }
+                this.patchTodo('project_add', {"name": listTitle}).then(() => {
+                    this.setActiveList(this.todoLists[this.todoLists.length - 1]);
+                });
+            },
             deleteList(list) {
                 if (!list || !confirm(`Are you sure you want to delete ${list.title} list?`)) {
                     return
@@ -493,7 +502,6 @@
                     this.errorState = 'serverIssue';
                 }
                 this.isLoadingTodos = false;
-                Set(`Todoist-Error-${+(new Date())}`, errorInfo);
                 this.$ga.event(TodoType, 'error', `${errorInfo.statusText}-${errorInfo.status}-${errorInfo.error_tag}`)
             }
         },

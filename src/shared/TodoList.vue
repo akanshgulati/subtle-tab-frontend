@@ -175,35 +175,35 @@
     }
 
     .todo-list:nth-of-type(10n+1) .todo-list-title:before {
-        background-color: #c0392b;
+        background-color: #FFB400;
     }
 
     .todo-list:nth-of-type(10n+2) .todo-list-title:before {
-        background-color: #8e44ad;
+        background-color: #00D1C1;
     }
 
     .todo-list:nth-of-type(10n+3) .todo-list-title:before {
-        background-color: #00695C;
+        background-color: #fe626d;
     }
 
     .todo-list:nth-of-type(10n+4) .todo-list-title:before {
-        background-color: orange;
+        background-color: #7ab800;
     }
 
     .todo-list:nth-of-type(10n+5) .todo-list-title:before {
-        background-color: #2980b9;
+        background-color: #7b0051;
     }
 
     .todo-list:nth-of-type(10n+6) .todo-list-title:before {
-        background-color: #2ecc71;
+        background-color: #FFAA91;
     }
 
     .todo-list:nth-of-type(10n+7) .todo-list-title:before {
-        background-color: #e67e22;
+        background-color: #3F51B5;
     }
 
     .todo-list:nth-of-type(10n+8) .todo-list-title:before {
-        background-color: #3F51B5;
+        background-color: #e67e22;
     }
 
     .todo-list:nth-of-type(10n+9) .todo-list-title:before {

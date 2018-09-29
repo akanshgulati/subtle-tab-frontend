@@ -1,3 +1,5 @@
+import {format} from 'date-fns'
+
 export default {
     isTodayDate(timeStamp){
         if(!timeStamp){
@@ -31,22 +33,17 @@ export default {
                 return {value: 'Tomorrow', pending: 2};
             case nowValue - 1:
                 return {value: 'Yesterday', pending: -1};
-            default:
-                return {value: date.toLocaleDateString().replace(/\//g, '.'), pending: date - now};
+        }
+        if ((now.getFullYear() - date.getFullYear()) === 0) {
+            return {value: format(date, 'DD MMM'), pending: dateValue - nowValue};
+        } else {
+            return {value: format(date, 'DD MMM, YYYY'), pending: dateValue - nowValue};
         }
     },
     getDateInputTypeDate(date){
         if (!date) {
             return;
         }
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('-');
+        return format(date, 'YYYY-MM-DD')
     }
 }

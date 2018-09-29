@@ -29,11 +29,11 @@
             <transition mode="out-in" name="fast-fade">
                 <span
                     key="due-date"
-                    class="todo-due"
+                    class="todo-due flex-no-shrink"
                     v-if="!showHoverBtn"
                     :class="{'pending': isPending, 'overdue': !isPending}"
                 >{{dueString}}</span>
-                <div key="btn" class="todo-btn" v-else>
+                <div key="btn" class="todo-btn flex-no-shrink" v-else>
                     <!--FAVOURITE STAR -->
                     <!--<svg height="25" width="23" class="star-rating" :class="{'starred':todo.starred}" v-on:click="starTodo(todo)">
                         <polygon points="9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78" style="fill-rule:nonzero;" fill="#ccc"/>
@@ -218,6 +218,7 @@
         margin-left: auto;
         position: relative;
         font-size: 0.7rem;
+        font-weight: 500;
     }
 
     .todo-due.overdue {
@@ -225,26 +226,7 @@
     }
 
     .todo-due.pending {
-        color: #2196F3
-    }
-
-    .todo-due::after {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 1px;
-        bottom: 1px;
-        left: 0;
-        border-bottom: 1px solid transparent;
-    }
-
-    .todo-due.overdue::after {
-        border-color: #dd4b39 !important
-    }
-
-    .todo-due.pending::after {
-        border-color: #2196F3 !important
+        color: #008f7a
     }
 
     svg.edit-icon {

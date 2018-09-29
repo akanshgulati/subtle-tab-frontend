@@ -16,6 +16,7 @@
     "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o firefox/build.js"
   },
   "dependencies": {
+    "date-fns": "1.29.0",
     "vue": "2.5.17",
     "vue-analytics": "^5.7.1"
   },
