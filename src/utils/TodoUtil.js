@@ -201,6 +201,35 @@ export const showDeleteIcon = (listTitle) => {
     const title = listTitle.toLowerCase();
     return disableDelete.indexOf(title) === -1;
 };
+
+export const addTodayList = () => {
+    return {
+        id: 1,
+        name: 'Today',
+        isDeleted: false,
+        isArchived: false
+    }
+};
+export const findInboxList = (lists) => {
+    if (!lists) {
+        return;
+    }
+    return lists.find(list => list.title.toLowerCase() === 'inbox');
+};
+export const findInboxListId = (lists)=>{
+    const list = findInboxList(lists);
+    return list.id;
+};
+export const addAfterInbox = (lists, listsToBeAdded) => {
+    if (!lists || !listsToBeAdded) {
+        return;
+    }
+    let newLists = [];
+    const inboxList = findInboxList(lists);
+    lists.splice(inboxList, 1);
+    newLists.push(inboxList);
+    return newLists.concat(listsToBeAdded, lists);
+};
 export default {
     unsetLocalTodos,
     unsetLocalTodo,
@@ -211,5 +240,9 @@ export default {
     unsetLocalLists,
     unsetLocalList,
     unsetTodoTypeLocalData,
-    showDeleteIcon
+    showDeleteIcon,
+    addTodayList,
+    findInboxList,
+    findInboxListId,
+    addAfterInbox
 }

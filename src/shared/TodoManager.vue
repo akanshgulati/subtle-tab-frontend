@@ -90,10 +90,8 @@
             </g>
         </svg>
                 <transition mode="out-in">
-                <span key='static' class="ml-10" v-if="!isEditingDate"
-                      @click.stop="isEditingDate = true">Add due date</span>
-
-                    <input key='dynamic' type="date" v-else class="ml-10 due-date mb-0 border-0" v-model="_todo.dueOn"/>
+                    <!--<span key='static' class="ml-10" v-if="!isEditingDate" @click.stop="isEditingDate = true">Add due date</span>-->
+                    <input key='dynamic' type="date" class="ml-10 due-date mb-0 border-0" v-model="_todo.dueOn"/>
                 </transition>
             </div>
         </div>
@@ -103,8 +101,8 @@
     </form>
 </template>
 <script>
-    import DueDate from './DueDate.vue'
     import Button from './Button.vue'
+    import TimeUtil from '../utils/timeUtil'
 
     export default {
         mounted() {
@@ -131,12 +129,14 @@
             }
         },
         components: {
-            DueDate,
             Button
         },
         computed: {
             _todo() {
-                return Object.assign({}, this.todo)
+                const date = TimeUtil.getDateInputTypeDate(this.todo.dueOn);
+                let todo =  Object.assign({}, this.todo);
+                todo.dueOn = date;
+                return todo;
             }
         }
     }

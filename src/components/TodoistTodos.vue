@@ -17,7 +17,7 @@
                               v-on:changed="changedTodoList"
                               :show-todos-count="false"
                               :is-delete-enabled="true"
-                              :is-create-enabled="false"/>
+                              :is-create-enabled="true"/>
                 </div>
             </div>
 
@@ -87,10 +87,11 @@
 
     import {Get, Set, Remove} from '../utils/storage'
     import {TODOIST, STORAGE} from '../utils/Constants'
-    import {isolateScroll, Http, DecryptAuth, generateId, POST} from '../utils/common'
+    import {isolateScroll, Http, DecryptAuth, generateId, POST, isUndefined} from '../utils/common'
     import TodoUtil from '../utils/TodoUtil'
     import {titleCase} from '../utils/StringUtils'
     import {TodosType, TodoListItemAction, TodoItemAction} from '../constants/Todos'
+    import timeUtil from '../utils/timeUtil'
 
     let syncList;
     const TodoType = TodosType.TODOIST;
@@ -123,7 +124,7 @@
             isolateScroll('incomplete-todos-list');
             isolateScroll('complete-todos-list');
             isolateScroll('todo-sidebar');
-            this.init()
+            this.init();
             syncList = setInterval(this.sync, 5000)
         },
         computed: {
@@ -143,11 +144,17 @@
                 return this.todoLists.map(list => list.id)
             },
             visibleLists() {
-                return this.todoLists.filter(list => !list.isDeleted && !list.isArchived)
+                const todoLists = this.todoLists.filter(list => !list.isDeleted && !list.isArchived);
+                if (todoLists && todoLists.length > 0) {
+                    return this.addTimeBoundList(todoLists);
+                }
+                return todoLists;
             },
             currentListIncompleteTodos() {
-                return this.todos.filter(
-                    todo => todo.listId === this.currentListId && !todo.isCompleted && !todo.isDeleted)
+                if (this.currentListId === 1) {
+                    return this.todos.filter(todo => timeUtil.isTodayDate(todo.dueOn) && !todo.isCompleted && !todo.isDeleted);
+                }
+                return this.todos.filter(todo => todo.listId === this.currentListId && !todo.isCompleted && !todo.isDeleted)
             },
             currentListCompleteTodos() {
                 return this.todos.filter(
@@ -213,11 +220,11 @@
                 // If local list is present
                 if (this.currentList && this.currentList.id && this.syncToken) {
                     // check for local data if all available
-                    let localTodos = this.getLocalTodos()
-                    let localLists = this.getLocalLists()
+                    let localTodos = this.getLocalTodos();
+                    let localLists = this.getLocalLists();
                     if (localLists && localTodos) {
-                        this.todos = localTodos
-                        this.todoLists = localLists
+                        this.todos = localTodos;
+                        this.todoLists = localLists;
                         this.isLoadingTodos = false;
                         return
                     }
@@ -236,6 +243,10 @@
                     }
                     if (data.projects.length > 0) {
                         this.updateLists(data.projects);
+                        // check if deleted list is the current list
+                        if (this.visibleLists && !this.visibleLists.find(list => list.id === this.currentListId) && this.todoLists.length) {
+                            this.setActiveList(this.todoLists[0]);
+                        }
                         this.syncToken = data.sync_token
                     }
                     if (data.items.length > 0) {
@@ -274,9 +285,9 @@
                 TodoUtil.unsetLocalLists(TodosType.TODOIST)
             },
             updateLists(lists) {
-                let formattedTodoLists = lists.map(list => this.formatListResponse(list))
+                let formattedTodoLists = lists.map(list => this.formatListResponse(list));
                 formattedTodoLists.forEach(list => {
-                    let listIndex = this.listsMeta.indexOf(list.id)
+                    let listIndex = this.listsMeta.indexOf(list.id);
                     if (listIndex > -1) {
                         // if list is updated
                         this.todoLists.splice(listIndex, 1);
@@ -303,25 +314,29 @@
             },
             getAll() {
                 this.isLoadingTodos = true;
-                this.syncToken = '*'
-                const baseUrl = TODOIST.URL.BASE
-                let todoLists, todos
+                this.syncToken = '*';
+                const baseUrl = TODOIST.URL.BASE;
+                let todoLists, todos;
                 const self = this;
                 return this.syncCall(baseUrl).then(data => {
                     if (!data) {
                         return;
                     }
                     todoLists = data.projects;
-                    todos = data.items
-                    self.todoLists = todoLists.map(list => self.formatListResponse(list))
+                    todos = data.items;
+                    self.todoLists = todoLists.map(list => self.formatListResponse(list));
                     self.todos = data.items.filter(todo => !todo.is_deleted && !todo.in_history && !todo.is_archived).
-                        map(todo => self.formatTodoResponse(todo))
+                        map(todo => self.formatTodoResponse(todo));
                     // setting active current list
-                    self.currentList = self.currentList || self.todoLists[0]
+                    self.currentList = self.currentList || self.todoLists[0];
                     // setting sync token to new value
-                    self.syncToken = data.sync_token
+                    self.syncToken = data.sync_token;
                     self.isLoadingTodos = false
                 })
+            },
+            addTimeBoundList(lists) {
+                const todayList = this.formatListResponse(TodoUtil.addTodayList());
+                return TodoUtil.addAfterInbox(lists, [todayList]);
             },
             formatTodoResponse(todo) {
                 return {
@@ -354,6 +369,8 @@
                     this.setActiveList(info.list)
                 } else if (info.action === TodoListItemAction.DELETE) {
                     this.deleteList(info.list)
+                } else if (info.action === TodoListItemAction.CREATE) {
+                    this.createList(info.data && info.data.title);
                 }
             },
             patchTodo(type, args) {
@@ -382,17 +399,28 @@
                     return
                 }
                 this.newTodo = {};
-                const _todo = {
-                    content: todo.title,
-                    project_id: this.currentListId,
-                    due_date: todo.dueOn
-                };
-                this.patchTodo('item_add', _todo).then(() => {
-                    this.$nextTick(() => {
-                        const todo = document.querySelector('.todos');
-                        todo.scroll({left: 0, top: todo.scrollHeight, behaviour: 'smooth'});
-                    });
-                })
+                let listId = this.currentListId;
+                // calculating due on the date mentioned or fetch from string
+                let dueOn = todo.dueOn;
+                if (listId === 1) {
+                    listId = TodoUtil.findInboxListId(this.todoLists);
+                    dueOn = timeUtil.getEndOfDay(0)
+                }
+                if (listId) {
+                    const _todo = {
+                        content: todo.title,
+                        project_id: listId,
+                        date_string: dueOn
+                    };
+                    this.patchTodo('item_add', _todo).then(() => {
+                        this.$nextTick(() => {
+                            const todo = document.querySelector('.todos');
+                            if (todo && todo.scroll) {
+                                todo.scroll({left: 0, top: todo.scrollHeight, behaviour: 'smooth'});
+                            }
+                        });
+                    })
+                }
             },
             changedTodo(info) {
                 if (!info || !info.action) {
@@ -400,13 +428,13 @@
                 }
                 switch (info.action) {
                     case TodoItemAction.COMPLETE:
-                        this.checkedTodo(info)
-                        return
+                        this.checkedTodo(info);
+                        return;
                     case TodoItemAction.EDIT:
-                        this.editTodo(info.todo)
-                        return
+                        this.editTodo(info.todo);
+                        return;
                     case TodoItemAction.DELETE:
-                        this.deleteTodo(info.todo)
+                        this.deleteTodo(info.todo);
                         return
                 }
             },
@@ -427,16 +455,24 @@
                 if (this.showSidebar) {
                     return
                 }
-                this.showTodoManager = true
-                this.currentTodoIndex = this.todos.indexOf(todo)
-                this.currentTodo = Object.assign({}, todo)
+                this.currentTodo = Object.assign({}, todo);
+                this.showTodoManager = true;
             },
             updateTodo(data) {
                 if (data.action === TodoItemAction.EDIT) {
-                    const updatedTodo = data.todo
+                    const updatedTodo = data.todo;
                     // updating it to current for below logic
-                    this.patchTodo('item_update', {'id': updatedTodo.id, content: updatedTodo.title})
+                    this.patchTodo('item_update',
+                        {'id': updatedTodo.id, content: updatedTodo.title, date_string: updatedTodo.dueOn})
                 }
+            },
+            createList(listTitle) {
+                if (!listTitle) {
+                    return;
+                }
+                this.patchTodo('project_add', {"name": listTitle}).then(() => {
+                    this.setActiveList(this.todoLists[this.todoLists.length - 1]);
+                });
             },
             deleteList(list) {
                 if (!list || !confirm(`Are you sure you want to delete ${list.title} list?`)) {
@@ -472,7 +508,6 @@
                     this.errorState = 'serverIssue';
                 }
                 this.isLoadingTodos = false;
-                Set(`Todoist-Error-${+(new Date())}`, errorInfo);
                 this.$ga.event(TodoType, 'error', `${errorInfo.statusText}-${errorInfo.status}-${errorInfo.error_tag}`)
             }
         },
@@ -495,7 +530,7 @@
             },
             currentList: {
                 handler: function(newValue) {
-                    if (!newValue || !newValue.id) {
+                    if (isUndefined(newValue) || isUndefined(newValue.id)) {
                         return
                     }
                     Set(STORAGE.T_CURRENT_TODO_LIST, this.currentList)
