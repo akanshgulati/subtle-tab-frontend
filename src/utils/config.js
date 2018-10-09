@@ -3,7 +3,7 @@ const config = {
         showUtilities: {
             showWeather: true,
             showClock: true,
-            showNotes: false,
+            showNotes: true,
             showTodos: true
         },
         clock: {

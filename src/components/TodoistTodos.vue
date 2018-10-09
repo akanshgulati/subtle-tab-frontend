@@ -243,6 +243,10 @@
                     }
                     if (data.projects.length > 0) {
                         this.updateLists(data.projects);
+                        // check if deleted list is the current list
+                        if (this.visibleLists && !this.visibleLists.find(list => list.id === this.currentListId) && this.todoLists.length) {
+                            this.setActiveList(this.todoLists[0]);
+                        }
                         this.syncToken = data.sync_token
                     }
                     if (data.items.length > 0) {
@@ -411,7 +415,9 @@
                     this.patchTodo('item_add', _todo).then(() => {
                         this.$nextTick(() => {
                             const todo = document.querySelector('.todos');
-                            todo.scroll({left: 0, top: todo.scrollHeight, behaviour: 'smooth'});
+                            if (todo && todo.scroll) {
+                                todo.scroll({left: 0, top: todo.scrollHeight, behaviour: 'smooth'});
+                            }
                         });
                     })
                 }
