@@ -319,7 +319,22 @@ function updateLocalStorage() {
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
+function loadNewTab(){
+    function loadStart() {
+        browser.tabs.update({url: 'index.html'});
+    }
 
+    // does not fire in private browsing, not recommended
+    function pushStart(data) {
+        if (data == null) {
+            loadStart()
+        }
+    }
+    if (browser.runtime && browser.tabs) {
+        browser.runtime.onStartup.addListener(loadStart);
+        browser.tabs.getCurrent().then((data) => (pushStart(data)));
+    }
+}
 function init() {
 
     chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
@@ -340,6 +355,7 @@ function init() {
             storage.set(constants.STORAGE.SEEN_ONBOARDING, true);
         }
     });
+    loadNewTab();
 }
 
 init();
