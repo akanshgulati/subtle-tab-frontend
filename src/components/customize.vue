@@ -813,6 +813,7 @@
                 let type = this.todos.type;
                 // REVOKE PROCESS
                 if (this.todos.isAuthSaved) {
+                    this.$ga.event('customize', 'integration', 'revoked', type)
                     // resetting form data and removing auth code from storage
                     this.todos.authCode = '';
                     this.todos.saveMsg = `<span class="success">Integration removed successfully</span>`;
@@ -829,6 +830,7 @@
                 const isAuthCodeCorrect = validateAuthCode(this.todos.type, this.todos.authCode);
                 if (!isAuthCodeCorrect) {
                     this.todos.saveMsg = `<span class='error'>Incorrect authentication code, contact support.</span>`;
+                    this.$ga.event('customize', 'integration', 'incorrect-code', type)
                     return
                 }
                 // ask user for permission of origin url
@@ -844,11 +846,13 @@
                         CustomizeUtil.storeAuthCode(type, this.todos.authCode);
                         this.todos.isAuthSaved = true;
                     }
+                    this.$ga.event('customize', 'integration', type);
                     EventBus.$emit(MessageTypeEnum.TODO_WRAPPER, {message: TodoWrapperMessage.REFRESH});
                 }, () => {
                     this.todos.type = this.settings.todos.type = TodosType.DEFAULT;
                     this.todos.saveMsg = `<span class='error'>Invalid auth code</span>`;
                     EventBus.$emit(MessageTypeEnum.TODO_WRAPPER, {message: TodoWrapperMessage.REFRESH});
+                    this.$ga.event('customize', 'integration', 'failed');
                 })
             }
         },

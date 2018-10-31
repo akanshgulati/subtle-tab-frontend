@@ -92,11 +92,12 @@
                 return showDeleteIcon(listItem.title);
             },
             itemSelected(listItem) {
-                this.currentListItemId = listItem.id
+                this.currentListItemId = listItem.id;
                 this.$emit('changed', {
                     action: TodoListItemAction.SELECT,
                     list: listItem
-                })
+                });
+                this.$ga.event('todo', 'list', TodoListItemAction.SELECT);
             },
             create() {
                 this.$emit('changed', {
@@ -107,9 +108,10 @@
                 });
                 this.isEditing = false;
                 this.title = '';
+                this.$ga.event('todo', 'list', TodoListItemAction.CREATE);
             },
             type() {
-                this.isEditing = true
+                this.isEditing = true;
                 setTimeout(() => {
                     this.$nextTick(() => {
                         this.$refs.list.focus()
@@ -126,7 +128,8 @@
                 this.$emit('changed', {
                     action: TodoListItemAction.DELETE,
                     list: listItem
-                })
+                });
+                this.$ga.event('todo', 'list', TodoListItemAction.DELETE);
             }
         }
 

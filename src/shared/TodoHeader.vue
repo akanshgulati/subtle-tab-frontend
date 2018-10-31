@@ -104,6 +104,7 @@
                 this.$emit('changed', {
                     action: TodoListItemAction.DELETE
                 });
+                this.$ga.event('todo', 'header', TodoListItemAction.DELETE);
             },
             togglePin() {
                 EventBus.$emit(MessageTypeEnum.APP, {
@@ -111,17 +112,20 @@
                     widget: 'todos',
                     value: !this.isPinned
                 });
+                this.$ga.event('todo', 'header', AppMessage.PIN);
             },
             openTodoCustomize() {
                 EventBus.$emit(MessageTypeEnum.APP, {
                     message: AppMessage.OPEN_CUSTOMIZE,
                     tab: 'todo'
                 });
+                this.$ga.event('todo', 'header', AppMessage.OPEN_CUSTOMIZE);
             },
             viewList() {
                 this.$emit('changed', {
                     action: TodoListItemAction.VIEWLIST
                 });
+                this.$ga.event('todo', 'header', TodoListItemAction.VIEWLIST);
             }
         }
     }

@@ -96,7 +96,8 @@
                 } else {
                     this.$emit('create', {
                         title: this.defaultTitle
-                    })
+                    });
+                    this.$ga.event('todo', 'add-todo', 'create');
                 }
                 this.defaultTitle = '';
                 this.isTodoEditing = true;
@@ -126,8 +127,9 @@
                 this.$emit('toggleEditMode', this.isTodoEditing);
             },
             toggleCompleted() {
-                this.showCompleted = !this.showCompleted
-                this.$emit('toggleCompleted', this.showCompleted)
+                this.showCompleted = !this.showCompleted;
+                this.$emit('toggleCompleted', this.showCompleted);
+                this.$ga.event('todo','add-todo','show-completed');
             }
         },
         components: {

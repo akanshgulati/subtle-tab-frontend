@@ -91,31 +91,35 @@
                 this.$emit('changed', {
                     todo: this.todo,
                     action: TodoItemAction.EDIT
-                })
+                });
+                this.$ga.event('todo', 'todo-item', 'edit-btn');
             },
             changed() {
                 // this.todo.isCompleted = !this.todo.isCompleted
-                this.isCompleted = !this.isCompleted
+                this.isCompleted = !this.isCompleted;
 
                 this.$emit('changed', {
                     todo: this.todo,
                     action: TodoItemAction.COMPLETE,
                     value: this.isCompleted
-                })
+                });
+                this.$ga.event('todo', 'todo-item', 'complete-btn');
             },
             editTodo(data) {
                 this.$emit('changed', {
                     todo: this.todo,
                     action: TodoItemAction.EDIT,
                     value: data
-                })
+                });
+                this.$ga.event('todo', 'todo-item', 'edited-btn');
             },
             deleteTodo(data) {
                 this.$emit('changed', {
                     todo: this.todo,
                     action: TodoItemAction.DELETE,
                     value: data.id
-                })
+                });
+                this.$ga.event('todo', 'todo-item', 'delete-btn');
             }
         },
         computed: {

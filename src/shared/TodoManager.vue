@@ -119,7 +119,8 @@
                 this.$emit('changed', {
                     action: 'edit',
                     todo: this._todo
-                })
+                });
+                this.$ga.event('todo', 'manager', 'saved');
             }
         },
         props: {
