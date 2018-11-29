@@ -259,15 +259,21 @@ svg #customize_btn, svg #note_btn, svg #todo_btn {
     transition: all 0.2s ease-in-out;
 }
 
+svg #wallpaper-lock-btn {
+    stroke: #d6d6d6;
+    transition: all 0.2s ease-in-out;
+}
+
 .nav-bar-opener svg {
-    padding: 0.20rem;
     transition: all 0.2s ease-in-out;
 }
 
 svg:hover #customize_btn, svg:hover #note_btn, svg:hover #todo_btn {
     fill: white;
 }
-
+svg:hover #wallpaper-lock-btn {
+    stroke: #fff;
+}
 .close-btn {
     cursor: pointer;
     width: 24px;
@@ -1246,7 +1252,17 @@ input[type].no-focus:focus {
 .fast-fade-enter, .fast-fade-leave-to {
     opacity: 0;
 }
+.fade-in-slow-enter-active {
+    transition: all 0.4s ease-in-out;
+}
 
+.fade-in-slow-leave-active {
+    transition: all .6s ease-in-out;
+}
+
+.fade-in-slow-enter, .fade-in-slow-leave-to {
+    opacity: 0 !important;
+}
 svg.delete-icon {
     fill: #767678;
     transition: all 0.23s ease-in;

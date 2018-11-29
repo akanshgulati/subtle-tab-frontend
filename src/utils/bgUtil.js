@@ -53,7 +53,25 @@ let bgUtil = {
                 return themes[i];
             }
         }
-    }
+    },
+    updateBgSeen(id, theme, bgSeen, isRemove){
+        if (!id || !theme) {
+            return;
+        }
+        if (!isRemove) {
+            if (bgSeen.indexOf(id) === -1) {
+                bgSeen.push(id);
+                storage.set('bg-seen-' + theme, bgSeen);
+            }
+        } else {
+            const index = bgSeen.indexOf(id);
+            if (index > -1) {
+                bgSeen.splice(index, 1);
+                storage.set('bg-seen-' + theme, bgSeen);
+            }
+        }
+        return bgSeen;
+    },
 };
 
 export default bgUtil;

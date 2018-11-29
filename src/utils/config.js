@@ -27,7 +27,8 @@ const config = {
         background: {
             themeId: 1,
             changeInterval: 2,
-            type: 'predefined'
+            type: 'predefined',
+            changeLocked: false
         },
         notes: {
             isPinned: false

@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener(
         return true;
     });
 
-let loadCurrentBackground = (url, callback) => {
+const loadCurrentBackground = (url, callback) => {
     let defaultImageLoaded = false;
     let img = new Image();
     img.src = url;
@@ -74,12 +74,13 @@ let loadCurrentBackground = (url, callback) => {
         callback(false);
     };
 
-    let defaultImageTimeout = setTimeout(() => {
+    const defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
     }, 2000);
 };
-let loadCurrentCustomBackground = (url, callback) => {
+
+const loadCurrentCustomBackground = (url, callback) => {
     let defaultImageLoaded = false;
     let img = new Image();
     img.src = url;
@@ -99,7 +100,8 @@ let loadCurrentCustomBackground = (url, callback) => {
         callback(false);
     }, 4000);
 };
-let getBackground = (theme, changePage) => {
+
+const getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
         let themePage = currentPage[theme.value] || 0;
@@ -149,12 +151,12 @@ let updateThemeStorage = (bgData, theme) => {
 };
 
 let previousURL;
-let loadNextBackground = function(url) {
+const loadNextBackground = (url) => {
     previousURL = previousURL || url;
     if (previousURL !== url) {
         _console('BG: Load Next Background for', url);
         previousURL = url;
-        let image = new Image();
+        const image = new Image();
         image.src = url;
     }
 };
@@ -330,11 +332,12 @@ function loadNewTab(){
             loadStart()
         }
     }
-    if (browser.runtime && browser.tabs) {
+    if (browser && browser.runtime && browser.tabs) {
         browser.runtime.onStartup.addListener(loadStart);
         browser.tabs.getCurrent().then((data) => (pushStart(data)));
     }
 }
+
 function init() {
 
     chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
