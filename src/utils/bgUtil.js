@@ -1,6 +1,7 @@
-import config from './config';
 import storage from './storage';
 import bgData from './backgroundData';
+import {toDataURL} from './StringUtils';
+import {STORAGE} from './Constants';
 
 let bgUtil = {
     getFormattedJSON(dataArr){
@@ -72,6 +73,31 @@ let bgUtil = {
         }
         return bgSeen;
     },
+    cacheBackground(callback){
+        let imageUrl = document.getElementById('background').style.backgroundImage.match(/url\("(.*)"\)/)[1];
+        if (imageUrl.search('http') === -1) {
+            imageUrl = chrome.runtime.getURL(imageUrl);
+        }
+        toDataURL(imageUrl, (string) => {
+            if (string) {
+                chrome.storage.local.set({[STORAGE.BACKGROUND_LOCKED]: string}, () => {
+                    callback(true)
+                });
+            } else {
+                callback(false);
+            }
+        });
+    },
+    removeBackgroundCache() {
+        storage.remove(STORAGE.BACKGROUND_LOCKED);
+    },
+    setBackgroundWallpaper(url) {
+        if(!url){
+            return;
+        }
+        const bgElement = document.getElementById('background');
+        bgElement.style.backgroundImage = 'url(' + url + ')';
+    }
 };
 
 export default bgUtil;

@@ -87,6 +87,15 @@ let CommonUtils = {
     },
     isUndefined(data) {
         return typeof data === 'undefined';
+    },
+    isChrome(){
+        return navigator.userAgent.toLowerCase().search('chrome') > -1;
+    },
+    isFirefox(){
+        return navigator.userAgent.toLowerCase().search('firefox') > -1;
+    },
+    getBrowser(){
+        return CommonUtils.isChrome() ? 'chrome' : CommonUtils.isFirefox() ? 'firefox' : '';
     }
 };
 

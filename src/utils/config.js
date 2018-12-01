@@ -27,8 +27,7 @@ const config = {
         background: {
             themeId: 1,
             changeInterval: 2,
-            type: 'predefined',
-            changeLocked: false
+            type: 'predefined'
         },
         notes: {
             isPinned: false
@@ -43,6 +42,9 @@ const config = {
             lastChecked: '0020',
             isToBeFetched: true,
             isSeen: true
+        },
+        background: {
+            isLocked: false
         }
     },
     other: {
@@ -54,3 +56,4 @@ const config = {
 export default config;
 
 export const DefaultConfig = config.defaultCustomization;
+export const MiscConfig = config.misc;

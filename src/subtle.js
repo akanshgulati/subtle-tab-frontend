@@ -200,7 +200,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             continue;
         }
         _console('Storage Changed' + JSON.stringify(changes[key]));
-        if (typeof changes[key].newValue !== undefined) {
+        // Saving only sync data in local storage and preventing any local type change
+        if (typeof changes[key].newValue !== "undefined" && namespace !== 'local') {
             storage.setLocal(key, changes[key].newValue);
         } else {
             //To handle cases when no data is present
@@ -316,6 +317,10 @@ function updateLocalStorage() {
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
+        if (CommonUtils.isUndefined(miscSettings.background)) {
+            miscSettings.background = config.misc.background;
+        }
+
     }
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
@@ -340,7 +345,7 @@ function loadNewTab(){
 
 function init() {
 
-    chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
+    chrome.runtime.setUninstallURL(`https://www.subtletab.com/#/uninstall?browser=${CommonUtils.getBrowser()}`);
 
     chrome.storage.sync.get(null, (data) => {
         for (let key in data) {

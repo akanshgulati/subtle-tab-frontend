@@ -11,13 +11,16 @@ export const MessageTypeEnum = {
 export const Message = {
     [MessageTypeEnum.APP]: {
         OPEN_CUSTOMIZE: 'OpenCustomize',
-        PIN: 'pin'
+        PIN: 'pin',
+        TOGGLE_BACKGROUND_LOCK: 'toggleBackgroundLock'
     },
     [MessageTypeEnum.TODO_WRAPPER]: {
         REFRESH: 'refresh'
     },
     [MessageTypeEnum.BACKGROUND]: {
-        CHANGE_LOCKED: 'changeLocked'
+        CHANGE_LOCKED: 'changeLocked',
+        THEME_RESET: 'themeReset',
+        TYPE_CHANGED: 'typeChanged'
     }
 };
 export const AppMessage = Message[MessageTypeEnum.APP];

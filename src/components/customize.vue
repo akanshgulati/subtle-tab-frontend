@@ -28,7 +28,7 @@
                         <input type="radio" v-model="activeTab" value="general"
                                id="tab4" @change="onChange('changeTab')">
                         <label for="tab4" class="flex-center"
-                               :class="{'active': activeTab === 'general'}">
+                               :class="{'active': activeTab === tabTypeEnum.GENERAL}">
                             <svg viewBox="0 0 21 21">
                                 <use xlink:href="#icon-general"></use>
                             </svg>
@@ -36,11 +36,10 @@
                         </label>
                     </li>
                     <li>
-                        <input type="radio" v-model="activeTab"
-                               value="background" id="tab1"
+                        <input type="radio" v-model="activeTab" :value="tabTypeEnum.BACKGROUND" id="tab1"
                                @change="onChange('changeTab')">
                         <label for="tab1" class="flex-center"
-                               :class="{'active': activeTab === 'background'}">
+                               :class="{'active': activeTab === tabTypeEnum.BACKGROUND}">
                             <svg viewBox="0 0 21 21">
                                 <use xlink:href="#icon-wallpaper"></use>
                             </svg>
@@ -48,10 +47,10 @@
                         </label>
                     </li>
                     <li>
-                        <input type="radio" v-model="activeTab" value="clock"
+                        <input type="radio" v-model="activeTab" :value="tabTypeEnum.CLOCK"
                                id="tab2" @change="onChange('changeTab')">
                         <label for="tab2" class="flex-center"
-                               :class="{'active': activeTab === 'clock'}">
+                               :class="{'active': activeTab === tabTypeEnum.CLOCK}">
                             <svg>
                                 <use xlink:href="#icon-clock"></use>
                             </svg>
@@ -59,10 +58,10 @@
                         </label>
                     </li>
                     <li>
-                        <input type="radio" v-model="activeTab" value="weather"
+                        <input type="radio" v-model="activeTab" :value="tabTypeEnum.WEATHER"
                                id="tab3" @change="onChange('changeTab')">
                         <label for="tab3" class="flex-center"
-                               :class="{'active': activeTab === 'weather'}">
+                               :class="{'active': activeTab === tabTypeEnum.WEATHER}">
                             <svg viewBox="0 0 21 21">
                                 <use xlink:href="#icon-weather"></use>
                             </svg>
@@ -70,10 +69,10 @@
                         </label>
                     </li>
                     <li>
-                        <input type="radio" v-model="activeTab" value="todo"
+                        <input type="radio" v-model="activeTab" :value="tabTypeEnum.TODO"
                                id="tab5">
                         <label for="tab5" class="flex-center fill"
-                               :class="{'active': activeTab === 'todo'}">
+                               :class="{'active': activeTab === tabTypeEnum.TODO}">
                             <svg viewBox="0 0 512 512" class="fill">
                                 <use xlink:href="#icon-todo"></use>
                             </svg>
@@ -81,11 +80,11 @@
                         </label>
                     </li>
                     <li class="separator">
-                        <input type="radio" v-model="activeTab" value="whatsnew"
+                        <input type="radio" v-model="activeTab" :value="tabTypeEnum.WHATS_NEW"
                                id="tab6"
                                @change="onChange('changeTab')">
                         <label for="tab6" class="flex-center"
-                               :class="{'active': activeTab === 'whatsnew'}">
+                               :class="{'active': activeTab === tabTypeEnum.WHATS_NEW}">
                             <svg viewBox="0 0 21 21">
                                 <use xlink:href="#icon-whatsnew"></use>
                             </svg>
@@ -94,394 +93,408 @@
                     </li>
                 </ul>
             </aside>
-            <div class="container">
-                <section v-if="activeTab === 'general'">
-                    <div>
-                        <h4 class="font-medium text-black semi-bold">Show/hide
-                            Widgets</h4>
-                        <ul class="ph-10">
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Weather
-                                        widget
-                                    </div>
-                                    <small>Show/hide weather widget</small>
-                                </div>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox"
-                                               v-model="settings.showUtilities.showWeather">
-                                        <span class="lever mar-0"></span>
-                                    </label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Date &
-                                        Time widget
-                                    </div>
-                                    <small>Show/hide date and time widget
-                                    </small>
-                                </div>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox"
-                                               v-model="settings.showUtilities.showClock">
-                                        <span class="lever mar-0"></span>
-                                    </label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Notes
-                                        widget
-                                    </div>
-                                    <small>Show/hide notes widget</small>
-                                </div>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox"
-                                               v-model="settings.showUtilities.showNotes">
-                                        <span class="lever mar-0"></span>
-                                    </label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Todos widget
-                                    </div>
-                                    <small>Show/hide todos widget</small>
-                                </div>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox"
-                                               v-model="settings.showUtilities.showTodos">
-                                        <span class="lever mar-0"></span>
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                </section>
-                <section v-if="activeTab === 'background'">
-                    <div>
-                        <h4 class="font-medium text-black semi-bold">
-                            Settings</h4>
-                        <ul class="ph-10">
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Wallpaper
-                                        Change Interval (new tabs)
-                                    </div>
-                                    <small>Choose lower value with high internet
-                                        speed to prevent loading.
-                                    </small>
-                                </div>
-                                <div class="right">
-                                    <input type="radio"
-                                           v-model="settings.background.changeInterval"
-                                           id="bgInterval1"
-                                           class="filled-in" value="1"
-                                           @change="onChange('backgroundInterval')">
-                                    <label for="bgInterval1"
-                                           class="inline-radio">1 tab</label>
-                                    <input type="radio"
-                                           v-model="settings.background.changeInterval"
-                                           id="bgInterval2"
-                                           class="filled-in" value="2"
-                                           @change="onChange('backgroundInterval')">
-                                    <label for="bgInterval2"
-                                           class="inline-radio">2 tabs</label>
-                                    <input type="radio"
-                                           v-model="settings.background.changeInterval"
-                                           id="bgInterval5"
-                                           class="filled-in" value="5"
-                                           @change="onChange('backgroundInterval')">
-                                    <label for="bgInterval5"
-                                           class="inline-radio">5 tabs</label>
-                                    <input type="radio"
-                                           v-model="settings.background.changeInterval"
-                                           id="bgInterval10"
-                                           class="filled-in" value="10"
-                                           @change="onChange('backgroundInterval')">
-                                    <label for="bgInterval10"
-                                           class="inline-radio">10 tabs</label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Wallpaper
-                                        Type
-                                    </div>
-                                    <small>Choose default for Subtle collection
-                                        or add custom wallpapers
-                                    </small>
-                                </div>
-                                <div class="right">
-                                    <input type="radio"
-                                           v-model="settings.background.type"
-                                           id="wallpaperType2"
-                                           class="filled-in" value="predefined"
-                                           @change="onChange('backgroundType')"/>
-                                    <label for="wallpaperType2"
-                                           class="inline-radio">Default</label>
-                                    <input type="radio"
-                                           v-model="settings.background.type"
-                                           id="wallpaperType1"
-                                           class="filled-in" value="custom"
-                                           @change="onChange('backgroundType')"/>
-                                    <label for="wallpaperType1"
-                                           class="inline-radio">Custom</label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div v-if="settings.background.type !== 'custom'"
-                         :class="{'fade_in': settings.background.type !== 'custom'}">
-                        <h4 class="font-medium text-black semi-bold">Default
-                            Category</h4>
-                        <ul class="flex">
-                            <li v-for='(theme, index) in themes'
-                                v-bind:class="{active: isActiveTheme(index)}"
-                                class="thumbnail">
-                                <input type="radio"
-                                       v-model="settings.background.themeId"
-                                       :id="theme.value" class="hide"
-                                       :value="theme.id">
-                                <div v-on:click="selectActive(index)"
-                                     :style=" { 'background-image' : 'url(' + theme.imgUrl + ')'}"
-                                     class="thumbnail-image"></div>
-                                <p class="thumbnail-name font-center">
-                                    {{theme.lValue}}</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div v-if="settings.background.type === 'custom'"
-                         :class="{'fade_in': settings.background.type === 'custom'}">
-                        <h4 class="font-medium text-black semi-bold">Custom
-                            List</h4>
-                        <small>Add each image url in new line and press save
-                            list button. Image url should end with (.png, .jpg)
-                        </small>
-                        <textarea name="" id="" cols="30" rows="15"
-                                  v-model="currentBgCustom"></textarea>
-                        <button class="save-button font-xsmall btn semi-bold"
-                                v-on:click.stop="saveCustomBg"
-                                :disabled="!currentBgCustom.trim().length">Save
-                            List
-                        </button>
-                        <span v-html="isCustomBgSaveMsg"></span>
-                    </div>
-                </section>
-                <section v-if="activeTab === 'clock'">
-                    <div>
-                        <h4 class="font-medium text-black semi-bold">
-                            Integration: Google Calendar</h4>
-                        <small class="ph-10" v-if="!calendar.isAuthSaved">
-                            <strong>Authenticate Subtle tab to access your
-                                calendar data, <a class="semi-bold"
-                                                  @click.stop="openIntegration('calendar')">click
-                                    here</a> to start.</strong>
-                        </small>
-                        <div class="ph-10 flex" v-on:keydown.stop="">
-                            <input
-                                type="text"
-                                :readonly='calendar.isAuthSaved'
-                                v-model="calendar.authCode"
-                                class="mar-0 font-xsmall"
-                                placeholder="Paste authentication code obtained from above link here">
-                            <button
-                                class="save-button font-xsmall btn semi-bold"
-                                :disabled="!calendar.authCode"
-                                @click="calendarAuth">
-                                {{calendar.isAuthSaved ? 'Revoke' : 'Save'}}
+            <div class="cmain">
+                <transition>
+                    <div class="cmain-disabled" v-if="isBackgroundWidgetLocked">
+                        <div class="flex flex-flow-column flex-justify-center flex-center full-height">
+                            <span class="font-black semi-bold mb-10 font-large">Wallpaper widget is locked.</span>
+                            <button @click="unlockSettings(tabTypeEnum.BACKGROUND)"
+                                    class="save-button font-xsmall btn semi-bold"> Unlock
                             </button>
                         </div>
-                        <div class="ph-10 font-xsmall"
-                             v-html="calendar.saveMsg"/>
-
-                        <h4 class="font-medium text-black semi-bold">
-                            Settings</h4>
-                        <ul class="ph-10">
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Clock
-                                        format
-                                    </div>
-                                    <small>Choose 12 hour or 24 hour clock
-                                        format
-                                    </small>
-                                </div>
-                                <div class="right">
-                                    <input type="radio"
-                                           v-model="settings.clock.type"
-                                           id="clock12"
-                                           class="filled-in" value="twelve">
-                                    <label for="clock12" class="inline-radio">12
-                                        Hour</label>
-                                    <input type="radio"
-                                           v-model="settings.clock.type"
-                                           id="clock24"
-                                           class="filled-in" value="twentyfour">
-                                    <label for="clock24" class="inline-radio">24
-                                        Hour</label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Date
-                                        (show/hide)
-                                    </div>
-                                    <small>Show/hide date along with time
-                                    </small>
-                                </div>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox"
-                                               v-model="settings.clock.showDay">
-                                        <span class="lever mar-0"></span>
-                                    </label>
-                                </div>
-
-                            </li>
-                        </ul>
                     </div>
-                </section>
-                <section v-if="activeTab === 'weather'">
-                    <div>
-                        <h4 class="font-medium text-black semi-bold">Location
-                            settings</h4>
-                        <ul class="ph-10">
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Location
-                                        type
+                </transition>
+                <div class="container">
+                    <section v-if="activeTab === tabTypeEnum.GENERAL">
+                        <div>
+                            <h4 class="font-medium text-black semi-bold">Show/hide
+                                Widgets</h4>
+                            <ul class="ph-10">
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Weather
+                                            widget
+                                        </div>
+                                        <small>Show/hide weather widget</small>
                                     </div>
-                                    <small>Choose either default geo-location or
-                                        add custom location.
-                                    </small>
-                                </div>
-                                <div class="right">
-                                    <input type="radio"
-                                           v-model="settings.weather.location.type"
-                                           id="weather-geo" class="filled-in"
-                                           value="geo"
-                                           @change="onChange('weatherLocationType')">
-                                    <label for="weather-geo"
-                                           class="inline-radio">Default
-                                        Geolocation</label>
-                                    <input type="radio"
-                                           v-model="settings.weather.location.type"
-                                           id="weather-custom" class="filled-in"
-                                           value="custom"
-                                           @change="onChange('weatherLocationType')">
-                                    <label for="weather-custom"
-                                           class="inline-radio">Custom</label>
-                                </div>
-                            </li>
-                            <li class="inline-list-item flex overflow-hidden flex-center flex-justify-space-between">
-                                <div>
-                                    <div class="font-small semi-bold">
-                                        City/Town/Village Name
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showWeather">
+                                            <span class="lever mar-0"></span>
+                                        </label>
                                     </div>
-                                    <small>Enter correct name and press save
-                                        button.
-                                    </small>
-                                </div>
-                                <div class="right flex">
-                                    <input placeholder="e.g. Mumbai" type="text"
-                                           v-model="customLocation"
-                                           class="mar-0"
-                                           :disabled="settings.weather.location.type==='geo'"
-                                           v-on:keydown.stop="">
-                                    <button
-                                        class="btn save-button font-xsmall semi-bold"
-                                        v-on:click.stop="updateCustomLocation"
-                                        :disabled="customLocation == settings.weather.location.name">
-                                        Save
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
-                        <h4 class="font-medium text-black semi-bold">
-                            Miscellaneous Settings</h4>
-                        <ul class="ph-10">
-                            <li class="inline-list-item">
-                                <span class="font-small semi-bold">Temperature Unit</span>
-                                <div class="right">
-                                    <input type="radio"
-                                           v-model="settings.weather.unit"
-                                           id="weather-celcius"
-                                           class="filled-in"
-                                           value="c">
-                                    <label for="weather-celcius"
-                                           class="inline-radio">Celsius</label>
-                                    <input type="radio"
-                                           v-model="settings.weather.unit"
-                                           id="weather-fehren" class="filled-in"
-                                           value="f">
-                                    <label for="weather-fehren"
-                                           class="inline-radio">Fahrenheit</label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-                <section v-if="activeTab === 'todo'">
-                    <div>
-                        <h4 class="font-medium text-black semi-bold">
-                            Settings</h4>
-                        <ul class="inline-list">
-                            <li class="inline-list-item">
-                                <div>
-                                    <div class="font-small semi-bold">Todo type</div>
-                                    <small>Integrate 3rd-party todo applications.</small>
-                                </div>
-                                <div class="right">
-                                    <input type="radio" v-model="todos.type" id="defaultTodo" class="filled-in"
-                                           value="default"/>
-                                    <label for="defaultTodo" class="inline-radio">Default</label>
-
-                                    <input type="radio" v-model="todos.type" id="wTodos" class="filled-in" value="w"/>
-                                    <label for="wTodos" class="inline-radio">Wunderlist</label>
-
-                                    <input type="radio" v-model="todos.type" id="todoistTodos" class="filled-in"
-                                           value="t"/>
-                                    <label for="todoistTodos" class="inline-radio">Todoist</label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div v-if="todos.isAuthCodeBoxVisible || settings.todos.type === 'w' || settings.todos.type ==='t'"
-                        :class="{'fade_in': todos.isAuthCodeBoxVisible}">
-                        <h4 class="font-medium text-black semi-bold">Integrate
-                            {{todos.type === 'w'? 'Wunderlist': 'Todoist'}}</h4>
-                        <small class="ph-10" v-if="!todos.isAuthSaved">
-                            <strong>Integrate {{todos.type === 'w'? 'Wunderlist': 'Todoist'}} in Subtle tab,
-                                <a class="semi-bold" @click.stop="openIntegration(todos.type)">click here</a>
-                                to start.
-                            </strong>
-                        </small>
-                        <div class="ph-10 flex" v-on:keydown.stop="">
-                            <input
-                                type="text"
-                                :readonly='todos.isAuthSaved'
-                                v-model="todos.authCode"
-                                class="mar-0 font-xsmall"
-                                placeholder="Paste authentication code obtained from above link here">
-                            <button
-                                class="save-button font-xsmall btn semi-bold"
-                                :disabled="!todos.authCode"
-                                @click="saveAuthCode">{{todos.isAuthSaved ? 'Revoke' : 'Save'}}
-                            </button>
+                                </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Date &
+                                            Time widget
+                                        </div>
+                                        <small>Show/hide date and time widget
+                                        </small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showClock">
+                                            <span class="lever mar-0"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Notes
+                                            widget
+                                        </div>
+                                        <small>Show/hide notes widget</small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showNotes">
+                                            <span class="lever mar-0"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Todos widget
+                                        </div>
+                                        <small>Show/hide todos widget</small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showTodos">
+                                            <span class="lever mar-0"></span>
+                                        </label>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="ph-10 font-xsmall" v-html="todos.saveMsg"/>
-                    </div>
-                </section>
-                <section v-if="activeTab === 'whatsnew'" class="full-height">
-                    <whats-new class="full-height"></whats-new>
-                </section>
+
+                    </section>
+                    <section v-if="activeTab === tabTypeEnum.BACKGROUND">
+                        <div>
+                            <h4 class="font-medium text-black semi-bold">
+                                Settings</h4>
+                            <ul class="ph-10">
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Wallpaper
+                                            Change Interval (new tabs)
+                                        </div>
+                                        <small>Choose lower value with high internet
+                                            speed to prevent loading.
+                                        </small>
+                                    </div>
+                                    <div class="right">
+                                        <input type="radio"
+                                               v-model="settings.background.changeInterval"
+                                               id="bgInterval1"
+                                               class="filled-in" value="1"
+                                               @change="onChange('backgroundInterval')">
+                                        <label for="bgInterval1"
+                                               class="inline-radio">1 tab</label>
+                                        <input type="radio"
+                                               v-model="settings.background.changeInterval"
+                                               id="bgInterval2"
+                                               class="filled-in" value="2"
+                                               @change="onChange('backgroundInterval')">
+                                        <label for="bgInterval2"
+                                               class="inline-radio">2 tabs</label>
+                                        <input type="radio"
+                                               v-model="settings.background.changeInterval"
+                                               id="bgInterval5"
+                                               class="filled-in" value="5"
+                                               @change="onChange('backgroundInterval')">
+                                        <label for="bgInterval5"
+                                               class="inline-radio">5 tabs</label>
+                                        <input type="radio"
+                                               v-model="settings.background.changeInterval"
+                                               id="bgInterval10"
+                                               class="filled-in" value="10"
+                                               @change="onChange('backgroundInterval')">
+                                        <label for="bgInterval10"
+                                               class="inline-radio">10 tabs</label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Wallpaper
+                                            Type
+                                        </div>
+                                        <small>Choose default for Subtle collection
+                                            or add custom wallpapers
+                                        </small>
+                                    </div>
+                                    <div class="right">
+                                        <input type="radio"
+                                               v-model="settings.background.type"
+                                               id="wallpaperType2"
+                                               class="filled-in" value="predefined"
+                                               @change="onChange('backgroundType')"/>
+                                        <label for="wallpaperType2"
+                                               class="inline-radio">Default</label>
+                                        <input type="radio"
+                                               v-model="settings.background.type"
+                                               id="wallpaperType1"
+                                               class="filled-in" value="custom"
+                                               @change="onChange('backgroundType')"/>
+                                        <label for="wallpaperType1"
+                                               class="inline-radio">Custom</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="settings.background.type !== 'custom'"
+                             :class="{'fade_in': settings.background.type !== 'custom'}">
+                            <h4 class="font-medium text-black semi-bold">Default
+                                Category</h4>
+                            <ul class="flex">
+                                <li v-for='(theme, index) in themes'
+                                    v-bind:class="{active: isActiveTheme(index)}"
+                                    class="thumbnail">
+                                    <input type="radio"
+                                           v-model="settings.background.themeId"
+                                           :id="theme.value" class="hide"
+                                           :value="theme.id">
+                                    <div v-on:click="selectActive(index)"
+                                         :style=" { 'background-image' : 'url(' + theme.imgUrl + ')'}"
+                                         class="thumbnail-image"></div>
+                                    <p class="thumbnail-name font-center">
+                                        {{theme.lValue}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="settings.background.type === 'custom'"
+                             :class="{'fade_in': settings.background.type === 'custom'}">
+                            <h4 class="font-medium text-black semi-bold">Custom
+                                List</h4>
+                            <small>Add each image url in new line and press save
+                                list button. Image url should end with (.png, .jpg)
+                            </small>
+                            <textarea name="" id="" cols="30" rows="15"
+                                      v-model="currentBgCustom"></textarea>
+                            <button class="save-button font-xsmall btn semi-bold"
+                                    v-on:click.stop="saveCustomBg"
+                                    :disabled="!currentBgCustom.trim().length">Save
+                                List
+                            </button>
+                            <span v-html="isCustomBgSaveMsg"></span>
+                        </div>
+                    </section>
+                    <section v-if="activeTab === tabTypeEnum.CLOCK">
+                        <div>
+                            <h4 class="font-medium text-black semi-bold">
+                                Integration: Google Calendar</h4>
+                            <small class="ph-10" v-if="!calendar.isAuthSaved">
+                                <strong>Authenticate Subtle tab to access your
+                                    calendar data, <a class="semi-bold"
+                                                      @click.stop="openIntegration('calendar')">click
+                                        here</a> to start.</strong>
+                            </small>
+                            <div class="ph-10 flex" v-on:keydown.stop="">
+                                <input
+                                    type="text"
+                                    :readonly='calendar.isAuthSaved'
+                                    v-model="calendar.authCode"
+                                    class="mar-0 font-xsmall"
+                                    placeholder="Paste authentication code obtained from above link here">
+                                <button
+                                    class="save-button font-xsmall btn semi-bold"
+                                    :disabled="!calendar.authCode"
+                                    @click="calendarAuth">
+                                    {{calendar.isAuthSaved ? 'Revoke' : 'Save'}}
+                                </button>
+                            </div>
+                            <div class="ph-10 font-xsmall"
+                                 v-html="calendar.saveMsg"/>
+
+                            <h4 class="font-medium text-black semi-bold">
+                                Settings</h4>
+                            <ul class="ph-10">
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Clock
+                                            format
+                                        </div>
+                                        <small>Choose 12 hour or 24 hour clock
+                                            format
+                                        </small>
+                                    </div>
+                                    <div class="right">
+                                        <input type="radio"
+                                               v-model="settings.clock.type"
+                                               id="clock12"
+                                               class="filled-in" value="twelve">
+                                        <label for="clock12" class="inline-radio">12
+                                            Hour</label>
+                                        <input type="radio"
+                                               v-model="settings.clock.type"
+                                               id="clock24"
+                                               class="filled-in" value="twentyfour">
+                                        <label for="clock24" class="inline-radio">24
+                                            Hour</label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Date
+                                            (show/hide)
+                                        </div>
+                                        <small>Show/hide date along with time
+                                        </small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.clock.showDay">
+                                            <span class="lever mar-0"></span>
+                                        </label>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section v-if="activeTab === tabTypeEnum.WEATHER">
+                        <div>
+                            <h4 class="font-medium text-black semi-bold">Location
+                                settings</h4>
+                            <ul class="ph-10">
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Location
+                                            type
+                                        </div>
+                                        <small>Choose either default geo-location or
+                                            add custom location.
+                                        </small>
+                                    </div>
+                                    <div class="right">
+                                        <input type="radio"
+                                               v-model="settings.weather.location.type"
+                                               id="weather-geo" class="filled-in"
+                                               value="geo"
+                                               @change="onChange('weatherLocationType')">
+                                        <label for="weather-geo"
+                                               class="inline-radio">Default
+                                            Geolocation</label>
+                                        <input type="radio"
+                                               v-model="settings.weather.location.type"
+                                               id="weather-custom" class="filled-in"
+                                               value="custom"
+                                               @change="onChange('weatherLocationType')">
+                                        <label for="weather-custom"
+                                               class="inline-radio">Custom</label>
+                                    </div>
+                                </li>
+                                <li class="inline-list-item flex overflow-hidden flex-center flex-justify-space-between">
+                                    <div>
+                                        <div class="font-small semi-bold">
+                                            City/Town/Village Name
+                                        </div>
+                                        <small>Enter correct name and press save
+                                            button.
+                                        </small>
+                                    </div>
+                                    <div class="right flex">
+                                        <input placeholder="e.g. Mumbai" type="text"
+                                               v-model="customLocation"
+                                               class="mar-0"
+                                               :disabled="settings.weather.location.type==='geo'"
+                                               v-on:keydown.stop="">
+                                        <button
+                                            class="btn save-button font-xsmall semi-bold"
+                                            v-on:click.stop="updateCustomLocation"
+                                            :disabled="customLocation == settings.weather.location.name">
+                                            Save
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h4 class="font-medium text-black semi-bold">
+                                Miscellaneous Settings</h4>
+                            <ul class="ph-10">
+                                <li class="inline-list-item">
+                                    <span class="font-small semi-bold">Temperature Unit</span>
+                                    <div class="right">
+                                        <input type="radio"
+                                               v-model="settings.weather.unit"
+                                               id="weather-celcius"
+                                               class="filled-in"
+                                               value="c">
+                                        <label for="weather-celcius"
+                                               class="inline-radio">Celsius</label>
+                                        <input type="radio"
+                                               v-model="settings.weather.unit"
+                                               id="weather-fehren" class="filled-in"
+                                               value="f">
+                                        <label for="weather-fehren"
+                                               class="inline-radio">Fahrenheit</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section v-if="activeTab === tabTypeEnum.TODO">
+                        <div>
+                            <h4 class="font-medium text-black semi-bold">
+                                Settings</h4>
+                            <ul class="inline-list">
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Todo type</div>
+                                        <small>Integrate 3rd-party todo applications.</small>
+                                    </div>
+                                    <div class="right">
+                                        <input type="radio" v-model="todos.type" id="defaultTodo" class="filled-in"
+                                               value="default"/>
+                                        <label for="defaultTodo" class="inline-radio">Default</label>
+
+                                        <input type="radio" v-model="todos.type" id="wTodos" class="filled-in"
+                                               value="w"/>
+                                        <label for="wTodos" class="inline-radio">Wunderlist</label>
+
+                                        <input type="radio" v-model="todos.type" id="todoistTodos" class="filled-in"
+                                               value="t"/>
+                                        <label for="todoistTodos" class="inline-radio">Todoist</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div
+                            v-if="todos.isAuthCodeBoxVisible || settings.todos.type === 'w' || settings.todos.type ==='t'"
+                            :class="{'fade_in': todos.isAuthCodeBoxVisible}">
+                            <h4 class="font-medium text-black semi-bold">Integrate
+                                {{todos.type === 'w'? 'Wunderlist': 'Todoist'}}</h4>
+                            <small class="ph-10" v-if="!todos.isAuthSaved">
+                                <strong>Integrate {{todos.type === 'w'? 'Wunderlist': 'Todoist'}} in Subtle tab,
+                                    <a class="semi-bold" @click.stop="openIntegration(todos.type)">click here</a>
+                                    to start.
+                                </strong>
+                            </small>
+                            <div class="ph-10 flex" v-on:keydown.stop="">
+                                <input
+                                    type="text"
+                                    :readonly='todos.isAuthSaved'
+                                    v-model="todos.authCode"
+                                    class="mar-0 font-xsmall"
+                                    placeholder="Paste authentication code obtained from above link here">
+                                <button
+                                    class="save-button font-xsmall btn semi-bold"
+                                    :disabled="!todos.authCode"
+                                    @click="saveAuthCode">{{todos.isAuthSaved ? 'Revoke' : 'Save'}}
+                                </button>
+                            </div>
+                            <div class="ph-10 font-xsmall" v-html="todos.saveMsg"/>
+                        </div>
+                    </section>
+                    <section v-if="activeTab === tabTypeEnum.WHATS_NEW" class="full-height">
+                        <whats-new class="full-height"></whats-new>
+                    </section>
+                </div>
             </div>
         </div>
         <footer
@@ -591,18 +604,19 @@
 <script>
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
-    import constants, {STORAGE, TODOIST} from '../utils/Constants'
+    import constants, {STORAGE} from '../utils/Constants'
     import WhatsNew from './whatsNew.vue'
     import {DecryptAuth} from '../utils/common'
     import {DefaultConfig} from '../utils/config'
     import {EventBus} from '../utils/EventBus'
-    import {G_CAL, WUNDERLIST} from '../utils/Constants'
+    import {G_CAL} from '../utils/Constants'
     import {getPermission} from '../utils/PermissionUtils'
     import {validateAuthCode} from '../utils/IntegrationUtil'
     import {TodosType} from '../constants/Todos'
     import CustomizeUtil from '../utils/CustomizeUtil'
     import {unsetThirdPartyTodoData} from '../utils/TodoUtil'
-    import {MessageTypeEnum, TodoWrapperMessage} from '../constants/Message';
+    import {TabTypeEnum} from '../enums/CustomizeEnum';
+    import {MessageTypeEnum, TodoWrapperMessage, BackgroundMessage, AppMessage} from '../constants/Message';
 
     export default {
         components: {
@@ -614,7 +628,7 @@
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
                 activeTab: storage.get(
-                    constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || 'general',
+                    constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || TabTypeEnum.GENERAL,
                 customLocation: '',
                 currentBgCustom: '',
                 isCustomBgSaveMsg: '',
@@ -629,7 +643,11 @@
                     isAuthCodeBoxVisible: false,
                     authCode: CustomizeUtil.getAuthCode(this.settings.todos.type),
                     isAuthSaved: !!CustomizeUtil.getAuthCode(this.settings.todos.type)
-                }
+                },
+                locked: {
+                    background: this.miscSettings.background.isLocked
+                },
+                tabTypeEnum: TabTypeEnum
             }
         },
         mounted() {
@@ -652,7 +670,8 @@
                 return this.settings.background.themeId === (index + 1)
             },
             selectActive(index) {
-                this.settings.background.themeId = (index + 1)
+                this.settings.background.themeId = (index + 1);
+                EventBus.$emit(MessageTypeEnum.BACKGROUND, {message: BackgroundMessage.THEME_RESET});
                 this.$ga.event('customize', 'wallpaperCategoryChanged',
                     this.themes[index].lValue)
             },
@@ -707,23 +726,26 @@
             },
             onChange(changeType) {
                 try {
-                    let value
-                    if (changeType === 'backgroundInterval') {
-                        value = this.settings.background &&
-                            this.settings.background.changeInterval
-                    } else if (changeType === 'changeTab') {
-                        value = this.activeTab
-                    } else if (changeType === 'backgroundType') {
-                        value = this.settings.background &&
-                            this.settings.background.type
-                    } else if (changeType === 'weatherLocationType') {
-                        value = this.settings.weather.location &&
-                            this.settings.weather.location.type
+                    let value;
+                    switch(changeType){
+                        case 'backgroundInterval':
+                            value = this.settings.background &&
+                                this.settings.background.changeInterval;
+                            break;
+                        case 'changeTab':
+                            value = this.activeTab;
+                            break;
+                        case 'backgroundType':
+                            value = this.settings.background &&
+                                this.settings.background.type;
+                            EventBus.$emit(MessageTypeEnum.BACKGROUND, {message: BackgroundMessage.TYPE_CHANGED});
+                            break;
+                        case 'weatherLocationType':
+                            value = this.settings.weather.location &&
+                                this.settings.weather.location.type;
                     }
                     this.$ga.event('customize', changeType, value)
-                } catch (e) {
-
-                }
+                } catch (e) {}
             },
             calendarAuthSuccess() {
                 this.$ga.event('customize', 'g_integration', 'success')
@@ -854,9 +876,15 @@
                     EventBus.$emit(MessageTypeEnum.TODO_WRAPPER, {message: TodoWrapperMessage.REFRESH});
                     this.$ga.event('customize', 'integration', 'failed');
                 })
+            },
+            unlockSettings(tab) {
+                switch(tab){
+                    case TabTypeEnum.BACKGROUND:
+                        EventBus.$emit(MessageTypeEnum.APP, {message: AppMessage.TOGGLE_BACKGROUND_LOCK});
+                }
             }
         },
-        props: ['settings'],
+        props: ['settings', 'miscSettings'],
         watch: {
             'todos.type': {
                 handler(newValue, oldValue) {
@@ -875,6 +903,36 @@
                     }
                 }
             }
+        },
+        computed: {
+            isBackgroundWidgetLocked(){
+                return this.miscSettings && this.miscSettings.background && this.miscSettings.background.isLocked &&
+                    this.activeTab === TabTypeEnum.BACKGROUND;
+            }
         }
     }
 </script>
+<style scoped>
+    .cmain {
+        position: relative;
+        width: 80%;
+        overflow: hidden;
+        height: 22rem;
+    }
+    .cmain-disabled {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(240, 240, 240, 0.85);
+        z-index: 100000;
+        text-align: center;
+    }
+    .container {
+        padding: 0 1rem;
+        overflow: auto;
+        width: 100%;
+        height: 22rem;
+    }
+</style>

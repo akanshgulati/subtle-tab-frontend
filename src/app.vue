@@ -5,7 +5,7 @@
             <div class="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
-                            v-on:startLoading="startLoad"></background>
+                            v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
                 <div id="utilities">
                     <div id="position--bottom-right">
                         <ClockWrapper
@@ -99,7 +99,7 @@
                                         <polyline id="Shape" points="10.1194637 22.4834513 16.158003 11.1700998 27.4011807 25.4322118"></polyline>
                                         <ellipse id="Oval" cx="8.9321391" cy="13.8222737" rx="1.95915115" ry="1.91656091"></ellipse>
                                         <path d="M20.8215332,9.92724609 C20.8215332,9.92724609 14.1306571,9.92724609 0.748904806,9.92724609 L0.748904806,25.2361626 L29.3716404,25.2361626 L29.3716404,17.0605469" id="Path-2" stroke="#fff"></path>
-                                        <transition name="fade-in-slow" mode="out-in">
+                                        <transition name="fast-fade" mode="out-in">
                                             <path
                                                 key="lock"
                                                 v-if="isBackgroundChangeLocked"
@@ -123,7 +123,7 @@
             <transition>
                 <div id="customize-section" v-if="showCustomizeMenu">
                     <div class="customization-overlay"></div>
-                    <customize :settings="sharedData" id="customize"
+                    <customize :settings="sharedData" id="customize" :misc-settings="miscSettings"
                                v-on:closeCustomizeMenu="toggleCustomizeMenu"></customize>
                 </div>
             </transition>
@@ -153,6 +153,7 @@
     import bgData from './utils/backgroundData'
     import {EventBus} from './utils/EventBus.js';
     import {AppMessage, MessageTypeEnum, BackgroundMessage} from './constants/Message';
+    import {TabTypeEnum} from './enums/CustomizeEnum';
 
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
@@ -179,8 +180,7 @@
                 seenOnBoarding: _isOnBoardingSeen,
                 miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: _showTodos,
-                isBackgroundChangeLocked: _sharedData.background.changeLocked || false
+                showTodos: _showTodos
             }
         },
         mounted() {
@@ -222,11 +222,19 @@
                     case AppMessage.PIN:
                         this.toggleNotesTodoPin(e);
                         return;
+                    case AppMessage.TOGGLE_BACKGROUND_LOCK:
+                        this.toggleBackgroundLock();
+                        break;
                 }
             });
 
             this.init();
             this.initWhenIdle()
+        },
+        computed: {
+            isBackgroundChangeLocked() {
+                return this.miscSettings.background.isLocked || false
+            }
         },
         watch: {
             sharedData: {
@@ -292,7 +300,7 @@
                 if (+this.miscSettings.update.lastChecked < v) {
                     this.miscSettings.update.isSeen = false;
                     this.miscSettings.update.lastChecked = v;
-                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, 'whatsnew')
+                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, TabTypeEnum.WHATS_NEW)
                 }
             },
             checkForUpdates() {
@@ -353,8 +361,9 @@
                 }
             },
             toggleBackgroundLock() {
-                this.isBackgroundChangeLocked = this.sharedData.background.changeLocked = !this.isBackgroundChangeLocked;
-                EventBus.$emit(BackgroundMessage.CHANGE_LOCKED, {value: this.isBackgroundChangeLocked});
+                this.miscSettings.background.isLocked = !this.miscSettings.background.isLocked;
+                EventBus.$emit(MessageTypeEnum.BACKGROUND,
+                    {message: BackgroundMessage.CHANGE_LOCKED, value: this.miscSettings.background.isLocked});
             }
         },
         components: {

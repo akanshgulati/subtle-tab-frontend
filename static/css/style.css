@@ -372,12 +372,6 @@ svg:hover #close_btn {
     color: #7AB800;
 }
 
-#customize .container {
-    width: 80%;
-    padding: 0 1rem;
-    overflow: auto;
-}
-
 #customize .container > section > div {
     padding-bottom: 1rem;
 }

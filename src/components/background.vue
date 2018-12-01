@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="fade">
         <transition name="fade-in-slow">
             <div class="lock-wrapper" v-if="showLock">
                 <div class="lock-base">
@@ -15,7 +15,7 @@
                     <div class="lock-upper-left"></div>
                 </div>
                 <div class="lock-status">
-                    Wallpaper is {{lockStatus? 'locked': 'unlocked'}}
+                    Wallpaper widget is {{lockStatus? 'locked': 'unlocked'}}
                 </div>
             </div>
         </transition>
@@ -28,15 +28,13 @@
     import bgUtil from '../utils/bgUtil'
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
-    import constants from '../utils/Constants'
+    import constants, {STORAGE} from '../utils/Constants'
     import {EventBus} from '../utils/EventBus'
-    import {BackgroundMessage} from '../constants/Message'
+    import {BackgroundMessage, MessageTypeEnum} from '../constants/Message'
+
     let bgElement;
     let LockShowTimeout;
-
     const backgroundVue = {
-        beforeCreate(){
-        },
         data () {
             return {
                 showBackground: false,
@@ -53,25 +51,43 @@
                 lockStatus: false
             }
         },
-        props: ['settings'],
+        props: ['settings', 'miscSettings'],
         mounted(){
             bgElement = document.getElementById('background');
-            EventBus.$on(BackgroundMessage.CHANGE_LOCKED, e => {
-                this.handleBackgroundLock(e.value);
+            EventBus.$on(MessageTypeEnum.BACKGROUND, e => {
+                switch (e.message) {
+                    case BackgroundMessage.CHANGE_LOCKED:
+                        this.handleBackgroundLock(e.value);
+                        return;
+                    case BackgroundMessage.THEME_RESET:
+                    case BackgroundMessage.TYPE_CHANGED:
+                        this.getBg(true);
+                }
             });
             this.getBg();
         },
         methods: {
-            handleBackgroundLock(isLocked){
+            lockFadeInOut(isLocked){
                 clearTimeout(LockShowTimeout);
-                const backgroundKey = this.bgKeys[this.bgIndex];
-                this.bgSeen = bgUtil.updateBgSeen(backgroundKey, this.themeVal, this.bgSeen, isLocked);
                 this.showLock = true;
                 this.lockStatus = isLocked;
-                LockShowTimeout = setTimeout(()=>{
+                LockShowTimeout = setTimeout(() => {
                     this.showLock = false;
                     LockShowTimeout = 0;
                 }, 3000);
+            },
+            handleBackgroundLock(isLocked) {
+                const self = this;
+                if (isLocked) {
+                    bgUtil.cacheBackground((isCached) => {
+                        if (isCached) {
+                            self.lockFadeInOut(isLocked);
+                        }
+                    });
+                } else {
+                    bgUtil.removeBackgroundCache();
+                    self.lockFadeInOut(isLocked);
+                }
             },
             getAllBackgrounds(theme){
                 const currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
@@ -81,12 +97,28 @@
                 return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
             },
             getBg(reset) {
-                if (this.settings && this.settings.type !== 'custom') {
+                // Handling a case when wallpaper is locked and available in local storage
+                if (this.miscSettings.background.isLocked) {
+                    this.loadLockedBackground();
+                }
+                // In case wallpaper is not locked, we check if wallpaper a default one
+                else if (this.settings && this.settings.type !== 'custom') {
                     this.getBackground(reset);
                 } else {
                     this.loadCustomBackground(reset);
                 }
                 this.backgroundType = this.settings.type;
+            },
+            loadLockedBackground() {
+                chrome.storage.local.get(STORAGE.BACKGROUND_LOCKED, backgroundString => {
+                    if (backgroundString) {
+                        bgUtil.setBackgroundWallpaper(backgroundString[STORAGE.BACKGROUND_LOCKED]);
+                    } else {
+                        bgUtil.removeBackgroundCache();
+                        this.miscSettings.background.isLocked = false;
+                    }
+                });
+                this.$emit('stopLoading');
             },
             getBackground: function (reset) {
                 if(reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type){
@@ -211,7 +243,8 @@
                 });
             },
             resetBackgroundTheme(){
-                this.getBg(true);
+                // this is valid only for predefined wallpapers
+                this.getBackground(true);
                 chrome.runtime.sendMessage({query: 'setTabsCount', value: 0});
             },
             isLoading(){
@@ -258,20 +291,22 @@
                     }
                 });
             }
-        },
-        watch: {
-            settings: {
-                handler: function(){
-                    chrome.runtime.sendMessage({query: 'log', value: 'Reset Called'});
-                    this.resetBackgroundTheme();
-                },
-                deep: true
-            }
         }
     };
     export default backgroundVue;
 </script>
 <style scoped>
+    @keyframes fade {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .fade {
+        animation: fade 0.6s ease-in-out;
+    }
     @keyframes unlock-circle {
         0% {
             bottom: 200px;
