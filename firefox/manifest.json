@@ -18,6 +18,7 @@
         "https://*.wunderlist.com/",
         "https://*.todoist.com/",
         "https://www.googleapis.com/"
+        "unlimitedStorage"
     ],
     "applications": {
         "gecko": {

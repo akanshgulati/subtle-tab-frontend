@@ -1,5 +1,5 @@
 import {TodosType} from '../constants/Todos'
-import {WUNDERLIST, TODOIST} from './Constants'
+import {WUNDERLIST, TODOIST, G_CAL} from './Constants'
 
 export const getOriginPermission = (origin) => {
   return new Promise((resolve, reject) => {
@@ -34,6 +34,9 @@ export const getPermission = (type) => {
             case TodosType.DEFAULT:
                 reject(false);
                 return;
+            case 'calendar':
+                originUrl = G_CAL.URL.ORIGIN;
+                break;
             default:
                 reject(false);
                 return

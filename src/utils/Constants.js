@@ -5,7 +5,7 @@ export const G_CAL = {
         BASE: 'https://www.googleapis.com/calendar/v3/',
         LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
         REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
-        ORIGIN: 'https://www.googleapis.com/',
+        ORIGIN: 'https://www.googleapis.com/calendar',
         KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/calendar',
         INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/calendar'
     }

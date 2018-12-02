@@ -785,28 +785,13 @@
                 }
                 // case of save
                 try {
-                    let code = DecryptAuth(this.calendar.authCode)
+                    let code = DecryptAuth(this.calendar.authCode);
                     if (code.access_token && code.refresh_token) {
-                        // check for permissions
-                        chrome.permissions.contains(
-                            {origins: [G_CAL.URL.ORIGIN]}, result => {
-                                // returns a boolean when permission is there
-                                if (result) {
-                                    this.calendarAuthSuccess()
-                                } else {
-                                    chrome.permissions.request(
-                                        {origins: [G_CAL.URL.ORIGIN]},
-                                        granted => {
-                                            // The callback argument will be true if the user granted the permissions.
-                                            if (granted) {
-                                                this.calendarAuthSuccess()
-                                            } else {
-                                                this.calendarAuthFailed(
-                                                    'Integration process aborted.')
-                                            }
-                                        })
-                                }
-                            })
+                        getPermission('calendar').then(() => {
+                            this.calendarAuthSuccess()
+                        }, () => {
+                            this.calendarAuthFailed('Integration process aborted.')
+                        });
                     } else {
                         this.calendarAuthFailed()
                     }
