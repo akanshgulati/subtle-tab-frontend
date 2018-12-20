@@ -309,7 +309,7 @@ function updateLocalStorage() {
             sharedData.todos = config.defaultCustomization.todos;
             sharedData.showUtilities.showTodos = true;
         }
-
+        storage.set('snowflakes', true);
     }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
@@ -337,7 +337,7 @@ function loadNewTab(){
 }
 function init() {
 
-    chrome.runtime.setUninstallURL('https://www.subtletab.com/uninstall');
+    chrome.runtime.setUninstallURL('https://www.subtletab.com/#/uninstall');
 
     chrome.storage.sync.get(null, (data) => {
         for (let key in data) {

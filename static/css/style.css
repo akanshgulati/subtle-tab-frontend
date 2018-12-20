@@ -293,7 +293,11 @@ svg:hover #close_btn {
     z-index: 10;
     overflow: hidden;
 }
-
+#customize .snowflake-background {
+    background-position: center;
+    background-image: url('../images/christmas_banner.png');
+    background-size: cover;
+}
 #customize .main-window {
     height: 22rem;
 }
@@ -1254,4 +1258,7 @@ svg.delete-icon {
 
 svg.delete-icon:hover {
     fill: #e56161
+}
+.snowflakes {
+    transition: opacity 0.25s ease-in-out;
 }
