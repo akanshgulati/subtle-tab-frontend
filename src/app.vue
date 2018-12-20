@@ -124,6 +124,7 @@
     import bgData from './utils/backgroundData'
     import {EventBus} from './utils/EventBus.js';
     import {AppMessage, MessageTypeEnum} from './constants/Message';
+    import Snowflakes from './utils/snow';
 
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
@@ -134,6 +135,7 @@
     import Onboarding from './components/onboarding.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
+    window.Snowflakes = Snowflakes;
     export default {
         beforeCreate() {
             _sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
