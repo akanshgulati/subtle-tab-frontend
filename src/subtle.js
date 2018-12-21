@@ -331,7 +331,7 @@ function loadNewTab(){
             loadStart()
         }
     }
-    if (browser.runtime && browser.tabs) {
+    if (CommonUtils.isFirefox() && browser && browser.runtime && browser.tabs) {
         browser.runtime.onStartup.addListener(loadStart);
         browser.tabs.getCurrent().then((data) => (pushStart(data)));
     }
