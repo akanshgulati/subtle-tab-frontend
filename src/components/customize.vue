@@ -95,11 +95,11 @@
             <div class="container">
                 <section v-if="activeTab === 'general'">
                     <div>
-                        <h4 class="font-medium text-black semi-bold">Chirstmas snow</h4>
+                        <h4 class="font-medium text-black semi-bold">Christmas snow</h4>
                         <ul class="ph-10">
                             <li class="inline-list-item">
                                 <div>
-                                    <div class="font-small semi-bold">Snow effect</div>
+                                    <div class="font-small semi-bold" style="color: #d02025;">Snow effect</div>
                                     <small>Show/hide snow flakes on screen</small>
                                 </div>
                                 <div class="switch">
