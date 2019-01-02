@@ -2,7 +2,7 @@
     <div @mousedown.left="closeWindows">
         <onboarding id="onboarding" v-if="!seenOnBoarding" v-on:stopOnboarding="stopOnBoarding"></onboarding>
         <div v-if="seenOnBoarding">
-            <div class="loading" :class="{ 'show-loading': isLoading}"></div>
+            <div id="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
                             v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
@@ -92,7 +92,7 @@
                                 </svg>
                                 <div class="whatsnew-notify" v-show="!miscSettings.update.isSeen">!</div>
                             </div>
-                            <div class="pointer ml-20" @click.stop="toggleBackgroundLock">
+                            <div class="pointer ml-20" @click.stop="showHistory = true">
                                 <svg width="2.6em" height="1.8em" viewBox="0 0 35 26" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" id="wallpaper-lock-btn">
                                         <polyline id="Shape" transform="translate(5.914229, 22.385445) rotate(-10.000000) translate(-5.914229, -22.385445) " points="1.60663153 24.9218261 6.74294348 19.8490641 10.2218261 23.4984239"></polyline>
@@ -127,6 +127,9 @@
                                v-on:closeCustomizeMenu="toggleCustomizeMenu"></customize>
                 </div>
             </transition>
+            <transition name="slide-up">
+                <History v-if="showHistory"/>
+            </transition>
         </div>
 
         <svg style="display: none;">
@@ -152,7 +155,7 @@
     import Constants from './utils/Constants'
     import bgData from './utils/backgroundData'
     import {EventBus} from './utils/EventBus.js';
-    import {AppMessage, MessageTypeEnum, BackgroundMessage} from './constants/Message';
+    import {AppMessage, MessageTypeEnum} from './constants/Message';
     import {TabTypeEnum} from './enums/CustomizeEnum';
 
     import ClockWrapper from './components/ClockWrapper.vue'
@@ -162,6 +165,7 @@
     import Notes from './components/notes.vue'
     import TodoWrapper from './components/TodoWrapper.vue'
     import Onboarding from './components/onboarding.vue'
+    import History from './components/History.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
@@ -180,7 +184,8 @@
                 seenOnBoarding: _isOnBoardingSeen,
                 miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: _showTodos
+                showTodos: _showTodos,
+                showHistory: false
             }
         },
         mounted() {
@@ -205,6 +210,9 @@
                 } else if (e.keyCode === 71) {
                     this.$ga.event('app', 'keydown', 'calendar');
                     EventBus.$emit('calendar', {message: 'open'})
+                } else if(e.keyCode === 72) {
+                    this.$ga.event('app', 'keydown', 'history');
+                    this.showHistory = true;
                 }
             });
             // App Messages
@@ -224,6 +232,9 @@
                         return;
                     case AppMessage.TOGGLE_BACKGROUND_LOCK:
                         this.toggleBackgroundLock();
+                        break;
+                    case AppMessage.TOGGLE_HISTORY:
+                        this.showHistory = false;
                         break;
                 }
             });
@@ -268,13 +279,14 @@
                 }
             },
             toggleCustomizeMenu(state) {
-                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state
+                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state;
                 if (!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
                 this.showNotes = state ? !state : this.sharedData.notes.isPinned;
                 this.showTodos = state ? !state : this.sharedData.todos.isPinned;
                 this.otherSettings.weather.showWeatherInfo = false;
+                this.showHistory = false;
                 this.toggle('calendar', {message: 'close', force: state})
             },
             stopLoad() {
@@ -359,11 +371,6 @@
                 } else if (navigator.userAgent.indexOf('Chrome') > -1) {
                     this.$ga.page('/chrome-app')
                 }
-            },
-            toggleBackgroundLock() {
-                this.miscSettings.background.isLocked = !this.miscSettings.background.isLocked;
-                EventBus.$emit(MessageTypeEnum.BACKGROUND,
-                    {message: BackgroundMessage.CHANGE_LOCKED, value: this.miscSettings.background.isLocked});
             }
         },
         components: {
@@ -373,7 +380,8 @@
             Weather,
             Onboarding,
             Notes,
-            TodoWrapper
+            TodoWrapper,
+            History
         }
     }
 </script>

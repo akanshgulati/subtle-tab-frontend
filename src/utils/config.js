@@ -44,7 +44,8 @@ const config = {
             isSeen: true
         },
         background: {
-            isLocked: false
+            isLocked: false,
+            lockedUrl: ''
         }
     },
     other: {

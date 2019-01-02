@@ -144,14 +144,14 @@ label {
     margin-bottom: 5vh;
 }
 
-.show-loading {
+#loading.show-loading {
     animation-name: fade_in;
     animation-duration: 1.5s;
     animation-fill-mode: both;
     visibility: visible !important;
 }
 
-.loading {
+#loading {
     position: absolute;
     height: 100vh;
     width: 100vw;
@@ -160,10 +160,19 @@ label {
     top: 0;
     visibility: hidden;
     opacity: 0;
-    background-size: cover;
-    background: rgba(239, 239, 239, 0.94) url(../images/logo-loading-trans.png) no-repeat center;
+    background: rgba(239, 239, 239, 0.94) url(../images/loading.svg) no-repeat center;
+    background-size: 5vw;
 }
-
+#loading:after {
+    content: 'Loading...';
+    color: #666666;
+    font-weight: 500;
+    margin: 0 auto;
+    position: absolute;
+    left: calc(50% - 2vw);
+    bottom: calc(50% - 4vw);
+    font-size: 1vw;
+}
 .dim-overlay {
     position: absolute;
     height: 100vh;
@@ -176,7 +185,7 @@ label {
     background: rgba(0, 0, 0, 0.5);
 }
 
-#background {
+#background, #background-hover {
     margin: 0;
     padding: 0;
     top: 0;
@@ -189,9 +198,13 @@ label {
     z-index: 1;
     background-size: cover;
     background-repeat: no-repeat;
-    transition: all 0.3s ease;
-    opacity: 1;
+    transition: all 0.3s ease, background 0.5s ease-in-out;
     background-position: center;
+}
+
+#background-hover {
+    z-index: 2;
+    transition: background 0.5s ease-in-out;
 }
 
 #background-hidden {
@@ -271,9 +284,11 @@ svg #wallpaper-lock-btn {
 svg:hover #customize_btn, svg:hover #note_btn, svg:hover #todo_btn {
     fill: white;
 }
+
 svg:hover #wallpaper-lock-btn {
     stroke: #fff;
 }
+
 .close-btn {
     cursor: pointer;
     width: 24px;
@@ -356,6 +371,7 @@ svg:hover #close_btn {
     fill: none;
     stroke: #666;
 }
+
 .csidebar svg.fill {
     width: 1.5rem;
     margin-right: 0.5rem;
@@ -367,6 +383,7 @@ svg:hover #close_btn {
     stroke: #7AB800;
     color: #7AB800;
 }
+
 .csidebar label.fill:hover:not(.active) svg, .csidebar label.fill:hover:not(.active) span {
     fill: #7AB800;
     color: #7AB800;
@@ -437,13 +454,13 @@ svg:hover #close_btn {
     margin: 0;
 }
 
-.thumbnail {
+#customize .thumbnail {
     margin-right: 1rem;
     cursor: pointer;
     flex-basis: 100%;
 }
 
-.thumbnail-image {
+#customize .thumbnail-image {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -454,7 +471,7 @@ svg:hover #close_btn {
     transition: all 0.3s ease-in-out;
 }
 
-.thumbnail-image:hover {
+#customize .thumbnail-image:hover {
     opacity: 1;
     transform: scale(0.98);
 }
@@ -639,7 +656,7 @@ svg:hover #close_btn {
     position: absolute;
     height: 100vh;
     width: 100vw;
-    z-index: 2;
+    z-index: 3;
     left: 0;
 }
 
@@ -716,9 +733,11 @@ svg:hover #close_btn {
 .full-height {
     height: 100%;
 }
+
 .full-width {
     width: 100%;
 }
+
 .relative {
     position: relative;
 }
@@ -789,9 +808,11 @@ svg:hover #close_btn {
     left: -75%;
     z-index: 1;
 }
+
 #notes .sidebar {
     background-color: rgb(234, 234, 234)
 }
+
 #notes .sidebar ul li {
     transition: all 0.5s;
     box-shadow: 0px 0.35rem 7px -5px #ccc;
@@ -902,7 +923,7 @@ header svg:hover #hamburger {
     padding: 0.5rem 0.4rem 0.2rem 1rem;
 }
 
-.note-title{
+.note-title {
     margin: 0;
     flex: 1;
     font-weight: 500;
@@ -1246,6 +1267,7 @@ input[type].no-focus:focus {
 .fast-fade-enter, .fast-fade-leave-to {
     opacity: 0;
 }
+
 .fade-in-slow-enter-active {
     transition: all 0.4s ease-in-out;
 }
@@ -1257,6 +1279,15 @@ input[type].no-focus:focus {
 .fade-in-slow-enter, .fade-in-slow-leave-to {
     opacity: 0 !important;
 }
+
+.slide-up-enter, .slide-up-leave-to {
+    transform: translateY(100%);
+}
+
+.slide-up-enter-active, .slide-up-leave-active {
+    transition: transform 0.4s ease-in-out;
+}
+
 svg.delete-icon {
     fill: #767678;
     transition: all 0.23s ease-in;
@@ -1264,4 +1295,90 @@ svg.delete-icon {
 
 svg.delete-icon:hover {
     fill: #e56161
+}
+
+#history {
+    background: white;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+#history header a {
+    background-color: rgba(49, 153, 230, 0.31);
+    color: #3199e6;
+    border: none;
+    border-radius: 3px;
+    height: auto;
+    line-height: 1;
+    box-shadow: none;
+    padding: 5px;
+}
+
+#history .thumbnail {
+    width: 11.5vw;
+    height: 11vh;
+    border-radius: 3px;
+    margin: 0 3px;
+    overflow: hidden;
+}
+
+#history .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 3px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+#history .loading-thumbnail {
+    width: 100%;
+    height: 100%;
+    background-size: 3vw;
+    border: 1px solid #8d8d8d;
+    background-position: center center;
+    border-radius: 3px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-image: url("../images/loading.svg");
+}
+
+#history .change-list {
+    width: 1.5vw;
+    transition: all 0.25s ease-in-out;
+    padding: 0 0.25vw;
+}
+
+#history .change-list:hover {
+    transform: scale(1.3);
+}
+
+#history .change-list svg {
+    fill: #a0a0a0;
+    stroke: #a0a0a0;
+}
+
+#history .change-list:hover svg {
+    fill: #333;
+    stroke: #333;
+}
+
+#history .btn-blue {
+    background-color: rgba(49, 153, 230, 0.31);
+    color: #3199e6;
+    border-radius: 3px;
+}
+
+#history #prev-arrow {
+    transform: rotate(180deg);
+}
+
+#history-thumbs.no-history{
+    background-image: url(../images/no_other_wallpaper.png);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: contain;
 }

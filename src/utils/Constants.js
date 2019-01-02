@@ -49,6 +49,8 @@ const constants = {
         BACKGROUND_CUSTOM: 'bg-custom',
         BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
         BACKGROUND_LOCKED: 'bg-locked',
+        BACKGROUND_HISTORY: 'bg_history',
+        BACKGROUND_HISTORY_DATA: 'bg_history_data',
 
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',

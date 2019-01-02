@@ -86,7 +86,7 @@
 </template>
 
 <script>
-    import _debounce from '../utils/debounce'
+    import _debounce from '../utils/throttle'
     import storage from '../utils/storage'
     import constants from '../utils/Constants'
     import {EventBus} from '../utils/EventBus';

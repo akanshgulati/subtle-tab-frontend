@@ -20,6 +20,7 @@
             </div>
         </transition>
         <div class="util-overlay"></div>
+        <div id="background-hover"></div>
         <div id="background"></div>
     </div>
 </template>
@@ -30,15 +31,15 @@
     import storage from '../utils/storage'
     import constants, {STORAGE} from '../utils/Constants'
     import {EventBus} from '../utils/EventBus'
-    import {BackgroundMessage, MessageTypeEnum} from '../constants/Message'
+    import {BackgroundMessage, MessageTypeEnum, HistoryMessage} from '../constants/Message'
 
-    let bgElement;
+    let bgElement, bgHoverElement;
     let LockShowTimeout;
     const backgroundVue = {
-        data () {
+        data() {
             return {
                 showBackground: false,
-                bgSeen : '',
+                bgSeen: '',
                 tabsCount: '',
                 themeId: '',
                 defaultImageLoaded: false,
@@ -52,12 +53,16 @@
             }
         },
         props: ['settings', 'miscSettings'],
-        mounted(){
+        mounted() {
             bgElement = document.getElementById('background');
+            bgHoverElement = document.getElementById('background-hover');
             EventBus.$on(MessageTypeEnum.BACKGROUND, e => {
                 switch (e.message) {
                     case BackgroundMessage.CHANGE_LOCKED:
-                        this.handleBackgroundLock(e.value);
+                        this.handleBackgroundLock(e.value, e.url);
+                        return;
+                    case BackgroundMessage.CHANGE_BACKGROUND:
+                        this.changeBackground(e);
                         return;
                     case BackgroundMessage.THEME_RESET:
                     case BackgroundMessage.TYPE_CHANGED:
@@ -67,7 +72,7 @@
             this.getBg();
         },
         methods: {
-            lockFadeInOut(isLocked){
+            lockFadeInOut(isLocked) {
                 clearTimeout(LockShowTimeout);
                 this.showLock = true;
                 this.lockStatus = isLocked;
@@ -76,25 +81,53 @@
                     LockShowTimeout = 0;
                 }, 3000);
             },
-            handleBackgroundLock(isLocked) {
+            changeBackground(data) {
+                if (data.url) {
+                    const image = new Image();
+                    image.src = data.url;
+                    image.onload = () => {
+                        bgHoverElement.style.opacity = '1';
+                        bgHoverElement.style.backgroundImage = 'url(' + data.url + ')';
+                    };
+                } else {
+                    bgHoverElement.style.opacity = '0';
+                }
+            },
+            handleBackgroundLock(isLocked, url) {
+                if (!url) {
+                    return;
+                }
                 const self = this;
                 if (isLocked) {
-                    bgUtil.cacheBackground((isCached) => {
+                    bgHoverElement.style.opacity = '0';
+                    bgUtil.cacheBackground(url, (isCached) => {
+                        EventBus.$emit(MessageTypeEnum.HISTORY, {
+                            message: HistoryMessage.LOCK_COMPLETE,
+                            url: isCached && url
+                        });
                         if (isCached) {
+                            self.miscSettings.background.isLocked = true;
+                            self.miscSettings.background.lockedUrl = url;
+                            self.getBg();
                             self.lockFadeInOut(isLocked);
                         }
                     });
                 } else {
+                    bgHoverElement.style.opacity = '0';
+                    self.miscSettings.background.isLocked = false;
+                    self.miscSettings.background.lockedUrl = '';
                     bgUtil.removeBackgroundCache();
                     self.lockFadeInOut(isLocked);
                 }
             },
-            getAllBackgrounds(theme){
+            getAllBackgrounds(theme) {
                 const currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
                 const localBgData = storage.get(theme.value);
                 const storedBg = bgData.stored[theme.id];
                 // If page number is 1, we add stored background first and then shows the backgrounds from URLS
-                return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData ? localBgData : Object.assign({}, storedBg, localBgData);
+                return currentPage && currentPage[theme.value] && currentPage[theme.value] > 1 && localBgData
+                    ? localBgData
+                    : Object.assign({}, storedBg, localBgData);
             },
             getBg(reset) {
                 // Handling a case when wallpaper is locked and available in local storage
@@ -120,14 +153,14 @@
                 });
                 this.$emit('stopLoading');
             },
-            getBackground: function (reset) {
-                if(reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type){
+            getBackground: function(reset) {
+                if (reset && this.themeId === this.settings.themeId && this.backgroundType === this.settings.type) {
                     return;
                 }
                 const theme = bgUtil.getCurrentTheme(this.settings.themeId);
                 this.themeVal = theme.value;
                 const localBgData = storage.get(theme.value);
-                this.bgSeen = storage.get('bg-seen-'+ theme.value) || [];
+                this.bgSeen = storage.get('bg-seen-' + theme.value) || [];
                 const allBackgrounds = this.getAllBackgrounds(theme);
                 const bgKeys = Object.keys(allBackgrounds);
                 this.allBackgrounds = allBackgrounds;
@@ -135,7 +168,7 @@
                 this.themeId = theme.id;
 
                 if (navigator.onLine) {
-                    chrome.runtime.sendMessage({query: 'log', value: 'GetBackground Called '+ theme.id});
+                    chrome.runtime.sendMessage({query: 'log', value: 'GetBackground Called ' + theme.id});
                     let i = 0;
                     // Finding the background which is not seen before
                     for (; i < bgKeys.length; i++) {
@@ -148,7 +181,8 @@
                     // If no local background data of the theme is found or if background list has less than equal to 2 background left,
                     // we call for entire new list of background data from API
                     if (!localBgData || i >= (bgKeys.length - 2)) {
-                        chrome.runtime.sendMessage({query: 'log', value: 'No Local Storage Found for theme '+ theme.id});
+                        chrome.runtime.sendMessage(
+                            {query: 'log', value: 'No Local Storage Found for theme ' + theme.id});
                         chrome.runtime.sendMessage({query: 'getBackground', theme, newPage: true});
                     }
                     // This is a safe check if user is not able to download latest background, we show default background to user
@@ -156,20 +190,17 @@
                         bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
                         this.$emit('stopLoading');
                     }
-
-                } else if(false){
-                    // CHECK FOR TEMPORARY IMAGES
-                }else {
+                } else {
                     bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
                     this.$emit('stopLoading');
                 }
             },
             loadCustomBackground(reset) {
                 // this check is required to make sure to not change custom wallpaper when type is not changed
-                if(reset && this.backgroundType === this.settings.type){
+                if (reset && this.backgroundType === this.settings.type) {
                     return;
                 }
-                let customBackgrounds = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
+                const customBackgrounds = storage.get(constants.STORAGE.BACKGROUND_CUSTOM);
                 let customSeenBgIndex = storage.get(constants.STORAGE.BACKGROUND_SEEN_CUSTOM);
                 // because customSeenBgIndex can be 0 , so strict checking
                 customSeenBgIndex = customSeenBgIndex === null ? -1 : customSeenBgIndex;
@@ -192,7 +223,7 @@
                     customSeenBgIndex++;
                 }
 
-                let currentUrl = customBackgrounds[customSeenBgIndex];
+                const currentUrl = customBackgrounds[customSeenBgIndex];
 
                 chrome.runtime.sendMessage({
                     query: 'loadCurrentCustomBackground',
@@ -202,8 +233,11 @@
                         // console.log("background loaded in time");
                         this.defaultImageLoaded = false;
                         bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
+                        bgUtil.addToHistory(customSeenBgIndex + '^custom', currentUrl, {type: this.settings.type});
                         if (customBackgrounds.length > 1) {
-                            let nextUrlIndex = customSeenBgIndex === (customBackgrounds.length - 1) ? 0 : customSeenBgIndex + 1;
+                            let nextUrlIndex = customSeenBgIndex === (customBackgrounds.length - 1)
+                                ? 0
+                                : customSeenBgIndex + 1;
                             let nextUrl = customBackgrounds[nextUrlIndex];
                             chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
                         }
@@ -224,8 +258,8 @@
                 this.defaultImageLoaded = false;
                 let i = this.bgIndex;
                 let currentUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
-                chrome.runtime.sendMessage({query: 'loadCurrentBackground', url: currentUrl}, (responseURL) =>{
-                    if(responseURL){
+                chrome.runtime.sendMessage({query: 'loadCurrentBackground', url: currentUrl}, (responseURL) => {
+                    if (responseURL) {
                         this.defaultImageLoaded = false;
                         bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
                         chrome.runtime.sendMessage({query: 'log', value: 'Current URL ' + currentUrl});
@@ -233,27 +267,29 @@
                         const nextUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i + 1]], this.bgKeys[i + 1]);
                         chrome.runtime.sendMessage({query: 'log', value: 'Next URL ' + nextUrl});
                         chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
-                    }else {
+                        bgUtil.addToHistory(this.bgKeys[i], this.allBackgrounds[this.bgKeys[i]],
+                            {type: this.settings.type, theme: this.themeVal});
+                    } else {
                         this.defaultImageLoaded = true;
                         bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
-                        chrome.runtime.sendMessage({query: 'log', value: 'Default URL'+ this.settings.themeId});
+                        chrome.runtime.sendMessage({query: 'log', value: 'Default URL' + this.settings.themeId});
                         this.$emit('stopLoading');
                     }
                     this.markBgSeen(this.bgKeys[i]);
                 });
             },
-            resetBackgroundTheme(){
+            resetBackgroundTheme() {
                 // this is valid only for predefined wallpapers
                 this.getBackground(true);
                 chrome.runtime.sendMessage({query: 'setTabsCount', value: 0});
             },
-            isLoading(){
+            isLoading() {
                 this.$emit('startLoading');
             },
-            markBgSeen(id){
+            markBgSeen(id) {
                 chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
                     // to prevent change on refresh;
-                    if(!tabs){
+                    if (!tabs) {
                         return;
                     }
                     if (this.settings.changeLocked) {
@@ -261,13 +297,12 @@
                     }
                     if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
                         this.bgSeen = bgUtil.updateBgSeen(id, this.themeVal, this.bgSeen);
-                    }
-                    else if (this.defaultImageLoaded) {
+                    } else if (this.defaultImageLoaded) {
                         chrome.runtime.sendMessage({query: 'setTabsCount', value: parseInt(tabs) - 1});
                     }
                 });
             },
-            getDefaultBg(){
+            getDefaultBg() {
                 let counter = 0;
                 let value = Math.random();
                 let themeId = this.settings.themeId;
@@ -278,10 +313,10 @@
                 chrome.runtime.sendMessage({query: 'log', value: 'getDefaultBg Called with counter, ' + counter});
                 return bgData.stored[themeId][1 + (themeId - 1) * 3 + counter];
             },
-            markCustomBgSeen(index){
+            markCustomBgSeen(index) {
                 chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
                     // to prevent change on refresh;
-                    if(!tabs){
+                    if (!tabs) {
                         return;
                     }
                     if (tabs % this.settings.changeInterval === 0 && !this.defaultImageLoaded) {
@@ -304,9 +339,11 @@
             opacity: 1;
         }
     }
+
     .fade {
         animation: fade 0.6s ease-in-out;
     }
+
     @keyframes unlock-circle {
         0% {
             bottom: 200px;
@@ -352,14 +389,17 @@
         position: relative;
         opacity: 0.4;
     }
+
     .lock-upper {
         position: relative;
         bottom: 200px;
     }
+
     .lock-upper-lock {
         animation: unlock-circle 2s;
         bottom: 150px;
     }
+
     .lock-upper-unlock {
         animation: unlock-circle 2s;
         animation-direction: reverse;
@@ -406,6 +446,7 @@
         bottom: 85px;
         left: 85px;
     }
+
     .lock-status {
         position: relative;
         bottom: 41px;

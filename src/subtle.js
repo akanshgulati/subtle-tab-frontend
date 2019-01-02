@@ -77,7 +77,7 @@ const loadCurrentBackground = (url, callback) => {
     const defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
-    }, 2000);
+    }, 4000);
 };
 
 const loadCurrentCustomBackground = (url, callback) => {
