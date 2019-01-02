@@ -1,7 +1,7 @@
 {
     "name": "Subtle Tab",
     "description": "Personalized experience on new tabs for better productivity",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "incognito": "spanning",
     "chrome_url_overrides": {
         "newtab": "index.html"
@@ -17,13 +17,13 @@
         "storage",
         "https://*.wunderlist.com/",
         "https://*.todoist.com/",
-        "https://www.googleapis.com/"
+        "https://www.googleapis.com/",
         "unlimitedStorage"
     ],
     "applications": {
         "gecko": {
             "id": "subtle@subtletab.com",
-            "strict_min_version": "54.0"
+            "strict_min_version": "55.0"
         }
     },
     "browser_action": {

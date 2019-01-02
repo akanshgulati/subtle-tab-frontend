@@ -314,7 +314,11 @@ svg:hover #close_btn {
     z-index: 10;
     overflow: hidden;
 }
-
+#customize .snowflake-background {
+    background-position: center;
+    background-image: url('../images/christmas_banner.png');
+    background-size: cover;
+}
 #customize .main-window {
     height: 22rem;
 }
@@ -1297,6 +1301,7 @@ svg.delete-icon:hover {
     fill: #e56161
 }
 
+
 #history {
     background: white;
     position: absolute;
@@ -1376,9 +1381,12 @@ svg.delete-icon:hover {
     transform: rotate(180deg);
 }
 
-#history-thumbs.no-history{
+#history-thumbs.no-history {
     background-image: url(../images/no_other_wallpaper.png);
     background-position: right top;
     background-repeat: no-repeat;
     background-size: contain;
+}
+.snowflakes {
+    transition: opacity 0.25s ease-in-out;
 }

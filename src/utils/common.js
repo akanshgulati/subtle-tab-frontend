@@ -105,7 +105,7 @@ export const getString = (s) => {
   } catch (e) {
     return s
   }
-}
+};
 
 
 export default CommonUtils

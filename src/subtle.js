@@ -182,9 +182,11 @@ chrome.runtime.onInstalled.addListener(function(details) {
         });
 
         chrome.tabs.create({});
+        storage.set('snowflakes', true);
 
     } else if (details && details.reason && details.reason === 'update') {
         updateLocalStorage();
+        storage.set('snowflakes', true);
     }
 });
 
@@ -312,7 +314,6 @@ function updateLocalStorage() {
             sharedData.todos = config.defaultCustomization.todos;
             sharedData.showUtilities.showTodos = true;
         }
-
     }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
@@ -337,7 +338,7 @@ function loadNewTab(){
             loadStart()
         }
     }
-    if (browser && browser.runtime && browser.tabs) {
+    if (CommonUtils.isFirefox() && browser && browser.runtime && browser.tabs) {
         browser.runtime.onStartup.addListener(loadStart);
         browser.tabs.getCurrent().then((data) => (pushStart(data)));
     }
