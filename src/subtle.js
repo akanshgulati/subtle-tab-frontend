@@ -316,6 +316,7 @@ function updateLocalStorage() {
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
+        miscSettings.update.lastChecked = '12';
         if (CommonUtils.isUndefined(miscSettings.background)) {
             miscSettings.background = config.misc.background;
         }

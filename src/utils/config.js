@@ -39,7 +39,7 @@ const config = {
     },
     misc: {
         update: {
-            lastChecked: '0020',
+            lastChecked: '12',
             isToBeFetched: true,
             isSeen: true
         },

@@ -613,8 +613,7 @@
                 selectedTheme: this.settings.background.themeId,
                 themes: bgData.themes,
                 version: chrome.runtime.getManifest().version,
-                activeTab: storage.get(
-                    constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || TabTypeEnum.GENERAL,
+                activeTab: storage.get(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB) || TabTypeEnum.GENERAL,
                 customLocation: '',
                 currentBgCustom: '',
                 isCustomBgSaveMsg: '',
@@ -644,9 +643,7 @@
             // this is done for backgrounds
             let bgCustom = storage.get(constants.STORAGE.BACKGROUND_CUSTOM)
 
-            if (bgCustom && Object.prototype.toString.call(bgCustom) ===
-                '[object Array]'
-                && bgCustom.length) {
+            if (bgCustom && Object.prototype.toString.call(bgCustom) === '[object Array]' && bgCustom.length) {
                 this.currentBgCustom = bgCustom.join('\n')
             }
             this.$ga.event('customize', 'open')

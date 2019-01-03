@@ -292,10 +292,10 @@
                 }
             },
             toggleCustomizeMenu(state) {
-                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state;
-                if (!this.miscSettings.update.isSeen) {
+                if (!this.miscSettings.update.isSeen && this.showCustomizeMenu) {
                     this.miscSettings.update.isSeen = true;
                 }
+                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state;
                 this.showNotes = state ? !state : this.sharedData.notes.isPinned;
                 this.showTodos = state ? !state : this.sharedData.todos.isPinned;
                 this.otherSettings.weather.showWeatherInfo = false;
@@ -321,7 +321,7 @@
                 if (!newVersion) {
                     return
                 }
-                let v = +newVersion.replace(/\./g, '')
+                let v = +newVersion.replace(/\./g, '');
                 if (+this.miscSettings.update.lastChecked < v) {
                     this.miscSettings.update.isSeen = false;
                     this.miscSettings.update.lastChecked = v;
