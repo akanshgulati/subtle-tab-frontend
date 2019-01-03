@@ -60,7 +60,7 @@
         mounted() {
             const historyData = Get(STORAGE.BACKGROUND_HISTORY_DATA);
             const historyIds = Get(STORAGE.BACKGROUND_HISTORY);
-            const historyUnsortedData = historyIds.map(id => {
+            this.urlsData = historyIds.map(id => {
                 let obj = {};
                 obj.id = id;
                 if (historyData[id].url.indexOf('http') === -1) {
@@ -72,13 +72,8 @@
                 return obj;
             });
             if (this.lockedUrl) {
-                const lockedUrlData = historyUnsortedData.find(data => data.original === this.lockedUrl);
-                if (lockedUrlData) {
-                    historyUnsortedData.unshift(lockedUrlData);
-                    this.urlsData = historyUnsortedData;
-                }
-            } else {
-                this.urlsData = historyUnsortedData;
+                const lockedUrlDataIndex = this.urlsData.findIndex(data => data.original === this.lockedUrl);
+                this.startIndex = parseInt(lockedUrlDataIndex / SHOW_MAX_THUMB, 10);
             }
             // Listen to events for successfully stopping locking
             EventBus.$on(MessageTypeEnum.HISTORY, (e) => {

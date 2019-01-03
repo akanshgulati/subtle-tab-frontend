@@ -232,9 +232,6 @@
                     case AppMessage.PIN:
                         this.toggleNotesTodoPin(e);
                         return;
-                    case AppMessage.TOGGLE_BACKGROUND_LOCK:
-                        this.toggleBackgroundLock();
-                        break;
                     case AppMessage.TOGGLE_HISTORY:
                         this.showHistory = false;
                         break;

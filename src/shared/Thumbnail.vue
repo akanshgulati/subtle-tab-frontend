@@ -2,9 +2,10 @@
     <div class="full-height">
         <div class="full-height full-width">
             <div class="loading-thumbnail" v-if="isLoading" key="loading"></div>
-            <div class="thumbnail-image fade_in relative" v-else id="img" key="loaded"
-                 :style="background" @mouseleave="onMouseLeave" @mouseover="onMouseEnter()" @click.stop="onMouseEnter(true)">
-                <section class="flex flex-center full-height flex-justify-center thumbnail-icon-section pointer">
+            <div class="thumbnail-image fade_in relative" v-else key="loaded"
+                 @mouseleave="onMouseLeave" @mouseover="onMouseEnter()" @click.stop="onMouseEnter(true)">
+                <div :style="background" class="thumbnail-background"></div>
+                <section class="flex flex-center full-height flex-justify-center thumbnail-icon-section pointer relative">
                     <div class="thumbnail-icon thumbnail-lock pointer" @click.stop="toggleLock"
                          :class="{'active': isLocked, 'loading': isLocking}"></div>
                     <!--<div v-if="false" class="thumbnail-icon thumbnail-favourite pointer" @click.stop="toggleFavourite" :class="{'active': isFavourite}"></div>-->
@@ -83,15 +84,30 @@
     }
 
     .thumbnail-image {
-        transition: transform 2.2s ease-in-out;
+        width: 100%;
+        height: 100%;
+        background-position: center center;
+        border-radius: 3px;
+        overflow: hidden;
+        background-repeat: no-repeat;
     }
-
-    .thumbnail-image:hover {
-        transform: scale(1.25);
+    .thumbnail-background {
+        transition: transform 2s linear;
+        background-size: 100%;
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+    }
+    .thumbnail-image:hover .thumbnail-background{
+        transform: scale(1.5);
     }
 
     .thumbnail-icon-section {
         transition: background 0.25s ease-in-out;
+        z-index: 2;
     }
 
     .thumbnail-image:hover .thumbnail-icon-section {

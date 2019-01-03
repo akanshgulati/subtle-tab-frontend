@@ -104,7 +104,8 @@
                 }
             },
             handleBackgroundLock(isLocked, url) {
-                if (!url) {
+                // expect URL only when isLocked is true
+                if (isLocked && !url) {
                     return;
                 }
                 const self = this;

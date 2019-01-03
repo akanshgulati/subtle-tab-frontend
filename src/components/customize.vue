@@ -96,7 +96,7 @@
                     <div class="cmain-disabled" v-if="isBackgroundWidgetLocked">
                         <div class="flex flex-flow-column flex-justify-center flex-center full-height">
                             <span class="font-black semi-bold mb-10 font-large">Wallpaper widget is locked.</span>
-                            <button @click="unlockSettings(tabTypeEnum.BACKGROUND)"
+                            <button @click="unlockSettings(activeTab)"
                                     class="save-button font-xsmall btn semi-bold"> Unlock
                             </button>
                         </div>
@@ -127,13 +127,14 @@
                                 <li class="inline-list-item">
                                     <div>
                                         <div class="font-small semi-bold">Weather widget</div>
-                                        <div class="switch">
-                                            <label>
-                                                <input type="checkbox"
-                                                       v-model="settings.showUtilities.showWeather">
-                                                <span class="lever mar-0"></span>
-                                            </label>
-                                        </div>
+                                        <small>Show/hide weather widget</small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showWeather">
+                                            <span class="lever mar-0"></span>
+                                        </label>
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
@@ -221,13 +222,6 @@
                                                @change="onChange('backgroundInterval')">
                                         <label for="bgInterval5"
                                                class="inline-radio">5 tabs</label>
-                                        <input type="radio"
-                                               v-model="settings.background.changeInterval"
-                                               id="bgInterval10"
-                                               class="filled-in" value="10"
-                                               @change="onChange('backgroundInterval')">
-                                        <label for="bgInterval10"
-                                               class="inline-radio">10 tabs</label>
                                     </div>
                                 </li>
                                 <li class="inline-list-item">
@@ -615,19 +609,18 @@
 <script>
     import bgData from '../utils/backgroundData'
     import storage from '../utils/storage'
-    import constants, {STORAGE} from '../utils/Constants'
+    import constants from '../utils/Constants'
     import WhatsNew from './whatsNew.vue'
     import {DecryptAuth} from '../utils/common'
     import {DefaultConfig} from '../utils/config'
     import {EventBus} from '../utils/EventBus'
-    import {G_CAL} from '../utils/Constants'
     import {getPermission} from '../utils/PermissionUtils'
     import {validateAuthCode} from '../utils/IntegrationUtil'
     import {TodosType} from '../constants/Todos'
     import CustomizeUtil from '../utils/CustomizeUtil'
     import {unsetThirdPartyTodoData} from '../utils/TodoUtil'
     import {TabTypeEnum} from '../enums/CustomizeEnum';
-    import {MessageTypeEnum, TodoWrapperMessage, BackgroundMessage, AppMessage} from '../constants/Message';
+    import {MessageTypeEnum, TodoWrapperMessage, BackgroundMessage} from '../constants/Message';
 
     export default {
         components: {
@@ -877,7 +870,11 @@
             unlockSettings(tab) {
                 switch(tab){
                     case TabTypeEnum.BACKGROUND:
-                        EventBus.$emit(MessageTypeEnum.APP, {message: AppMessage.TOGGLE_BACKGROUND_LOCK});
+                        EventBus.$emit(MessageTypeEnum.BACKGROUND, {
+                            message: BackgroundMessage.CHANGE_LOCKED,
+                            value: false,
+                            url: ''
+                        });
                 }
             }
         },

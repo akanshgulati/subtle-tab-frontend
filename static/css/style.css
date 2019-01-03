@@ -1329,16 +1329,6 @@ svg.delete-icon:hover {
     overflow: hidden;
 }
 
-#history .thumbnail-image {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
-    border-radius: 3px;
-    overflow: hidden;
-    background-repeat: no-repeat;
-}
-
 #history .loading-thumbnail {
     width: 100%;
     height: 100%;
