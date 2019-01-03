@@ -95,7 +95,8 @@
                 <transition>
                     <div class="cmain-disabled" v-if="isBackgroundWidgetLocked">
                         <div class="flex flex-flow-column flex-justify-center flex-center full-height">
-                            <span class="font-black semi-bold mb-10 font-large">Wallpaper widget is locked.</span>
+                            <span class="font-black semi-bold mb-5 font-large">Wallpaper customization is locked.</span>
+                            <small class="mb-10">You can not customize a locked wallpaper.</small>
                             <button @click="unlockSettings(activeTab)"
                                     class="save-button font-xsmall btn semi-bold"> Unlock
                             </button>
@@ -493,13 +494,11 @@
                 <div class="flex">
                     <span class="semi-bold">Shortcuts</span>
                     <ul class="flex shortcut-bar">
-                        <li><span class="shortcut-key">n</span> Open Notes</li>
-                        <li><span class="shortcut-key">c</span> Open Customize
-                        </li>
-                        <li><span class="shortcut-key">w</span> Open Forecast
-                        </li>
-                        <li><span class="shortcut-key">g</span> Open Calendar
-                        </li>
+                        <li><span class="shortcut-key">n</span>Notes</li>
+                        <li><span class="shortcut-key">c</span>Customize</li>
+                        <li><span class="shortcut-key">w</span>Forecast</li>
+                        <li><span class="shortcut-key">g</span>Calendar</li>
+                        <li><span class="shortcut-key">h</span>History</li>
                         <li><span class="shortcut-key">esc</span> Close all</li>
                     </ul>
                 </div>
