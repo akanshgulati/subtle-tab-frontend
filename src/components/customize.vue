@@ -498,7 +498,7 @@
                         <li><span class="shortcut-key">c</span>Customize</li>
                         <li><span class="shortcut-key">w</span>Forecast</li>
                         <li><span class="shortcut-key">g</span>Calendar</li>
-                        <li><span class="shortcut-key">h</span>History</li>
+                        <li><span class="shortcut-key">h</span>Recent wallpaper</li>
                         <li><span class="shortcut-key">esc</span> Close all</li>
                     </ul>
                 </div>

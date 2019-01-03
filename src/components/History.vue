@@ -42,24 +42,29 @@
 
     import {AppMessage, MessageTypeEnum, BackgroundMessage, HistoryMessage} from '../constants/Message';
     import {EventBus} from '../utils/EventBus';
-    import {Get} from '../utils/storage';
+    import {Get, Remove, Set} from '../utils/storage';
     import {STORAGE} from '../utils/Constants';
     import bgUtil from '../utils/bgUtil'
     import _debounce from '../utils/debounce'
+    import config from '../utils/config'
 
     const SHOW_MAX_THUMB = 8;
+    const miscSettings = Get(STORAGE.MISC_SETTINGS);
     export default {
         data() {
             return {
                 startIndex: 0,
                 urlsData: [],
-                lockedUrl: Get(STORAGE.MISC_SETTINGS).background.lockedUrl || '',
+                lockedUrl: (miscSettings && miscSettings.background.lockedUrl) || '',
                 isLocking: false
             }
         },
         mounted() {
             const historyData = Get(STORAGE.BACKGROUND_HISTORY_DATA);
             const historyIds = Get(STORAGE.BACKGROUND_HISTORY);
+            if (!historyIds || !historyData || historyIds.length !== Object.keys(historyData).length) {
+                this.resetHistory();
+            }
             this.urlsData = historyIds.map(id => {
                 let obj = {};
                 obj.id = id;
@@ -100,6 +105,12 @@
             }
         },
         methods: {
+            resetHistory() {
+                miscSettings.background = config.misc.background;
+                Set(STORAGE.MISC_SETTINGS, miscSettings);
+                Remove(STORAGE.BACKGROUND_HISTORY);
+                Remove(STORAGE.BACKGROUND_HISTORY_DATA);
+            },
             isLocked(url) {
                 const index = this.urls.indexOf(url);
                 return this.lockedUrl === this.urlsData[index].original;
