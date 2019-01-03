@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener(
         return true;
     });
 
-let loadCurrentBackground = (url, callback) => {
+const loadCurrentBackground = (url, callback) => {
     let defaultImageLoaded = false;
     let img = new Image();
     img.src = url;
@@ -74,12 +74,13 @@ let loadCurrentBackground = (url, callback) => {
         callback(false);
     };
 
-    let defaultImageTimeout = setTimeout(() => {
+    const defaultImageTimeout = setTimeout(() => {
         defaultImageLoaded = true;
         callback(false);
-    }, 2000);
+    }, 4000);
 };
-let loadCurrentCustomBackground = (url, callback) => {
+
+const loadCurrentCustomBackground = (url, callback) => {
     let defaultImageLoaded = false;
     let img = new Image();
     img.src = url;
@@ -99,7 +100,8 @@ let loadCurrentCustomBackground = (url, callback) => {
         callback(false);
     }, 4000);
 };
-let getBackground = (theme, changePage) => {
+
+const getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
         let themePage = currentPage[theme.value] || 0;
@@ -149,12 +151,12 @@ let updateThemeStorage = (bgData, theme) => {
 };
 
 let previousURL;
-let loadNextBackground = function(url) {
+const loadNextBackground = (url) => {
     previousURL = previousURL || url;
     if (previousURL !== url) {
         _console('BG: Load Next Background for', url);
         previousURL = url;
-        let image = new Image();
+        const image = new Image();
         image.src = url;
     }
 };
@@ -180,11 +182,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
         });
 
         chrome.tabs.create({});
-        storage.set('snowflakes', true);
 
     } else if (details && details.reason && details.reason === 'update') {
         updateLocalStorage();
-        storage.set('snowflakes', true);
     }
 });
 
@@ -200,7 +200,8 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             continue;
         }
         _console('Storage Changed' + JSON.stringify(changes[key]));
-        if (typeof changes[key].newValue !== undefined) {
+        // Saving only sync data in local storage and preventing any local type change
+        if (typeof changes[key].newValue !== "undefined" && namespace !== 'local') {
             storage.setLocal(key, changes[key].newValue);
         } else {
             //To handle cases when no data is present
@@ -315,6 +316,10 @@ function updateLocalStorage() {
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
+        if (CommonUtils.isUndefined(miscSettings.background)) {
+            miscSettings.background = config.misc.background;
+        }
+
     }
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
@@ -336,9 +341,10 @@ function loadNewTab(){
         browser.tabs.getCurrent().then((data) => (pushStart(data)));
     }
 }
+
 function init() {
 
-    chrome.runtime.setUninstallURL('https://www.subtletab.com/#/uninstall');
+    chrome.runtime.setUninstallURL(`https://www.subtletab.com/#/uninstall?browser=${CommonUtils.getBrowser()}`);
 
     chrome.storage.sync.get(null, (data) => {
         for (let key in data) {

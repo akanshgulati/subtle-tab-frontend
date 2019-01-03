@@ -5,7 +5,7 @@ export const G_CAL = {
         BASE: 'https://www.googleapis.com/calendar/v3/',
         LIST: 'https://www.googleapis.com/calendar/v3/users/me/calendarList',
         REFRESH: 'https://api.subtletab.com/integrations/calendar/refresh',
-        ORIGIN: 'https://www.googleapis.com/',
+        ORIGIN: 'https://www.googleapis.com/calendar',
         KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/calendar',
         INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/calendar'
     }
@@ -48,6 +48,9 @@ const constants = {
         BACKGROUND_SEEN_NATURE: 'bg-seen-nature',
         BACKGROUND_CUSTOM: 'bg-custom',
         BACKGROUND_SEEN_CUSTOM: 'bg-seen-custom',
+        BACKGROUND_LOCKED: 'bg-locked',
+        BACKGROUND_HISTORY: 'bg_history',
+        BACKGROUND_HISTORY_DATA: 'bg_history_data',
 
         CURRENT_PAGE: 'current-page',
         SEEN_ONBOARDING: 'seen-onboarding',

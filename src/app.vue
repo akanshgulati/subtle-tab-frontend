@@ -2,10 +2,10 @@
     <div @mousedown.left="closeWindows">
         <onboarding id="onboarding" v-if="!seenOnBoarding" v-on:stopOnboarding="stopOnBoarding"></onboarding>
         <div v-if="seenOnBoarding">
-            <div class="loading" :class="{ 'show-loading': isLoading}"></div>
+            <div id="loading" :class="{ 'show-loading': isLoading}"></div>
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
-                            v-on:startLoading="startLoad"></background>
+                            v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
                 <div id="utilities">
                     <div id="position--bottom-right">
                         <ClockWrapper
@@ -77,16 +77,61 @@
                         </transition>
                     </div>
                     <div id="position--bottom-left">
-                        <div class="pointer nav-bar-opener relative" v-on:click.stop="toggleCustomizeMenu">
-                            <svg enable-background="new 0 0 20 20" height="2em" version="1.1" viewBox="0 0 100 100" width="2em" xml:space="preserve">
+                        <div class="flex flex-end">
+                            <div class="pointer nav-bar-opener relative" v-on:click.stop="toggleCustomizeMenu" style="height:2em;">
+                                <svg enable-background="new 0 0 20 20" height="1.8em" version="1.1" viewBox="0 0 100 100"
+                                     width="2em" xml:space="preserve">
                                     <g id="customize_btn">
-                                        <path  d="M86.139,41.691l-8.095-1.175c-0.276-0.762-0.539-1.506-0.864-2.219l4.987-6.622c1.406-1.882,1.123-4.653-0.673-6.448   l-5.846-5.854c-1.006-1.007-2.358-1.578-3.715-1.578c-1.006,0-1.947,0.32-2.73,0.904l-6.615,4.97   c-0.729-0.337-1.472-0.605-2.22-0.883l-1.179-7.984C58.85,12.447,56.68,11,54.141,11h-8.28c-2.539,0-4.709,1.447-5.048,3.803   l-1.18,7.96c-0.748,0.279-1.495,0.551-2.226,0.892l-6.611-4.96c-0.782-0.584-1.727-0.903-2.731-0.903   c-1.359,0-2.716,0.571-3.722,1.58l-5.856,5.852c-1.799,1.8-2.1,4.572-0.693,6.452l4.94,6.617c-0.337,0.728-0.665,1.473-0.941,2.225   l-7.928,1.175C11.567,42.023,10,44.147,10,46.741v8.276c0,2.594,1.565,4.719,3.862,5.051l8.097,1.176   c0.276,0.763,0.538,1.507,0.863,2.219l-4.987,6.622c-1.407,1.883-1.124,4.654,0.672,6.449l5.846,5.854   c1.005,1.008,2.356,1.582,3.713,1.582c1.006,0,1.951-0.313,2.733-0.896l6.614-4.954c0.728,0.337,1.473,0.635,2.221,0.913   l1.18,8.043C41.152,89.432,43.322,91,45.861,91h8.28c2.539,0,4.709-1.566,5.049-3.924l1.18-8.079   c0.742-0.276,1.488-0.548,2.227-0.892l6.611,4.959c0.779,0.584,1.725,0.903,2.73,0.903c1.358,0,2.717-0.571,3.724-1.579   l5.854-5.853c1.799-1.8,2.1-4.57,0.694-6.453l-4.94-6.615c0.34-0.733,0.666-1.479,0.941-2.225l7.93-1.175   C88.436,59.736,90,57.611,90,55.02v-8.277C90,44.147,88.436,42.023,86.139,41.691z M73.882,58.236   c-0.455,1.479-1.06,2.935-1.796,4.324l-0.749,1.407l6.683,8.925c-0.017,0.025-0.037,0.056-0.068,0.086l-5.854,5.856   c-0.027,0.028-0.056,0.052-0.08,0.067l-8.929-6.666l-1.407,0.75c-1.434,0.761-2.888,1.378-4.326,1.82l-1.523,0.488L54.236,86.68   C54.211,86.688,54.18,87,54.141,87h-8.28c-0.036,0-0.067-0.313-0.093-0.318l-1.596-11.3l-1.526-0.563   c-1.474-0.451-2.928-1.086-4.324-1.824l-1.409-0.764l-8.941,6.664c-0.021-0.015-0.043-0.037-0.066-0.06l-5.852-5.856   c-0.026-0.025-0.049-0.054-0.065-0.076l6.692-8.932l-0.76-1.412c-0.703-1.324-1.304-2.738-1.791-4.324l-0.514-1.521l-11.193-1.574   C14.419,55.104,14,55.063,14,55.02v-8.277c0-0.045,0.419-0.085,0.424-0.12l11.112-1.575l0.526-1.521   c0.456-1.482,1.09-2.938,1.825-4.325l0.762-1.408l-6.674-8.926c0.016-0.025,0.041-0.054,0.072-0.085l5.854-5.854   c0.028-0.028,0.058-0.049,0.083-0.066l8.929,6.671l1.409-0.744c1.436-0.762,2.89-1.363,4.324-1.804l1.524-0.457L45.765,15.2   c0.025-0.007,0.058-0.2,0.096-0.2h8.28c0.037,0,0.068,0.191,0.094,0.198l1.597,11.214l1.524,0.528   c1.486,0.457,2.94,1.092,4.324,1.827l1.409,0.761l8.94-6.665c0.02,0.016,0.043,0.037,0.066,0.061l5.85,5.854   c0.027,0.027,0.051,0.055,0.066,0.078l-6.689,8.932l0.758,1.411c0.693,1.311,1.313,2.765,1.791,4.325l0.516,1.521l11.189,1.575   C85.581,46.656,86,46.696,86,46.741v8.276c0,0.047-0.419,0.086-0.424,0.121l-11.111,1.574L73.882,58.236z"/>
+                                        <path
+                                            d="M86.139,41.691l-8.095-1.175c-0.276-0.762-0.539-1.506-0.864-2.219l4.987-6.622c1.406-1.882,1.123-4.653-0.673-6.448   l-5.846-5.854c-1.006-1.007-2.358-1.578-3.715-1.578c-1.006,0-1.947,0.32-2.73,0.904l-6.615,4.97   c-0.729-0.337-1.472-0.605-2.22-0.883l-1.179-7.984C58.85,12.447,56.68,11,54.141,11h-8.28c-2.539,0-4.709,1.447-5.048,3.803   l-1.18,7.96c-0.748,0.279-1.495,0.551-2.226,0.892l-6.611-4.96c-0.782-0.584-1.727-0.903-2.731-0.903   c-1.359,0-2.716,0.571-3.722,1.58l-5.856,5.852c-1.799,1.8-2.1,4.572-0.693,6.452l4.94,6.617c-0.337,0.728-0.665,1.473-0.941,2.225   l-7.928,1.175C11.567,42.023,10,44.147,10,46.741v8.276c0,2.594,1.565,4.719,3.862,5.051l8.097,1.176   c0.276,0.763,0.538,1.507,0.863,2.219l-4.987,6.622c-1.407,1.883-1.124,4.654,0.672,6.449l5.846,5.854   c1.005,1.008,2.356,1.582,3.713,1.582c1.006,0,1.951-0.313,2.733-0.896l6.614-4.954c0.728,0.337,1.473,0.635,2.221,0.913   l1.18,8.043C41.152,89.432,43.322,91,45.861,91h8.28c2.539,0,4.709-1.566,5.049-3.924l1.18-8.079   c0.742-0.276,1.488-0.548,2.227-0.892l6.611,4.959c0.779,0.584,1.725,0.903,2.73,0.903c1.358,0,2.717-0.571,3.724-1.579   l5.854-5.853c1.799-1.8,2.1-4.57,0.694-6.453l-4.94-6.615c0.34-0.733,0.666-1.479,0.941-2.225l7.93-1.175   C88.436,59.736,90,57.611,90,55.02v-8.277C90,44.147,88.436,42.023,86.139,41.691z M73.882,58.236   c-0.455,1.479-1.06,2.935-1.796,4.324l-0.749,1.407l6.683,8.925c-0.017,0.025-0.037,0.056-0.068,0.086l-5.854,5.856   c-0.027,0.028-0.056,0.052-0.08,0.067l-8.929-6.666l-1.407,0.75c-1.434,0.761-2.888,1.378-4.326,1.82l-1.523,0.488L54.236,86.68   C54.211,86.688,54.18,87,54.141,87h-8.28c-0.036,0-0.067-0.313-0.093-0.318l-1.596-11.3l-1.526-0.563   c-1.474-0.451-2.928-1.086-4.324-1.824l-1.409-0.764l-8.941,6.664c-0.021-0.015-0.043-0.037-0.066-0.06l-5.852-5.856   c-0.026-0.025-0.049-0.054-0.065-0.076l6.692-8.932l-0.76-1.412c-0.703-1.324-1.304-2.738-1.791-4.324l-0.514-1.521l-11.193-1.574   C14.419,55.104,14,55.063,14,55.02v-8.277c0-0.045,0.419-0.085,0.424-0.12l11.112-1.575l0.526-1.521   c0.456-1.482,1.09-2.938,1.825-4.325l0.762-1.408l-6.674-8.926c0.016-0.025,0.041-0.054,0.072-0.085l5.854-5.854   c0.028-0.028,0.058-0.049,0.083-0.066l8.929,6.671l1.409-0.744c1.436-0.762,2.89-1.363,4.324-1.804l1.524-0.457L45.765,15.2   c0.025-0.007,0.058-0.2,0.096-0.2h8.28c0.037,0,0.068,0.191,0.094,0.198l1.597,11.214l1.524,0.528   c1.486,0.457,2.94,1.092,4.324,1.827l1.409,0.761l8.94-6.665c0.02,0.016,0.043,0.037,0.066,0.061l5.85,5.854   c0.027,0.027,0.051,0.055,0.066,0.078l-6.689,8.932l0.758,1.411c0.693,1.311,1.313,2.765,1.791,4.325l0.516,1.521l11.189,1.575   C85.581,46.656,86,46.696,86,46.741v8.276c0,0.047-0.419,0.086-0.424,0.121l-11.111,1.574L73.882,58.236z"/>
                                         <g>
-                                            <path d="M50.001,67.971c-9.61,0-17.428-7.82-17.428-17.43c0-9.61,7.818-17.429,17.428-17.429c9.608,0,17.429,7.818,17.429,17.429    C67.43,60.15,59.609,67.971,50.001,67.971z M50.001,37.187c-7.363,0-13.354,5.991-13.354,13.354    c0,7.363,5.991,13.354,13.354,13.354c7.362,0,13.354-5.988,13.354-13.354C63.354,43.178,57.363,37.187,50.001,37.187z"/>
+                                            <path
+                                                d="M50.001,67.971c-9.61,0-17.428-7.82-17.428-17.43c0-9.61,7.818-17.429,17.428-17.429c9.608,0,17.429,7.818,17.429,17.429    C67.43,60.15,59.609,67.971,50.001,67.971z M50.001,37.187c-7.363,0-13.354,5.991-13.354,13.354    c0,7.363,5.991,13.354,13.354,13.354c7.362,0,13.354-5.988,13.354-13.354C63.354,43.178,57.363,37.187,50.001,37.187z"/>
                                         </g>
                                     </g>
                                 </svg>
-                            <div class="whatsnew-notify" v-show="!miscSettings.update.isSeen">!</div>
+                                <div class="whatsnew-notify" v-show="!miscSettings.update.isSeen">!</div>
+                            </div>
+                            <div class="pointer ml-20" @click.stop="showHistory = true">
+                                <transition>
+                                    <svg v-if="isBackgroundChangeLocked" key='locked' width="2.6em" height="1.8em" viewBox="0 0 34 26" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" id="locked-wallpaper-icon" >
+                                            <g transform="translate(-10.000000, -4.000000)">
+                                                <g transform="translate(11.000000, 4.000000)">
+                                                    <path d="M20.3371974,9 C20.3371974,9 13.5581316,9 0,9 L0,25 L29,25 L29,16.4553162"></path>
+                                                    <path d="M31.8999096,6.20467534 L30.8087788,6.20467534 L30.8087788,3.31324389 C30.8087788,1.48630645 29.3224428,0 27.4955941,0 C25.6686862,0 24.1823798,1.48630645 24.1823798,3.31324389 L24.1823798,6.20467534 L23.0912194,6.20467534 C22.4895129,6.20467534 22,6.69421782 22,7.29589478 L22,14.0452781 C22,14.6469847 22.4895129,15.1364976 23.0912194,15.1364976 L31.8999096,15.1364976 C32.5016161,15.1364976 32.991129,14.6469847 32.991129,14.0452781 L32.991129,7.29592434 C32.991129,6.69421782 32.5016161,6.20467534 31.8999096,6.20467534 Z M24.90982,3.31324389 C24.90982,1.88748355 26.0697746,0.72749934 27.4955645,0.72749934 C28.9213249,0.72749934 30.0812795,1.88748355 30.0812795,3.31324389 L30.0812795,6.20467534 L24.90982,6.20467534 L24.90982,3.31324389 Z M32.2636593,14.0453077 C32.2636593,14.2458667 32.1004686,14.4090574 31.8999096,14.4090574 L23.0912194,14.4090574 C22.8906605,14.4090574 22.7274698,14.2458963 22.7274698,14.0453077 L22.7274698,7.29592434 C22.7274698,7.09536536 22.8906605,6.93217467 23.0912194,6.93217467 L31.8999096,6.93217467 C32.1004686,6.93217467 32.2636593,7.09533579 32.2636593,7.29592434 L32.2636593,14.0453077 Z" id="wallpaper-lock-icon" fill-rule="nonzero" stroke="none"></path>
+                                                    <polyline stroke-linecap="square"
+                                                              transform="translate(4.914229, 21.385445) rotate(-10.000000) translate(-4.914229, -21.385445) "
+                                                              points="0.60663155 23.9218261 5.7429435 18.8490641 9.22182612 22.4984239"></polyline>
+                                                    <polyline stroke-linecap="square"
+                                                              points="9.4 21.7628663 15.8130386 12.0857913 26.9867739 24.4322118"></polyline>
+                                                    <ellipse id="Oval" cx="7.9321391" cy="12.8222737" rx="1.95915115" ry="1.91656091"></ellipse>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <svg v-else key='history' width="2.6em" viewBox="0 0 39 24" version="1.1">
+                                        <g id="wallpaper-history-icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <g transform="translate(-10.000000, -5.000000)">
+                                                <g transform="translate(11.000000, 6.000000)">
+                                                    <rect id="Rectangle" x="0" y="0" width="29" height="16"></rect>
+                                                    <g id="Stack-2" transform="translate(6.000000, 4.000000)">
+                                                        <path d="M-1.89179639e-16,15.5 L27.2636593,15.5" id="Line"></path>
+                                                        <path d="M19.5,8 L35.5,8" id="Line-Copy" transform="translate(27.500000, 8.000000) rotate(90.000000) translate(-27.500000, -8.000000) "></path>
+                                                    </g>
+                                                    <g id="Stack-1" transform="translate(10.000000, 7.000000)">
+                                                        <path d="M-1.89179639e-16,15.5 L27.2636593,15.5" id="Line"></path>
+                                                        <path d="M19.5,8 L35.5,8" id="Line-Copy" transform="translate(27.500000, 8.000000) rotate(90.000000) translate(-27.500000, -8.000000) "></path>
+                                                    </g>
+                                                    <polyline id="Shape" stroke-linecap="square" transform="translate(4.914229, 12.385445) rotate(-10.000000) translate(-4.914229, -12.385445) " points="0.60663155 14.9218261 5.7429435 9.84906413 9.22182612 13.4984239"></polyline>
+                                                    <polyline id="Shape" stroke-linecap="square" points="9.4 12.7628663 15.8130386 3.08579126 26.9867739 15.4322118"></polyline>
+                                                    <ellipse id="Oval" cx="7.9321391" cy="3.8222737" rx="1.95915115" ry="1.91656091"></ellipse>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </transition>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,9 +139,12 @@
             <transition>
                 <div id="customize-section" v-if="showCustomizeMenu">
                     <div class="customization-overlay"></div>
-                    <customize :settings="sharedData" id="customize"
+                    <customize :settings="sharedData" id="customize" :misc-settings="miscSettings"
                                v-on:closeCustomizeMenu="toggleCustomizeMenu"></customize>
                 </div>
+            </transition>
+            <transition name="slide-up">
+                <History v-if="showHistory"/>
             </transition>
         </div>
 
@@ -124,7 +172,7 @@
     import bgData from './utils/backgroundData'
     import {EventBus} from './utils/EventBus.js';
     import {AppMessage, MessageTypeEnum} from './constants/Message';
-    import Snowflakes from './utils/snow';
+    import {TabTypeEnum} from './enums/CustomizeEnum';
 
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
@@ -133,9 +181,9 @@
     import Notes from './components/notes.vue'
     import TodoWrapper from './components/TodoWrapper.vue'
     import Onboarding from './components/onboarding.vue'
+    import History from './components/History.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
-    window.Snowflakes = Snowflakes;
     export default {
         beforeCreate() {
             _sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
@@ -152,7 +200,8 @@
                 seenOnBoarding: _isOnBoardingSeen,
                 miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
-                showTodos: _showTodos
+                showTodos: _showTodos,
+                showHistory: false
             }
         },
         mounted() {
@@ -177,6 +226,9 @@
                 } else if (e.keyCode === 71) {
                     this.$ga.event('app', 'keydown', 'calendar');
                     EventBus.$emit('calendar', {message: 'open'})
+                } else if(e.keyCode === 72) {
+                    this.$ga.event('app', 'keydown', 'history');
+                    this.showHistory = true;
                 }
             });
             // App Messages
@@ -194,11 +246,19 @@
                     case AppMessage.PIN:
                         this.toggleNotesTodoPin(e);
                         return;
+                    case AppMessage.TOGGLE_HISTORY:
+                        this.showHistory = false;
+                        break;
                 }
             });
 
             this.init();
             this.initWhenIdle()
+        },
+        computed: {
+            isBackgroundChangeLocked() {
+                return this.miscSettings.background.isLocked || false
+            }
         },
         watch: {
             sharedData: {
@@ -232,13 +292,14 @@
                 }
             },
             toggleCustomizeMenu(state) {
-                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state
+                this.showCustomizeMenu = commonUtils.isUndefined(state) ? !this.showCustomizeMenu : state;
                 if (!this.miscSettings.update.isSeen) {
                     this.miscSettings.update.isSeen = true;
                 }
                 this.showNotes = state ? !state : this.sharedData.notes.isPinned;
                 this.showTodos = state ? !state : this.sharedData.todos.isPinned;
                 this.otherSettings.weather.showWeatherInfo = false;
+                this.showHistory = false;
                 this.toggle('calendar', {message: 'close', force: state})
             },
             stopLoad() {
@@ -264,7 +325,7 @@
                 if (+this.miscSettings.update.lastChecked < v) {
                     this.miscSettings.update.isSeen = false;
                     this.miscSettings.update.lastChecked = v;
-                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, 'whatsnew')
+                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, TabTypeEnum.WHATS_NEW)
                 }
             },
             checkForUpdates() {
@@ -332,7 +393,8 @@
             Weather,
             Onboarding,
             Notes,
-            TodoWrapper
+            TodoWrapper,
+            History
         }
     }
 </script>

@@ -39,6 +39,10 @@
     padding: 0 !important;
 }
 
+.pad-10 {
+    padding: 0.72rem;
+}
+
 .pv-0, .pb-0 {
     margin-bottom: 0 !important;
 }
@@ -57,11 +61,6 @@
 
 .mr-5 {
     margin-right: 0.35rem !important;
-}
-
-.ph-10 {
-    padding-left: 0.72rem !important;
-    padding-right: 0.72rem !important;
 }
 
 .pl-10, .ph-10 {

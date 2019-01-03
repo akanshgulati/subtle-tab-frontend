@@ -42,6 +42,10 @@ const config = {
             lastChecked: '0020',
             isToBeFetched: true,
             isSeen: true
+        },
+        background: {
+            isLocked: false,
+            lockedUrl: ''
         }
     },
     other: {
@@ -53,3 +57,4 @@ const config = {
 export default config;
 
 export const DefaultConfig = config.defaultCustomization;
+export const MiscConfig = config.misc;
