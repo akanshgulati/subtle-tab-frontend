@@ -1,6 +1,6 @@
 <template>
     <div v-on:click.stop="" @mousedown.stop="" class="flex flex-flow-column">
-        <header class="snowflake-background">
+        <header>
             <div class="flex flex-center right">
                 <div class="close-btn" v-on:click="closeCustomizeMenu">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 12 12">
@@ -104,23 +104,6 @@
                 </transition>
                 <div class="container">
                     <section v-if="activeTab === 'general'">
-                        <div>
-                            <h4 class="font-medium text-black semi-bold">Christmas snow</h4>
-                            <ul class="ph-10">
-                                <li class="inline-list-item">
-                                    <div>
-                                        <div class="font-small semi-bold" style="color: #d02025;">Snow effect</div>
-                                        <small>Show/hide snow flakes on screen</small>
-                                    </div>
-                                    <div class="switch">
-                                        <label>
-                                            <input type="checkbox" v-model="snowFlakes">
-                                            <span class="lever mar-0"></span>
-                                        </label>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
                         <div>
                             <h4 class="font-medium text-black semi-bold">Show/hide Widgets</h4>
                             <ul class="ph-10">
@@ -651,8 +634,7 @@
                 locked: {
                     background: this.miscSettings.background.isLocked
                 },
-                tabTypeEnum: TabTypeEnum,
-                snowFlakes: storage.get('snowflakes')
+                tabTypeEnum: TabTypeEnum
             }
         },
         mounted() {
@@ -895,24 +877,6 @@
                         this.todos.authCode = CustomizeUtil.getAuthCode(newValue);
                         this.todos.isAuthSaved = false;
                     }
-                }
-            },
-            'snowFlakes': {
-                handler(newValue) {
-                    if (window.snowFlakes) {
-                        window.snowFlakes._container.style.opacity = newValue ? '1' : '0';
-                    } else {
-                        window.snowFlakes = newValue && new window.Snowflakes({
-                            color: '#fffafa', // Default: "#5ECDEF"
-                            container: document.querySelector('.util-overlay'),
-                            maxOpacity: 0.95,
-                            minSize: 10,
-                            maxSize: 14,
-                            rotation: false,
-                            zIndex: 1
-                        });
-                    }
-                    storage.set('snowflakes', this.snowFlakes);
                 }
             }
         },
