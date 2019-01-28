@@ -283,40 +283,9 @@ function updateLocalStorage() {
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
-    // Add feature of custom location in weather
-    if (sharedData && CommonUtils.isObject(sharedData)) {
-        if (sharedData.weather && CommonUtils.isUndefined(sharedData.weather.location)) {
-            let storedWeather = storage.get(constants.STORAGE.WEATHER);
-            // defining object of weather
-            sharedData.weather.location = config.defaultCustomization.weather.location;
-
-            if (CommonUtils.isObject(storedWeather) && !sharedData.weather.location.name) {
-                sharedData.weather.location.name = storedWeather[4] || storedWeather.city || '';
-            }
-        }
-
-        if (sharedData.background) {
-            if (CommonUtils.isUndefined(sharedData.background.type)) {
-                sharedData.background.type = 'predefined'
-                storage.set(constants.STORAGE.BACKGROUND_CUSTOM, backgroundData.customBackgrounds)
-            }
-        }
-
-        if (CommonUtils.isUndefined(sharedData.notes)) {
-            sharedData.notes = config.defaultCustomization.notes
-        }
-        if (sharedData.clock && CommonUtils.isUndefined(sharedData.clock.calendar)) {
-            sharedData.clock.calendar = config.defaultCustomization.clock.calendar
-        }
-        if (CommonUtils.isUndefined(sharedData.todos)) {
-            sharedData.todos = config.defaultCustomization.todos;
-            sharedData.showUtilities.showTodos = true;
-        }
-    }
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
-        miscSettings.update.lastChecked = '12';
         if (CommonUtils.isUndefined(miscSettings.background)) {
             miscSettings.background = config.misc.background;
         }
