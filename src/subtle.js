@@ -104,7 +104,7 @@ const loadCurrentCustomBackground = (url, callback) => {
 const getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
-        let themePage = currentPage[theme.value] || 0;
+        let themePage = currentPage[theme.value] || 1;
 
         if (changePage) {
             themePage++;
@@ -117,8 +117,8 @@ const getBackground = (theme, changePage) => {
             //responses will be other than seen, having good views and sizes
             bgData = filterResponses(response);
             //If all pages are empty;
-            if (themePage === response.pages) {
-                themePage = 0;
+            if (themePage > (response.pages - 5)) {
+                themePage = 1;
             }
 
             if (changePage) {
