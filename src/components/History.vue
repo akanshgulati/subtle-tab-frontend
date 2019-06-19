@@ -137,7 +137,8 @@
                 EventBus.$emit(MessageTypeEnum.BACKGROUND, {
                     message: BackgroundMessage.CHANGE_LOCKED,
                     value: data.value,
-                    url: this.urlsData[urlIndex].original
+                    url: this.urlsData[urlIndex].original,
+                    id: this.urlsData[urlIndex].id
                 });
             },
             onChangeBackground(data) {

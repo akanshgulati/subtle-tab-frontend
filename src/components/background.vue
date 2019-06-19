@@ -31,7 +31,7 @@
     import storage from '../utils/storage'
     import constants, {STORAGE} from '../utils/Constants'
     import {EventBus} from '../utils/EventBus'
-    import {BackgroundMessage, MessageTypeEnum, HistoryMessage} from '../constants/Message'
+    import {BackgroundMessage, MessageTypeEnum, HistoryMessage, BackgroundInfoMessage} from '../constants/Message'
 
     let bgElement, bgHoverElement;
     let LockShowTimeout;
@@ -59,7 +59,7 @@
             EventBus.$on(MessageTypeEnum.BACKGROUND, e => {
                 switch (e.message) {
                     case BackgroundMessage.CHANGE_LOCKED:
-                        this.handleBackgroundLock(e.value, e.url);
+                        this.handleBackgroundLock(e.value, e.url, e.id);
                         return;
                     case BackgroundMessage.CHANGE_BACKGROUND:
                         this.changeBackground(e);
@@ -93,7 +93,7 @@
                     bgHoverElement.style.opacity = '0';
                 }
             },
-            handleBackgroundLock(isLocked, url) {
+            handleBackgroundLock(isLocked, url, id) {
                 // expect URL only when isLocked is true
                 if (isLocked && !url) {
                     return;
@@ -109,6 +109,8 @@
                         if (isCached) {
                             self.miscSettings.background.isLocked = true;
                             self.miscSettings.background.lockedUrl = url;
+                            // id is required to fetch the location info from history for locked wallpapers
+                            self.miscSettings.background.id = id;
                             self.getBg();
                             self.lockFadeInOut(isLocked);
                         }
@@ -117,6 +119,8 @@
                     bgHoverElement.style.opacity = '0';
                     self.miscSettings.background.isLocked = false;
                     self.miscSettings.background.lockedUrl = '';
+                    // id is required to fetch the location info from history for locked wallpapers
+                    self.miscSettings.background.id = '';
                     bgUtil.removeBackgroundCache();
                     self.lockFadeInOut(isLocked);
                 }
@@ -139,14 +143,24 @@
                 else if (this.settings && this.settings.type !== 'custom') {
                     this.getBackground(reset);
                 } else {
+                    this.updateLocationInfo({isHidden: true});
                     this.loadCustomBackground(reset);
                 }
                 this.backgroundType = this.settings.type;
+
             },
             loadLockedBackground() {
                 chrome.storage.local.get(STORAGE.BACKGROUND_LOCKED, backgroundString => {
                     if (backgroundString) {
                         bgUtil.setBackgroundWallpaper(backgroundString[STORAGE.BACKGROUND_LOCKED]);
+
+                        // for locked wallpapers, we use the id saved in location storage
+                        const locationInfo = bgUtil.getBackgroundInfo({
+                            isLocked: true,
+                            id: this.miscSettings && this.miscSettings.background.id
+                        });
+                        this.updateLocationInfo(locationInfo);
+
                     } else {
                         bgUtil.removeBackgroundCache();
                         this.miscSettings.background.isLocked = false;
@@ -234,12 +248,15 @@
                         // console.log("background loaded in time");
                         this.defaultImageLoaded = false;
                         bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
+
+                        // Adding custom wallpapers to browser history
                         bgUtil.addToHistory(customSeenBgIndex + '^custom', currentUrl, {type: this.settings.type});
+
                         if (customBackgrounds.length > 1) {
-                            let nextUrlIndex = customSeenBgIndex === (customBackgrounds.length - 1)
+                            const nextUrlIndex = customSeenBgIndex === (customBackgrounds.length - 1)
                                 ? 0
                                 : customSeenBgIndex + 1;
-                            let nextUrl = customBackgrounds[nextUrlIndex];
+                            const nextUrl = customBackgrounds[nextUrlIndex];
                             chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
                         }
                     } else {
@@ -258,18 +275,36 @@
                 this.isLoading();
                 this.defaultImageLoaded = false;
                 let i = this.bgIndex;
-                let currentUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
+                const currentUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i]], this.bgKeys[i]);
+
                 chrome.runtime.sendMessage({query: 'loadCurrentBackground', url: currentUrl}, (responseURL) => {
                     if (responseURL) {
                         this.defaultImageLoaded = false;
                         bgElement.style.backgroundImage = 'url(' + currentUrl + ')';
                         chrome.runtime.sendMessage({query: 'log', value: 'Current URL ' + currentUrl});
                         this.$emit('stopLoading');
+
+                        // Call for next URL
                         const nextUrl = bgUtil.formImgURL(this.allBackgrounds[this.bgKeys[i + 1]], this.bgKeys[i + 1]);
-                        chrome.runtime.sendMessage({query: 'log', value: 'Next URL ' + nextUrl});
-                        chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
+                        if (nextUrl) {
+                            chrome.runtime.sendMessage({query: 'log', value: 'Next URL ' + nextUrl});
+                            chrome.runtime.sendMessage({query: 'loadNextBackground', url: nextUrl});
+                        } else {
+                            // TODO:: Add error reporting
+                        }
+
+                        const locationInfo = bgUtil.getBackgroundInfo({
+                            url: currentUrl,
+                            id: this.bgKeys[this.bgIndex],
+                            themeValue: this.themeVal
+                        });
+
+                        // Add URL to history
                         bgUtil.addToHistory(this.bgKeys[i], this.allBackgrounds[this.bgKeys[i]],
-                            {type: this.settings.type, theme: this.themeVal});
+                            {type: this.settings.type, theme: this.themeVal, location: locationInfo});
+
+                        this.updateLocationInfo(locationInfo);
+
                     } else {
                         this.defaultImageLoaded = true;
                         bgElement.style.backgroundImage = 'url(' + this.getDefaultBg() + ')';
@@ -308,11 +343,26 @@
                 let value = Math.random();
                 let themeId = this.settings.themeId;
                 counter = value < 0.33 ? 0 : counter = value < 0.66 ? 1 : 2;
+
+                this.defaultImageLoaded = true;
+
                 if (this.settings) {
                     this.$ga.event('background', 'default', this.settings.type, this.settings.changeInterval);
                 }
                 chrome.runtime.sendMessage({query: 'log', value: 'getDefaultBg Called with counter, ' + counter});
-                return bgData.stored[themeId][1 + (themeId - 1) * 3 + counter];
+
+                const defaultWallpaperId = 1 + (themeId - 1) * 3 + counter;
+
+                // Get info of the default background and load its information
+                const locationInfo = bgUtil.getBackgroundInfo({
+                    isDefault: true,
+                    id: defaultWallpaperId
+                });
+
+                // Update the background info here too
+                this.updateLocationInfo(locationInfo);
+
+                return bgData.stored[themeId][defaultWallpaperId];
             },
             markCustomBgSeen(index) {
                 chrome.runtime.sendMessage({query: 'getTabsCount'}, (tabs) => {
@@ -325,6 +375,13 @@
                     } else if (this.defaultImageLoaded) {
                         chrome.runtime.sendMessage({query: 'setTabsCount', value: parseInt(tabs) - 1});
                     }
+                });
+            },
+            updateLocationInfo(locationInfo) {
+                // Informs the BackgroundInfo component to update the location information
+                EventBus.$emit(MessageTypeEnum.BACKGROUND_INFO, {
+                    message: BackgroundInfoMessage.WALLPAPER_CHANGED,
+                    ...locationInfo
                 });
             }
         }

@@ -134,6 +134,10 @@
                             </div>
                         </div>
                     </div>
+                    <div id="position--bottom-middle">
+                        <!--<BackgroundInfo/>-->
+                        <BackgroundInfo class="pointer ml-20"/>
+                    </div>
                 </div>
             </div>
             <transition>
@@ -182,6 +186,7 @@
     import TodoWrapper from './components/TodoWrapper.vue'
     import Onboarding from './components/onboarding.vue'
     import History from './components/History.vue'
+    import BackgroundInfo from './components/BackgroundInfo.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
@@ -394,7 +399,8 @@
             Onboarding,
             Notes,
             TodoWrapper,
-            History
+            History,
+            BackgroundInfo
         }
     }
 </script>

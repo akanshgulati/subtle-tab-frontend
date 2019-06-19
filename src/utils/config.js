@@ -45,7 +45,8 @@ const config = {
         },
         background: {
             isLocked: false,
-            lockedUrl: ''
+            lockedUrl: '',
+            id: ''
         }
     },
     other: {

@@ -63,5 +63,67 @@ export default {
         'https://www.subtletab.com/extras/7.jpg',
         'https://www.subtletab.com/extras/7.jpg',
         'https://www.subtletab.com/extras/8.jpg',
-    ]
+    ],
+    storedDetails: {
+        1: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        2: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        3: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        4: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        5: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        6: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        7: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        8: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        9:{
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        10: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        11: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+        12: {
+            url: 'http://www.melsbrushes.co.uk/wp-content/uploads/2014/08/coloured-pencil-clipart-free.png',
+            user: 'Akansh Gulati',
+            area: "Singapore, Malaysia"
+        },
+    },
 }
