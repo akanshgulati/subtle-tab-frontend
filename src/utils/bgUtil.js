@@ -2,6 +2,7 @@ import storage from './storage';
 import bgData from './backgroundData';
 import {toDataURL} from './StringUtils';
 import {STORAGE} from './Constants';
+import localBackgroundData from '../utils/backgroundData'
 
 const bgUtil = {
     getFormattedJSON(dataArr){
@@ -19,13 +20,20 @@ const bgUtil = {
         }
         return arr;
     },
-    formImgURL(string, id, isThumbnail){
-        let arr = string.split(',');
-        if (arr.length > 1) {
-            return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr, isThumbnail) + this.getWallpaperSize(isThumbnail);
-        } else {
-            // Handling case of default images already present in extension
-            return string;
+    formImgURL(string, id, isThumbnail) {
+        try {
+            if (!string) {
+                return false;
+            }
+            let arr = string.split(',');
+            if (arr.length > 1) {
+                return 'https://farm' + arr[1] + '.staticflickr.com/' + arr[2] + '/' + id + '_' + this.getSecret(arr, isThumbnail) + this.getWallpaperSize(isThumbnail);
+            } else {
+                // Handling case of default images already present in extension
+                return string;
+            }
+        } catch (e) {
+            // TODO :: ADD listener here
         }
     },
     getSecret(arr, isThumbnail){
@@ -96,7 +104,7 @@ const bgUtil = {
         chrome.storage.local.set({[STORAGE.BACKGROUND_LOCKED]: ''});
     },
     setBackgroundWallpaper(url) {
-        if(!url){
+        if (!url) {
             return;
         }
         const bgElement = document.getElementById('background');
@@ -123,7 +131,8 @@ const bgUtil = {
         currentHistoryData[imageId] = {
             url: url,
             type: otherInfo.type,
-            theme: otherInfo.theme
+            theme: otherInfo.theme,
+            location: otherInfo.location
         };
         // Remove more than 40 images
         const keysToRemove = currentHistory.splice(40);
@@ -132,6 +141,51 @@ const bgUtil = {
         });
         storage.set(STORAGE.BACKGROUND_HISTORY, currentHistory);
         storage.set(STORAGE.BACKGROUND_HISTORY_DATA, currentHistoryData);
+    },
+    getBackgroundInfo(backgroundData){
+        // If image is the default one
+        const wallpaperId = backgroundData.id;
+
+        // handle case for locked wallpaper
+        if (backgroundData.isLocked) {
+            const miscSettings = storage.get(STORAGE.MISC_SETTINGS);
+            if (miscSettings) {
+                const wallpaperId = miscSettings.background.id;
+                const historyData = storage.get(STORAGE.BACKGROUND_HISTORY_DATA);
+                if (historyData && historyData[wallpaperId]) {
+                    return historyData[wallpaperId].location || {};
+                }
+            }
+        }
+        // if default background is loaded
+        else if (wallpaperId.length < 3) {
+            const backgroundDetail = localBackgroundData.storedDetails[wallpaperId];
+
+            if (backgroundDetail) {
+                return {
+                    area: backgroundDetail.area,
+                    url: backgroundDetail.url,
+                    user: backgroundDetail.user
+                }
+            }
+        }
+        // if image is loaded from server
+        else if (backgroundData.themeValue) {
+            const locationDetails = storage.get(backgroundData.themeValue + "_details");
+
+            if (locationDetails && locationDetails[wallpaperId]) {
+
+                const backgroundDetail = locationDetails[wallpaperId];
+
+                return {
+                    area: decodeURIComponent(backgroundDetail.area),
+                    url: "https://unsplash.com/photos/" + decodeURIComponent(backgroundDetail.id),
+                    user: decodeURIComponent(backgroundDetail.user)
+                };
+            }
+
+        }
+        return {};
     }
 };
 

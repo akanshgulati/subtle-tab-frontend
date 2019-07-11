@@ -63,5 +63,67 @@ export default {
         'https://www.subtletab.com/extras/7.jpg',
         'https://www.subtletab.com/extras/7.jpg',
         'https://www.subtletab.com/extras/8.jpg',
-    ]
+    ],
+    storedDetails: {
+        1: {
+            url: 'https://unsplash.com/photos/3l3RwQdHRHg',
+            user: 'Jonatan Pie',
+            area: "Stakkholtsgja canyon, Iceland"
+        },
+        2: {
+            url: 'https://unsplash.com/photos/rDJYMootbXQ',
+            user: 'Redcharlie',
+            area: "Callantsoog, Netherlands"
+        },
+        3: {
+            url: 'https://unsplash.com/photos/-98y5HIFDs8',
+            user: 'Ali Al-Mufti',
+            area: "Penarth, United Kingdom"
+        },
+        4: {
+            url: 'https://unsplash.com/photos/JDN-_FIqB3k',
+            user: 'All Bong',
+            area: "Paris, France"
+        },
+        5: {
+            url: 'https://unsplash.com/photos/wJ6xyh1YMxU',
+            user: 'Christoph Schulz',
+            area: "Atlantis, Dubai"
+        },
+        6: {
+            url: 'https://unsplash.com/photos/LMq-rTluKfQ',
+            user: 'Kelvin Zyteng',
+            area: "Farrer Park, Singapore"
+        },
+        7: {
+            url: 'https://unsplash.com/photos/rgAAcndHGBc',
+            user: 'Yuliya Kosolapova',
+            area: "Aqaba, Jordan"
+        },
+        8: {
+            url: 'https://unsplash.com/photos/tPKQwYHy8q4',
+            user: 'Aneta Ivanova',
+            area: "East Mountains"
+        },
+        9:{
+            url: 'https://unsplash.com/photos/Xz1ncdtqMR0',
+            user: 'Marcus Löfvenberg',
+            area: "Bali, Indonesia"
+        },
+        10: {
+            url: 'https://unsplash.com/photos/guvnhd3hbxw',
+            user: 'Modern Affliction',
+            area: "New Zealand"
+        },
+        11: {
+            url: 'https://unsplash.com/photos/K8IIPF2KY4Q',
+            user: 'Robert Wiedemann',
+            area: "Bloodmoon"
+        },
+        12: {
+            url: 'https://unsplash.com/photos/PSj_dlu_rGg',
+            user: 'Cody Board',
+            area: "Illinois, United States"
+        },
+    },
 }

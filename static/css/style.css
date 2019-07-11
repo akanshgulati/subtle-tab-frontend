@@ -263,6 +263,13 @@ label {
     align-items: center;
 }
 
+#position--bottom-middle {
+    position: absolute;
+    bottom: 1rem;
+    width: 400px;
+    left: calc(50% - 200px);
+}
+
 .pointer {
     cursor: pointer;
 }
