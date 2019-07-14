@@ -6,7 +6,8 @@ export const MessageTypeEnum = {
     WEATHER: 'weather',
     TODO_WRAPPER: 'todoWrapper',
     BACKGROUND: 'background',
-    HISTORY: 'history'
+    HISTORY: 'history',
+    BACKGROUND_INFO: 'backgroundInfo'
 };
 
 export const Message = {
@@ -27,9 +28,13 @@ export const Message = {
         THEME_RESET: 'themeReset',
         TYPE_CHANGED: 'typeChanged',
         CHANGE_BACKGROUND: 'changeBackground'
-    }
+    },
+    [MessageTypeEnum.BACKGROUND_INFO]: {
+        WALLPAPER_CHANGED: 'wallpaperChanged'
+    },
 };
 export const AppMessage = Message[MessageTypeEnum.APP];
 export const TodoWrapperMessage = Message[MessageTypeEnum.TODO_WRAPPER];
 export const BackgroundMessage = Message[MessageTypeEnum.BACKGROUND];
 export const HistoryMessage = Message[MessageTypeEnum.HISTORY];
+export const BackgroundInfoMessage = Message[MessageTypeEnum.BACKGROUND_INFO];

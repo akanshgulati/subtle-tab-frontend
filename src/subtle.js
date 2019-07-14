@@ -104,19 +104,22 @@ const loadCurrentCustomBackground = (url, callback) => {
 const getBackground = (theme, changePage) => {
     return new Promise((resolve, reject) => {
         let currentPage = storage.get(constants.STORAGE.CURRENT_PAGE) || {};
-        let themePage = currentPage[theme.value] || 1;
+        // setting initial value to 0 because changePage makes it 1 itself
+        let themePage = currentPage[theme.value] || 0;
 
         if (changePage) {
             themePage++;
         }
 
+        themePage = themePage || 1;
+
         let url = 'https://api.subtletab.com/theme/';
         url += theme.tags + '/' + themePage;
 
         CommonUtils.http(url).then((response) => {
-            //responses will be other than seen, having good views and sizes
+            // responses will be other than seen, having good views and sizes
             bgData = filterResponses(response);
-            //If all pages are empty;
+            // If all pages are empty;
             if (themePage > (response.pages - 5)) {
                 themePage = 1;
             }
@@ -127,7 +130,7 @@ const getBackground = (theme, changePage) => {
             currentPage[theme.value] = themePage;
             storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
 
-            updateThemeStorage(bgData, theme);
+            updateThemeStorage(bgData, theme, response.details);
             resolve();
         }, (error) => {
             reject(error);
@@ -135,15 +138,26 @@ const getBackground = (theme, changePage) => {
     });
 };
 
-let updateThemeStorage = (bgData, theme) => {
-    let themeLocalStorage = storage.get(constants.THEME[theme.value]);
+const updateThemeStorage = (bgData, theme, bgDetails) => {
+    let themeLocalStorage = storage.get(theme.value);
+
     if (!themeLocalStorage) {
         storage.set(theme.value, bgData);
+        storage.set(theme.value + '_details', bgDetails);
         return;
     }
     let allKeys = Object.keys(themeLocalStorage);
-    let lastURLKey = allKeys[allKeys.length];
+    let lastURLKey = allKeys[allKeys.length - 1];
     let lastStoredURL = themeLocalStorage[lastURLKey];
+
+    const localThemeDetails = storage.get(theme.value + "_details");
+
+    if (localThemeDetails) {
+        const lastDetailsKeys = Object.keys(localThemeDetails);
+        const lastKeyDetail = localThemeDetails[lastDetailsKeys[lastDetailsKeys.length - 1]];
+        storage.set(theme.value + "_details", Object.assign({}, lastKeyDetail, bgDetails));
+    }
+
     // Storing last background url for next round;
     let obj = {};
     obj[lastURLKey] = lastStoredURL;
@@ -284,13 +298,21 @@ function updateLocalStorage() {
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
 
+    // update the nature pages to show location
+    const currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
+    delete currentPage.nature;
+    storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
+    storage.remove('nature');
+
+
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
         if (CommonUtils.isUndefined(miscSettings.background)) {
             miscSettings.background = config.misc.background;
         }
-
     }
+
+
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
