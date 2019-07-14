@@ -298,13 +298,21 @@ function updateLocalStorage() {
     sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
 
+    // update the nature pages to show location
+    const currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
+    delete currentPage.nature;
+    storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
+    storage.remove('nature');
+
+
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
         miscSettings.update.isToBeFetched = true;
         if (CommonUtils.isUndefined(miscSettings.background)) {
             miscSettings.background = config.misc.background;
         }
-
     }
+
+
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);

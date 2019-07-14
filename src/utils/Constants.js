@@ -95,6 +95,7 @@ const constants = {
         'travel',
         'building',
         'night',
+        '_details',
         'notes_meta',
         'notes-',
         'bg-custom',

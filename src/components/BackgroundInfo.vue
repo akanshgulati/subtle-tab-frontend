@@ -2,7 +2,7 @@
     <div class="flex flex-justify-center flex-center ml-20 fade_in" v-if="infoReceived">
         <a class="photo-details" :href="url" target="_blank">
             <span class="photo-location">{{area}}</span>
-            <span class="photo-user">By {{user.split(' ')[0]}}</span>
+            <span class="photo-user" v-if="user">By {{user.split(' ')[0]}}</span>
         </a>
     </div>
 </template>
