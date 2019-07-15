@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-justify-center flex-center ml-20 fade_in" v-if="infoReceived">
-        <a class="photo-details" :href="url" target="_blank">
+        <a class="photo-details" :href="url" target="_blank" @click="onBgInfoClick">
             <span class="photo-location">{{area}}</span>
             <span class="photo-user" v-if="user">By {{user.split(' ')[0]}}</span>
         </a>
@@ -20,6 +20,9 @@
           }
         },
         methods: {
+            onBgInfoClick(){
+                this.$ga.event('bgInfo', 'clicked');
+            },
             updateInfo(info) {
                 // console.log("Bg Info", info);
 
