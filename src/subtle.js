@@ -354,7 +354,7 @@ function init() {
             storage.set(constants.STORAGE.SEEN_ONBOARDING, true);
         }
     });
-    loadNewTab();
+    // loadNewTab();
 }
 
 init();
