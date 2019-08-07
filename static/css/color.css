@@ -20,6 +20,10 @@
     text-decoration-color: #2179d6;
 }
 
+.text-red {
+    color: #cc0000;
+}
+
 .bg-blue {
     background-color: #2196F3;
 }
@@ -43,9 +47,11 @@
 .svg-black-stroke-hover:hover {
     stroke: #333 !important;
 }
+
 .svg-black-fill-hover:hover {
     fill: #333 !important;
 }
+
 .text-light-grey {
     color: #999;
 }
@@ -68,10 +74,10 @@
 .bg-light-grey {
     background-color: #ebebeb;
 }
+
 .bg-red {
     background-color: #cc0000;
 }
-
 
 
 /*

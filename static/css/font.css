@@ -60,7 +60,7 @@
 }
 
 .font-medium {
-    font-size: 1.1rem;
+    font-size: 1.1rem !important;
 }
 
 .font-large {
@@ -68,7 +68,7 @@
 }
 
 .font-xlarge {
-    font-size: 1.25rem;
+    font-size: 1.25rem !important;
 }
 
 .font-right {

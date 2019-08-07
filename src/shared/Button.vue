@@ -73,6 +73,10 @@
         background-color: rgba(33, 150, 243, 0.21);
         color: #2196F3;
     }
+    .green {
+        background-color: #0f9d58;
+        color: white;
+    }
     .save {
         background-color: #2196f3;
         color: #fff;

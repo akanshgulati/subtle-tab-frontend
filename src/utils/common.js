@@ -7,7 +7,7 @@ let CommonUtils = {
             xmlhttp.setRequestHeader('chrome-extension', btoa(chrome.runtime.id))
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4) {
-                    if(xmlhttp.responseText){
+                    if (xmlhttp.responseText) {
                         resolve(JSON.parse(xmlhttp.responseText))
                         return;
                     }
@@ -20,7 +20,7 @@ let CommonUtils = {
             xmlhttp.send(JSON.stringify(data))
         })
     },
-    Http(url, option) {
+    Http(url, option = {}) {
         return new Promise((resolve, reject) => {
             const xmlhttp = new XMLHttpRequest();
             const method = option.method || 'GET';
@@ -88,23 +88,23 @@ let CommonUtils = {
     isUndefined(data) {
         return typeof data === 'undefined';
     },
-    isChrome(){
+    isChrome() {
         return navigator.userAgent.toLowerCase().search('chrome') > -1;
     },
-    isFirefox(){
+    isFirefox() {
         return navigator.userAgent.toLowerCase().search('firefox') > -1;
     },
-    getBrowser(){
+    getBrowser() {
         return CommonUtils.isChrome() ? 'chrome' : CommonUtils.isFirefox() ? 'firefox' : '';
     }
 };
 
 export const getString = (s) => {
-  try {
-    return JSON.parse(s)
-  } catch (e) {
-    return s
-  }
+    try {
+        return JSON.parse(s)
+    } catch (e) {
+        return s
+    }
 };
 
 
@@ -126,7 +126,7 @@ export const POST = (url, option) => {
         headers.get('content-type').indexOf('x-www-form-urlencoded') > -1;
     if (!isContentTypeHeaderPresent) {
         headers.set('content-type', 'application/json');
-       data = JSON.stringify(option.data);
+        data = JSON.stringify(option.data);
     }
 
     if (isFormEncodedData) {
@@ -168,17 +168,17 @@ export const DecryptAuth = (code) => {
 }
 
 export const isolateScroll = (elementId) => {
-  let el = document.getElementById(elementId)
-  if (!el) {
-    return
-  }
-  el.onmousewheel = function(e) {
-    el.scrollTop -= e.wheelDeltaY
-    e = e || window.event
-    if (e.preventDefault)
-      e.preventDefault()
-    e.returnValue = false
-  }
+    let el = document.getElementById(elementId)
+    if (!el) {
+        return
+    }
+    el.onmousewheel = function (e) {
+        el.scrollTop -= e.wheelDeltaY
+        e = e || window.event
+        if (e.preventDefault)
+            e.preventDefault()
+        e.returnValue = false
+    }
 }
 
 export const isArray = CommonUtils.isArray;
@@ -186,3 +186,7 @@ export const isArray = CommonUtils.isArray;
 export const isObject = CommonUtils.isObject;
 
 export const isUndefined = CommonUtils.isUndefined;
+export const isValidURL = (url) => {
+    const regex = /(https?:\/\/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])(:?\d*)\/?([a-z_\/0-9\-#.]*)\??([a-z_\/0-9\-#=&]*)/ig;
+    return !!url.match(regex);
+};
