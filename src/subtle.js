@@ -290,19 +290,12 @@ function stopWeather() {
 }
 
 function updateLocalStorage() {
-    let sharedData;
     let miscSettings;
     // Show onboarding with latest features
 
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
-    sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    // sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
-
-    // update the nature pages to show location
-    const currentPage = storage.get(constants.STORAGE.CURRENT_PAGE);
-    delete currentPage.nature;
-    storage.set(constants.STORAGE.CURRENT_PAGE, currentPage);
-    storage.remove('nature');
 
 
     if (miscSettings && CommonUtils.isObject(miscSettings)) {
@@ -312,9 +305,7 @@ function updateLocalStorage() {
         }
     }
 
-
-
-    storage.set(constants.STORAGE.SHARED_DATA, sharedData);
+    // storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
 function loadNewTab(){
