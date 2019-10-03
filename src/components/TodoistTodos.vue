@@ -108,7 +108,6 @@
                 newTodo: {},
                 currentList: Get(STORAGE.T_CURRENT_TODO_LIST),
                 isLoadingTodos: true,
-                taskUrl: TODOIST.URL.TASKS,
                 syncTime: '',
                 showCompletedTodos: false,
                 isAddTodoSticky: false,
@@ -343,10 +342,10 @@
                     id: todo.id,
                     title: todo.content,
                     listId: todo.project_id,
-                    dueOn: todo.due_date_utc,
+                    dueOn: todo.due && todo.due.date,
                     isDeleted: !!todo.is_deleted,
                     isCompleted: !!todo.checked,
-                    order: todo.item_order
+                    order: todo.child_order
                 }
             },
             formatListResponse(list) {
@@ -442,14 +441,14 @@
                 const todo = todoData.todo;
                 const value = todoData.value;
                 const type = value ? 'item_complete' : 'item_uncomplete';
-                this.patchTodo(type, {'ids': [todo.id]})
+                this.patchTodo(type, {'id': todo.id})
             },
             deleteTodo(todo) {
                 if (!todo || !confirm('Are you sure you want to delete this todo?')) {
                     return
                 }
                 todo.isDeleted = true;
-                this.patchTodo('item_delete', {'ids': [todo.id]});
+                this.patchTodo('item_delete', {'id': todo.id});
             },
             editTodo(todo) {
                 if (this.showSidebar) {
@@ -463,7 +462,7 @@
                     const updatedTodo = data.todo;
                     // updating it to current for below logic
                     this.patchTodo('item_update',
-                        {'id': updatedTodo.id, content: updatedTodo.title, date_string: updatedTodo.dueOn})
+                        {'id': updatedTodo.id, content: updatedTodo.title, due: {string: updatedTodo.dueOn}})
                 }
             },
             createList(listTitle) {
@@ -478,7 +477,7 @@
                 if (!list || !confirm(`Are you sure you want to delete ${list.title} list?`)) {
                     return
                 }
-                this.patchTodo('project_delete', {'ids': [list.id]}).then(() => {
+                this.patchTodo('project_delete', {'id': list.id}).then(() => {
                     list.isDeleted = true;
                     this.setActiveList(this.todoLists[0]);
                 });
