@@ -22,9 +22,7 @@ export const WUNDERLIST = {
 }
 export const TODOIST = {
     URL: {
-        BASE: 'https://todoist.com/api/v7/sync',
-        LISTS: 'https://beta.todoist.com/API/v8/projects',
-        TASKS: 'https://beta.todoist.com/API/v8/tasks',
+        BASE: 'https://todoist.com/sync/v8/sync',
         ORIGIN: 'https://*.todoist.com/',
         KB_INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/kb/integrations/todoist',
         INTEGRATION_SUBTLE: 'https://www.subtletab.com/#/integrations/todoist'
