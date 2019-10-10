@@ -77,7 +77,9 @@
                         </transition>
                     </div>
                     <div id="position--top-middle">
-                        <BookmarksWrapper class="pointer"/>
+                        <transition>
+                            <BookmarksWrapper class="pointer fade_in" v-if="sharedData.showUtilities.showBookmarks"/>
+                        </transition>
                     </div>
                     <div id="position--bottom-left">
                         <div class="flex flex-end">
@@ -152,7 +154,7 @@
             <transition name="slide-up">
                 <History v-if="showHistory"/>
             </transition>
-<!--            <ContextMenu></ContextMenu>-->
+            <ContextMenu></ContextMenu>
             <Modal></Modal>
         </div>
 
@@ -269,6 +271,10 @@
                     case AppMessage.TOGGLE_HISTORY:
                         this.showHistory = false;
                         break;
+                    case AppMessage.HIDE_BOOKMARKS:
+                        this.sharedData.showUtilities.showBookmarks = false;
+                        break;
+
                 }
             });
 

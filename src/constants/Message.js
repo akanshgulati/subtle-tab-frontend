@@ -21,7 +21,8 @@ export const Message = {
         OPEN_CUSTOMIZE: 'OpenCustomize',
         PIN: 'pin',
         TOGGLE_BACKGROUND_LOCK: 'toggleBackgroundLock',
-        TOGGLE_HISTORY: 'toggleHistory'
+        TOGGLE_HISTORY: 'toggleHistory',
+        HIDE_BOOKMARKS: 'hideBookmarks'
     },
     [MessageTypeEnum.TODO_WRAPPER]: {
         REFRESH: 'refresh'
@@ -38,7 +39,9 @@ export const Message = {
     [MessageTypeEnum.BOOKMARK]: {
         EDIT: 'edit',
         ADD: 'add',
-        DELETE: 'delete'
+        DELETE: 'delete',
+        OPEN_NEW_TAB: 'open_new_tab',
+        HIDE_BAR: 'hide_bookmarks'
     },
     [MessageTypeEnum.CONTEXT_MENU]: {
         OPEN: 'open',
@@ -48,7 +51,8 @@ export const Message = {
         OPEN: 'open',
         CLOSE: 'close',
         ADD: 'add',
-        EDIT: 'edit'
+        EDIT: 'edit',
+        UPDATE: 'update'
     }
 };
 export const AppMessage = Message[MessageTypeEnum.APP];

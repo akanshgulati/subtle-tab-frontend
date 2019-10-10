@@ -1,7 +1,7 @@
 <template>
     <div id="bookmarks-wrapper" class="flex flex-center">
-        <div class="bookmark-items flex flex-center" @contextmenu.prevent="onRightClick">
-            <BookmarkItem @onDotClick="onDotClick" v-for="(item, index) in bookmarks" :item="item" :index="index"/>
+        <div class="bookmark-items flex flex-center">
+            <BookmarkItem @onDotClick="onDotClick" @onRightClick="onRightClick" v-for="(item, index) in bookmarks" :item="item" :index="index" :key="index"/>
         </div>
         <div id="add-bookmark" @click.stop="onAddClick">+</div>
     </div>
@@ -10,13 +10,13 @@
     import BookmarkItem from './BookmarkItem.vue';
     import Button from '../shared/Button.vue';
     import {EventBus} from "../utils/EventBus";
-    import {MessageTypeEnum, BookmarkMessage, ContextMenuMessage, ModalMessage} from "../constants/Message";
+    import {MessageTypeEnum, BookmarkMessage, ContextMenuMessage, ModalMessage, AppMessage} from "../constants/Message";
     import {Get, Set} from "../utils/storage";
     import {STORAGE} from "../utils/Constants";
 
     export default {
         beforeCreate() {
-            debugger;
+            // Todo :: handle firefox case here
             this.defaultBookmarks = [
                 {
                     title: 'Chrome Apps',
@@ -34,52 +34,78 @@
                     url: 'https://www.wikipedia.org/'
                 }
             ];
+            this.localBookmarks = Get(STORAGE.BOOKMARKS);
+            this.finalBookmarks = this.localBookmarks.length ? this.localBookmarks : this.defaultBookmarks;
         },
-        mounted(){
+        mounted() {
             EventBus.$on(MessageTypeEnum.BOOKMARK, (e) => {
-                console.log("Bookmark message", e);
                 switch (e.action) {
-                    case BookmarkMessage.EDIT:
-                        if (e.title && e.icon && e.url) {
+                    case BookmarkMessage.UPDATE:
+                        if (e.title && e.icon && e.url  && this.bookmarks[this.editIndex]) {
                             var obj = {
                                 title: e.title,
                                 icon: e.icon,
                                 url: e.url
                             };
+                            this.$ga.event('bookmarks', 'update');
                             this.bookmarks.splice(this.editIndex, 1, obj);
+                            this.editIndex = this.rightClickIndex = -1;
                             Set(STORAGE.BOOKMARKS, this.bookmarks);
                         }
                         break;
                     case BookmarkMessage.ADD:
                         var obj = e;
                         delete obj.action;
+                        if (!this.bookmarks || !this.bookmarks.length) {
+                            this.bookmarks = [];
+                        }
                         this.bookmarks.push(obj);
+                        this.$ga.event('bookmarks', 'add');
                         Set(STORAGE.BOOKMARKS, this.bookmarks);
                         break;
                     case BookmarkMessage.DELETE:
-                        this.bookmarks.splice(this.editIndex, 1);
-                        Set(STORAGE.BOOKMARKS, this.bookmarks);
+                        if (this.bookmarks[this.editIndex]) {
+                            this.bookmarks.splice(this.editIndex, 1);
+                            this.editIndex = this.rightClickIndex = -1;
+                            this.$ga.event('bookmarks', 'delete');
+                            Set(STORAGE.BOOKMARKS, this.bookmarks);
+                        }
+                        break;
+                    case BookmarkMessage.EDIT:
+                        // this message is coming from context menu
+                        this.onEdit(this.rightClickIndex);
+                        break;
+                    case BookmarkMessage.OPEN_NEW_TAB:
+                        chrome.tabs.create({url: this.bookmarks[this.rightClickIndex].url});
+                        break;
+                    case BookmarkMessage.HIDE_BAR:
+                        EventBus.$emit(MessageTypeEnum.APP, {message: AppMessage.HIDE_BOOKMARKS});
                         break;
                 }
             });
         },
         data() {
-            debugger;
             return {
-                bookmarks: Get(STORAGE.BOOKMARKS) || this.defaultBookmarks
+                bookmarks: this.finalBookmarks
             }
         },
         methods: {
-            onRightClick(e) {
+            onRightClick(e, index) {
+                this.rightClickIndex = index;
                 e.preventDefault();
                 EventBus.$emit(MessageTypeEnum.CONTEXT_MENU, {
                     action: ContextMenuMessage.OPEN,
                     event: e
                 });
+                this.$ga.event('bookmarks', 'right-clicked');
             },
-            onDotClick(index) {
+            onEdit(index) {
                 this.editIndex = index;
                 EventBus.$emit(MessageTypeEnum.MODAL, {action: ModalMessage.OPEN, item: this.bookmarks[index]});
+            },
+            onDotClick(index) {
+                this.$ga.event('bookmarks', 'three-dots-clicked');
+                this.onEdit(index);
             },
             onAddClick() {
                 this.editIndex = -1;
@@ -96,12 +122,14 @@
     #bookmarks-wrapper {
         align-items: flex-start;
         max-width: 70%;
+        min-width: 65rem;
+        justify-content: center;
     }
     .bookmark-items {
         /*max-width: 50rem;*/
         /*min-width: 300px;*/
         max-width: 100%;
-        min-width: 65rem;
+        /*min-width: 65rem;*/
         align-items: flex-start;
     }
     #add-bookmark {
@@ -115,5 +143,6 @@
         border-radius: 5px;
         background-color: rgba(255,255,255, 0.8);
         box-shadow: 0px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
     }
 </style>

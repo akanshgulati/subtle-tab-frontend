@@ -1,5 +1,5 @@
 <template>
-    <a class="bookmark-item flex flex-end mr-10 pv-10 ph-10 text-black" :title="item.title" :href="item.url">
+    <a class="bookmark-item flex flex-end mr-10 pv-10 ph-10 text-black" :title="item.title" :href="item.url" @click.prevent="onLinkClick(item.url)" @contextmenu.prevent="onRightClick">
         <div class="bookmark-edit" @click.stop="onDotClick" title="Edit Bookmark">...</div>
         <div class="bookmark-favicon" :style="getIcon(item.icon)"></div>
         <div class="bookmark-name">{{item.title}}</div>
@@ -13,6 +13,12 @@
             }
         },
         methods: {
+            onRightClick(e){
+                this.$emit('onRightClick', e, this.index);
+            },
+            onLinkClick(url) {
+                chrome.tabs.update({url});
+            },
             onDotClick(e) {
                 e.preventDefault();
                 this.$emit("onDotClick", this.index);

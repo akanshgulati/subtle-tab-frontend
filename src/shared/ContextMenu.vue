@@ -3,7 +3,7 @@
         <ul class="mar-0" @click.stop="onClick" v-if="isVisible">
             <li v-for="item in json" :data-value="item.value"
                 class="context-item pv-5 ph-10"
-                :class="`${item.color}  ${item.separator ? 'separator': ''}`">
+                :class="`${item.color ? item.color : ''}  ${item.separator ? 'separator': ''}`">
                 {{item.label}}
             </li>
         </ul>
@@ -11,7 +11,7 @@
 </template>
 <script>
     import {EventBus} from '../utils/EventBus';
-    import {MessageTypeEnum, ContextMenuMessage} from '../constants/Message';
+    import {MessageTypeEnum, ContextMenuMessage, BookmarkMessage} from '../constants/Message';
 
     export default {
 
@@ -20,27 +20,23 @@
                 isVisible: false,
                 json: [{
                     label: 'Edit',
-                    value: 'edit',
+                    value: BookmarkMessage.EDIT,
                     separator: true
                 }, {
                     label: 'Open in new window',
-                    value: 'new_window',
-                }, {
-                    label: 'Open in incognito',
-                    value: 'new_incognito'
+                    value: BookmarkMessage.OPEN_NEW_TAB,
                 }, {
                     label: 'Hide Bookmark',
-                    value: 'hide_bookmark',
+                    value: BookmarkMessage.HIDE_BAR,
                     separator: true
                 }, {
                     label: 'Remove',
-                    value: 'remove',
+                    value: BookmarkMessage.DELETE,
                     color: 'text-red'
                 }]
             }
         },
         mounted() {
-            console.log("Called");
 
             EventBus.$on(MessageTypeEnum.CONTEXT_MENU, e => {
                 console.log("Message on context menu ", e);

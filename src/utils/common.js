@@ -186,7 +186,17 @@ export const isArray = CommonUtils.isArray;
 export const isObject = CommonUtils.isObject;
 
 export const isUndefined = CommonUtils.isUndefined;
+
 export const isValidURL = (url) => {
     const regex = /(https?:\/\/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])(:?\d*)\/?([a-z_\/0-9\-#.]*)\??([a-z_\/0-9\-#=&]*)/ig;
+    return !!url.match(regex);
+};
+export const isChromeInternalURL = (url) => {
+    const regex = /^chrome:\/\//ig;
+    return !!url.match(regex);
+};
+
+export const isFirefoxInternalUrl = (url) => {
+    const regex = /^about:/ig;
     return !!url.match(regex);
 };

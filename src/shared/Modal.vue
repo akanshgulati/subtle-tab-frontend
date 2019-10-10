@@ -42,7 +42,7 @@
     import Button from './Button.vue'
     import {EventBus} from "../utils/EventBus";
     import {BookmarkMessage, MessageTypeEnum, ModalMessage} from "../constants/Message";
-    import {Http, isValidURL} from "../utils/common";
+    import {Http, isChromeInternalURL, isFirefoxInternalUrl, isValidURL} from "../utils/common";
 
     export default {
         mounted() {
@@ -80,7 +80,7 @@
                 }
                 if (this.isEditMode) {
                     EventBus.$emit(MessageTypeEnum.BOOKMARK, {
-                        action: BookmarkMessage.EDIT,
+                        action: BookmarkMessage.UPDATE,
                         title: this.title,
                         url: this.url,
                         icon: this.suggestion.favicon || this.icon
@@ -105,13 +105,13 @@
                 this.reset();
                 this.isVisible = false;
             },
-            onURLEntered(e){
-                if (!this.url || !isValidURL(this.url)) {
-                    this.error.url = 'Invalid url format, e.g. https://example.com';
+            onURLEntered(e) {
+                if (!this.url || !(isValidURL(this.url) || isChromeInternalURL(this.url) || isFirefoxInternalUrl(this.url))) {
+                    this.error.url = `Invalid url, correct format http://akansh.com`;
                     return;
                 }
                 this.error.url = null;
-                Http(`http://localhost:8080/bookmark/?url=${this.url}`).then(response => {
+                Http(`https://api.subtletab.com/bookmark/?url=${this.url}`).then(response => {
                     this.suggestion = response;
                     if (response.favicon) {
                         const image = new Image();
