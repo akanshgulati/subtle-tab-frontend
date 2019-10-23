@@ -212,6 +212,11 @@
             _isOnBoardingSeen = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
             _showNotes = _sharedData.notes.isPinned;
             _showTodos = _sharedData.todos.isPinned;
+            
+            if (process.env.NODE_ENV === 'production') {
+                window.console.log = () => {
+                }
+            }
         },
         data() {
             return {

@@ -1,7 +1,9 @@
 <template>
     <a class="bookmark-item flex flex-end mr-10 pv-10 ph-10 text-black" :title="item.title" :href="item.url" @click.prevent="onLinkClick(item.url)" @contextmenu.prevent="onRightClick">
         <div class="bookmark-edit" @click.stop="onDotClick" title="Edit Bookmark">...</div>
-        <div class="bookmark-favicon" :style="getIcon(item.icon)"></div>
+        <transition mode="out-in" :key="style">
+            <div class="bookmark-favicon" :style="style"></div>
+        </transition>
         <div class="bookmark-name">{{item.title}}</div>
     </a>
 </template>
@@ -9,8 +11,11 @@
     export default {
         data(){
             return {
-                style: 'background-image: url("images/icons/icon128.png");'
+                style: 'background-image: url("./images/default-bookmark-icon.png");'
             }
+        },
+        beforeMount(){
+            this.getIcon(this.item.icon);
         },
         methods: {
             onRightClick(e){
@@ -24,10 +29,13 @@
                 this.$emit("onDotClick", this.index);
             },
             getIcon(url) {
-                return `background-image: url("${url}");`
-            },
-            navigate() {
-                window.location.href = this.item.url;
+                const self = this;
+                const image = new Image();
+                self.style = 'background-image: url("./images/default-bookmark-icon.png")';
+                image.onload = function () {
+                    self.style = `background-image: url("${url}");`
+                };
+                image.src = url;
             }
         },
         props: {
@@ -37,6 +45,15 @@
             },
             index: {
                 type: Number
+            }
+        },
+        watch:{
+            item: {
+                handler(newValue = {}, oldValue = {}){
+                    if (newValue.icon !== oldValue.icon) {
+                        this.getIcon(newValue.icon);
+                    }
+                }
             }
         }
     }
@@ -55,7 +72,8 @@
         text-align: center;
         border-radius: 2px;
         opacity: 0;
-        transition: all 0.2s linear;
+        transition: all 0.2s ease-in;
+        transition-delay: 0.3s;
     }
 
     .bookmark-edit:hover {
@@ -71,11 +89,11 @@
         max-width: 6.99rem;
         min-width: 36px;
         position: relative;
+        color: black !important;
     }
 
     .bookmark-item:hover {
         background-color: rgba(255, 255, 255, 1);
-        /*padding-top: 1rem;*/
     }
 
     .bookmark-item:hover .bookmark-edit {

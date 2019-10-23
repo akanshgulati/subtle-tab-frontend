@@ -39,7 +39,16 @@
                 return this.size ? this.size : 'small'
             },
             typeClass() {
-                return this.type === 'primary' ? 'primary' : this.type === 'save' ? 'save' : '';
+                switch(this.type){
+                    case 'primary' :
+                        return 'primary';
+                    case 'save':
+                        return 'save';
+                    case 'green':
+                        return 'green';
+                    default:
+                        return ''
+                }
             }
         }
     }
@@ -74,7 +83,7 @@
         color: #2196F3;
     }
     .green {
-        background-color: #0f9d58;
+        background-color: rgb(122, 184, 0);
         color: white;
     }
     .save {

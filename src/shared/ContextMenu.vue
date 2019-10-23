@@ -23,10 +23,10 @@
                     value: BookmarkMessage.EDIT,
                     separator: true
                 }, {
-                    label: 'Open in new window',
+                    label: 'Open in new tab',
                     value: BookmarkMessage.OPEN_NEW_TAB,
                 }, {
-                    label: 'Hide Bookmark',
+                    label: 'Hide All Bookmarks',
                     value: BookmarkMessage.HIDE_BAR,
                     separator: true
                 }, {
