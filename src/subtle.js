@@ -291,10 +291,11 @@ function stopWeather() {
 
 function updateLocalStorage() {
     let miscSettings;
+    let sharedData;
     // Show onboarding with latest features
 
     //storage.set(constants.STORAGE.SEEN_ONBOARDING, false);
-    // sharedData = storage.get(constants.STORAGE.SHARED_DATA);
+    sharedData = storage.get(constants.STORAGE.SHARED_DATA);
     miscSettings = storage.get(constants.STORAGE.MISC_SETTINGS);
 
 
@@ -304,8 +305,11 @@ function updateLocalStorage() {
             miscSettings.background = config.misc.background;
         }
     }
+    if (sharedData && CommonUtils.isObject(sharedData)) {
+        sharedData.showUtilities.showBookmarks = true;
+    }
 
-    // storage.set(constants.STORAGE.SHARED_DATA, sharedData);
+    storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
 }
 function loadNewTab(){

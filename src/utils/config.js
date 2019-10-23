@@ -5,7 +5,7 @@ const config = {
             showClock: true,
             showNotes: true,
             showTodos: true,
-            showBookmarks: false
+            showBookmarks: true
         },
         clock: {
             showTwelveHour: true,
