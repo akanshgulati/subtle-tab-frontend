@@ -166,6 +166,20 @@
                                         </label>
                                     </div>
                                 </li>
+                                <li class="inline-list-item">
+                                    <div>
+                                        <div class="font-small semi-bold">Bookmark widget
+                                        </div>
+                                        <small>Show/hide bookmark widget</small>
+                                    </div>
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"
+                                                   v-model="settings.showUtilities.showBookmarks">
+                                            <span class="lever mar-0"></span>
+                                        </label>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
 

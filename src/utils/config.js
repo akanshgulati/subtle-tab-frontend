@@ -4,7 +4,8 @@ const config = {
             showWeather: true,
             showClock: true,
             showNotes: true,
-            showTodos: true
+            showTodos: true,
+            showBookmarks: true
         },
         clock: {
             showTwelveHour: true,

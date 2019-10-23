@@ -163,6 +163,7 @@ label {
     background: rgba(239, 239, 239, 0.94) url(../images/loading.svg) no-repeat center;
     background-size: 5vw;
 }
+
 #loading:after {
     content: 'Loading...';
     color: #666666;
@@ -173,6 +174,7 @@ label {
     bottom: calc(50% - 4vw);
     font-size: 1vw;
 }
+
 .dim-overlay {
     position: absolute;
     height: 100vh;
@@ -244,12 +246,23 @@ label {
     position: absolute;
     right: 1rem;
     top: 1rem;
+    z-index: 1;
 }
 
 #position--top-left {
     position: absolute;
     left: 1rem;
     top: 1rem;
+    z-index: 1;
+}
+
+#position--top-middle {
+    position: absolute;
+    top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 0;
 }
 
 #position--middle-center {
@@ -321,6 +334,7 @@ svg:hover #close_btn {
     z-index: 10;
     overflow: hidden;
 }
+
 #customize .main-window {
     height: 22rem;
 }

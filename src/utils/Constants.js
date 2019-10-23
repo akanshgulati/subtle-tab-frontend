@@ -80,7 +80,9 @@ const constants = {
         T_TODO: 't_todo_',
         T_TODOS_META: 't_todos_meta',
         T_AUTH: 't_auth',
-        T_SYNC_TOKEN: 't_sync_token'
+        T_SYNC_TOKEN: 't_sync_token',
+
+        BOOKMARKS: 'bookmarks'
     },
     SYNC: [
         'shared-data',
@@ -99,7 +101,8 @@ const constants = {
         'bg-custom',
         'bg-seen-custom',
         'misc_settings',
-        'subtle_user'
+        'subtle_user',
+        'bookmarks'
     ],
     URL: {
         WHATS_NEW: BASE_API + 'whatsnew',
@@ -114,4 +117,4 @@ const constants = {
 
 export default constants
 
-export const STORAGE = constants.STORAGE
+export const STORAGE = constants.STORAGE;

@@ -76,6 +76,11 @@
                                      v-on:weatherInfoStateChange="weatherInfoStateChange"/>
                         </transition>
                     </div>
+                    <div id="position--top-middle">
+                        <transition>
+                            <BookmarksWrapper class="pointer fade_in" v-if="sharedData.showUtilities.showBookmarks"/>
+                        </transition>
+                    </div>
                     <div id="position--bottom-left">
                         <div class="flex flex-end">
                             <div class="pointer nav-bar-opener relative" v-on:click.stop="toggleCustomizeMenu" style="height:2em;">
@@ -149,6 +154,8 @@
             <transition name="slide-up">
                 <History v-if="showHistory"/>
             </transition>
+            <ContextMenu></ContextMenu>
+            <Modal></Modal>
         </div>
 
         <svg style="display: none;">
@@ -162,6 +169,14 @@
                     <path
                         d="M46.4347899,51.1140206 C45.950678,51.012669 45.6164104,51.012669 45.4319868,51.1140206 L36.6142361,55.969398 L27.7791956,51.1140206 C27.5025603,50.9619931 27.0530279,50.9619931 26.7763926,51.1140206 C26.4997572,51.2660481 26.4997572,51.5130927 26.7763926,51.6651202 L36.0955448,56.7865456 C36.2338625,56.8625594 36.4067596,56.9005662 36.5969463,56.9005662 C36.7698434,56.9005662 36.9600302,56.8625594 37.0983479,56.7865456 L46.4175001,51.6651202 C46.6134502,51.5637685 46.6192134,51.3800687 46.4347899,51.1140206 Z"></path>
                 </g>
+                <g fill-rule="nonzero" fill="#000" id="icon-close">
+                    <path
+                        d="M6,0 C2.69169231,0 0,2.69146154 0,6 C0,9.30853846 2.69169231,12 6,12 C9.30830769,12 12,9.30853846 12,6 C12,2.69146154 9.30830769,0 6,0 Z M6,11.5384615 C2.94623077,11.5384615 0.461538462,9.05376923 0.461538462,6 C0.461538462,2.94623077 2.94623077,0.461538462 6,0.461538462 C9.05376923,0.461538462 11.5384615,2.94623077 11.5384615,6 C11.5384615,9.05376923 9.05376923,11.5384615 6,11.5384615 Z"
+                        id="Shape"></path>
+                    <path
+                        d="M8.24007692,3.75992308 C8.14984615,3.66969231 8.004,3.66969231 7.91376923,3.75992308 L6,5.67369231 L4.08623077,3.75992308 C3.996,3.66969231 3.85015385,3.66969231 3.75992308,3.75992308 C3.66969231,3.85015385 3.66969231,3.996 3.75992308,4.08623077 L5.67369231,6 L3.75992308,7.91376923 C3.66969231,8.004 3.66969231,8.14984615 3.75992308,8.24007692 C3.80492308,8.28507692 3.864,8.30769231 3.92307692,8.30769231 C3.98215385,8.30769231 4.04123077,8.28507692 4.08623077,8.24007692 L6,6.32630769 L7.91376923,8.24007692 C7.95876923,8.28507692 8.01784615,8.30769231 8.07692308,8.30769231 C8.136,8.30769231 8.19507692,8.28507692 8.24007692,8.24007692 C8.33030769,8.14984615 8.33030769,8.004 8.24007692,7.91376923 L6.32630769,6 L8.24007692,4.08623077 C8.33030769,3.996 8.33030769,3.85015385 8.24007692,3.75992308 Z"
+                        id="Shape"></path>
+                </g>
             </defs>
         </svg>
     </div>
@@ -174,7 +189,7 @@
     import Constants from './utils/Constants'
     import bgData from './utils/backgroundData'
     import {EventBus} from './utils/EventBus.js';
-    import {AppMessage, MessageTypeEnum} from './constants/Message';
+    import {AppMessage, ContextMenuMessage, MessageTypeEnum} from './constants/Message';
     import {TabTypeEnum} from './enums/CustomizeEnum';
 
     import ClockWrapper from './components/ClockWrapper.vue'
@@ -186,6 +201,9 @@
     import Onboarding from './components/onboarding.vue'
     import History from './components/History.vue'
     import BackgroundInfo from './components/BackgroundInfo.vue'
+    import BookmarksWrapper from './components/BookmarksWrapper.vue'
+    import ContextMenu from './shared/ContextMenu.vue'
+    import Modal from './shared/Modal.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
@@ -194,6 +212,11 @@
             _isOnBoardingSeen = storage.get(Constants.STORAGE.SEEN_ONBOARDING) || false;
             _showNotes = _sharedData.notes.isPinned;
             _showTodos = _sharedData.todos.isPinned;
+            
+            if (process.env.NODE_ENV === 'production') {
+                window.console.log = () => {
+                }
+            }
         },
         data() {
             return {
@@ -253,6 +276,10 @@
                     case AppMessage.TOGGLE_HISTORY:
                         this.showHistory = false;
                         break;
+                    case AppMessage.HIDE_BOOKMARKS:
+                        this.sharedData.showUtilities.showBookmarks = false;
+                        break;
+
                 }
             });
 
@@ -399,7 +426,10 @@
             Notes,
             TodoWrapper,
             History,
-            BackgroundInfo
+            BackgroundInfo,
+            BookmarksWrapper,
+            ContextMenu,
+            Modal
         }
     }
 </script>

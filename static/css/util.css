@@ -40,9 +40,11 @@
 }
 
 .pad-10 {
-    padding: 0.72rem;
+    padding: 0.72rem !important;
 }
-
+.pad-5 {
+    padding: 0.36rem !important;
+}
 .pv-0, .pb-0 {
     margin-bottom: 0 !important;
 }
