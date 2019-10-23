@@ -345,7 +345,7 @@
                 this.$ga.event('app', 'onboarding', 'close')
             },
             closeWindows() {
-                storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB);
+                // storage.remove(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB);
                 this.toggleCustomizeMenu(false)
             },
             showUpdateNotification(newVersion) {
@@ -353,10 +353,11 @@
                     return
                 }
                 let v = +newVersion.replace(/\./g, '');
-                if (+this.miscSettings.update.lastChecked < v) {
+                const currentVersion = +(chrome.runtime.getManifest().version.replace(/\./g, ''));
+                if (+this.miscSettings.update.lastChecked < v && currentVersion >= v) {
                     this.miscSettings.update.isSeen = false;
                     this.miscSettings.update.lastChecked = v;
-                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, TabTypeEnum.WHATS_NEW)
+                    storage.set(Constants.STORAGE.CURRENT_CUSTOMIZATION_TAB, TabTypeEnum.WHATS_NEW);
                 }
             },
             checkForUpdates() {

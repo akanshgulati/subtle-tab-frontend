@@ -895,6 +895,9 @@
                 return this.miscSettings && this.miscSettings.background && this.miscSettings.background.isLocked &&
                     this.activeTab === TabTypeEnum.BACKGROUND;
             }
+        },
+        beforeDestroy() {
+            storage.remove(constants.STORAGE.CURRENT_CUSTOMIZATION_TAB);
         }
     }
 </script>
