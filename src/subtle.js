@@ -311,6 +311,7 @@ function updateLocalStorage() {
 
     storage.set(constants.STORAGE.SHARED_DATA, sharedData);
     storage.set(constants.STORAGE.MISC_SETTINGS, miscSettings);
+    storage.set('snowflakes', true);
 }
 function loadNewTab(){
     function loadStart() {
