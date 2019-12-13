@@ -191,6 +191,7 @@
     import {EventBus} from './utils/EventBus.js';
     import {AppMessage, ContextMenuMessage, MessageTypeEnum} from './constants/Message';
     import {TabTypeEnum} from './enums/CustomizeEnum';
+    
 
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
@@ -204,8 +205,10 @@
     import BookmarksWrapper from './components/BookmarksWrapper.vue'
     import ContextMenu from './shared/ContextMenu.vue'
     import Modal from './shared/Modal.vue'
+    import Snowflakes from './utils/snow';
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
+    window.Snowflakes = Snowflakes;
     export default {
         beforeCreate() {
             _sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;

@@ -1393,3 +1393,13 @@ svg.delete-icon:hover {
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+#customize .snowflake-background {
+    background-position: center;
+    background-image: url('../images/christmas_banner.png');
+    background-size: cover;
+}
+
+.snowflakes {
+    transition: opacity 0.25s ease-in-out;
+}
