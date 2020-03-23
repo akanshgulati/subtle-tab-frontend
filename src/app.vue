@@ -7,7 +7,7 @@
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
                             v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
                 <transition>
-                    <div id="position--top-banner" v-if="showBanner">
+                    <div id="position--top-banner" v-if="!hideBanner">
                         <TopBanner/>
                     </div>
                 </transition>
@@ -235,7 +235,7 @@
                 otherSettings: config.other,
                 showTodos: _showTodos,
                 showHistory: false,
-                showBanner: true
+                hideBanner: storage.get(Constants.STORAGE.TOP_BANNER)
             }
         },
         mounted() {
@@ -287,7 +287,7 @@
                         this.sharedData.showUtilities.showBookmarks = false;
                         break;
                     case AppMessage.BANNER_CLOSE:
-                        this.showBanner = false;
+                        this.hideBanner = true;
                         break;
                 }
             });

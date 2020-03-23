@@ -283,15 +283,16 @@ label {
     left: calc(50% - 200px);
 }
 #position--top-banner {
-    height: 80px;
+    height: 70px;
     background: linear-gradient(90deg, #FBD786 0%, #FFB5B7 100%);
     width: 100%;
     position: fixed;
     z-index: 4;
 }
 
-#position--top-banner svg #icon-close {
-    fill: #d6d6d6;
+#close_btn_banner {
+    fill: #fff;
+    stroke: #fff;
     transition: all 0.2s ease-in-out;
 }
 
@@ -300,10 +301,10 @@ label {
     left: 1rem;
     content: "COVID 19";
     font-weight: 600;
-    font-size: 80px;
+    font-size: 70px;
     color: rgba(255, 255, 255, 0.2);
     overflow: hidden;
-    height: 80px;
+    height: 70px;
     line-height: 1;
 }
 .pointer {

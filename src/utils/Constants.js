@@ -82,7 +82,8 @@ const constants = {
         T_AUTH: 't_auth',
         T_SYNC_TOKEN: 't_sync_token',
 
-        BOOKMARKS: 'bookmarks'
+        BOOKMARKS: 'bookmarks',
+        TOP_BANNER: 'banner'
     },
     SYNC: [
         'shared-data',
