@@ -282,7 +282,30 @@ label {
     width: 400px;
     left: calc(50% - 200px);
 }
+#position--top-banner {
+    height: 80px;
+    background: linear-gradient(90deg, #FBD786 0%, #FFB5B7 100%);
+    width: 100%;
+    position: fixed;
+    z-index: 4;
+}
 
+#position--top-banner svg #icon-close {
+    fill: #d6d6d6;
+    transition: all 0.2s ease-in-out;
+}
+
+.covid-19-banner:before {
+    position: absolute;
+    left: 1rem;
+    content: "COVID 19";
+    font-weight: 600;
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    height: 80px;
+    line-height: 1;
+}
 .pointer {
     cursor: pointer;
 }

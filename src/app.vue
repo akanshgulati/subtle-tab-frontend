@@ -6,6 +6,11 @@
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
                             v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
+                <transition>
+                    <div id="position--top-banner" v-if="showBanner">
+                        <TopBanner/>
+                    </div>
+                </transition>
                 <div id="utilities">
                     <div id="position--bottom-right">
                         <ClockWrapper
@@ -204,6 +209,7 @@
     import BookmarksWrapper from './components/BookmarksWrapper.vue'
     import ContextMenu from './shared/ContextMenu.vue'
     import Modal from './shared/Modal.vue'
+    import TopBanner from './components/topBanner.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
@@ -228,7 +234,8 @@
                 miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
                 showTodos: _showTodos,
-                showHistory: false
+                showHistory: false,
+                showBanner: true
             }
         },
         mounted() {
@@ -279,7 +286,9 @@
                     case AppMessage.HIDE_BOOKMARKS:
                         this.sharedData.showUtilities.showBookmarks = false;
                         break;
-
+                    case AppMessage.BANNER_CLOSE:
+                        this.showBanner = false;
+                        break;
                 }
             });
 
@@ -430,7 +439,8 @@
             BackgroundInfo,
             BookmarksWrapper,
             ContextMenu,
-            Modal
+            Modal,
+            TopBanner
         }
     }
 </script>

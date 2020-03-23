@@ -22,7 +22,8 @@ export const Message = {
         PIN: 'pin',
         TOGGLE_BACKGROUND_LOCK: 'toggleBackgroundLock',
         TOGGLE_HISTORY: 'toggleHistory',
-        HIDE_BOOKMARKS: 'hideBookmarks'
+        HIDE_BOOKMARKS: 'hideBookmarks',
+        BANNER_CLOSE: "closeBanner"
     },
     [MessageTypeEnum.TODO_WRAPPER]: {
         REFRESH: 'refresh'
