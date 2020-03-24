@@ -282,7 +282,31 @@ label {
     width: 400px;
     left: calc(50% - 200px);
 }
+#position--top-banner {
+    height: 70px;
+    background: linear-gradient(90deg, #FBD786 0%, #FFB5B7 100%);
+    width: 100%;
+    position: fixed;
+    z-index: 4;
+}
 
+#close_btn_banner {
+    fill: #fff;
+    stroke: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+.covid-19-banner:before {
+    position: absolute;
+    left: 1rem;
+    content: "COVID 19";
+    font-weight: 600;
+    font-size: 70px;
+    color: rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    height: 70px;
+    line-height: 1;
+}
 .pointer {
     cursor: pointer;
 }
@@ -1392,14 +1416,4 @@ svg.delete-icon:hover {
     background-position: right top;
     background-repeat: no-repeat;
     background-size: contain;
-}
-
-#customize .snowflake-background {
-    background-position: center;
-    background-image: url('../images/christmas_banner.png');
-    background-size: cover;
-}
-
-.snowflakes {
-    transition: opacity 0.25s ease-in-out;
 }

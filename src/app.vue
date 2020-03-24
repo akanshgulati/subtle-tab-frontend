@@ -6,6 +6,11 @@
             <div id="viewport" :class="{'fade_in': !isLoading}">
                 <background :settings="sharedData.background" v-on:stopLoading="stopLoad"
                             v-on:startLoading="startLoad" :misc-settings="miscSettings"></background>
+                <transition>
+                    <div id="position--top-banner" v-if="!hideBanner">
+                        <TopBanner/>
+                    </div>
+                </transition>
                 <div id="utilities">
                     <div id="position--bottom-right">
                         <ClockWrapper
@@ -191,7 +196,6 @@
     import {EventBus} from './utils/EventBus.js';
     import {AppMessage, ContextMenuMessage, MessageTypeEnum} from './constants/Message';
     import {TabTypeEnum} from './enums/CustomizeEnum';
-    
 
     import ClockWrapper from './components/ClockWrapper.vue'
     import Background from './components/background.vue'
@@ -205,10 +209,9 @@
     import BookmarksWrapper from './components/BookmarksWrapper.vue'
     import ContextMenu from './shared/ContextMenu.vue'
     import Modal from './shared/Modal.vue'
-    import Snowflakes from './utils/snow';
+    import TopBanner from './components/topBanner.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
-    window.Snowflakes = Snowflakes;
     export default {
         beforeCreate() {
             _sharedData = storage.get(Constants.STORAGE.SHARED_DATA) || config.defaultCustomization;
@@ -231,7 +234,8 @@
                 miscSettings: storage.get(Constants.STORAGE.MISC_SETTINGS) || config.misc,
                 otherSettings: config.other,
                 showTodos: _showTodos,
-                showHistory: false
+                showHistory: false,
+                hideBanner: storage.get(Constants.STORAGE.TOP_BANNER)
             }
         },
         mounted() {
@@ -282,7 +286,9 @@
                     case AppMessage.HIDE_BOOKMARKS:
                         this.sharedData.showUtilities.showBookmarks = false;
                         break;
-
+                    case AppMessage.BANNER_CLOSE:
+                        this.hideBanner = true;
+                        break;
                 }
             });
 
@@ -433,7 +439,8 @@
             BackgroundInfo,
             BookmarksWrapper,
             ContextMenu,
-            Modal
+            Modal,
+            TopBanner
         }
     }
 </script>

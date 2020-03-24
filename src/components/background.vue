@@ -55,7 +55,6 @@
         props: ['settings', 'miscSettings'],
         mounted() {
             bgElement = document.getElementById('background');
-
             bgHoverElement = document.getElementById('background-hover');
             EventBus.$on(MessageTypeEnum.BACKGROUND, e => {
                 switch (e.message) {
@@ -69,16 +68,6 @@
                     case BackgroundMessage.TYPE_CHANGED:
                         this.getBg(true);
                 }
-            });
-
-            window.snowFlakes = storage.get('snowflakes') && new window.Snowflakes({
-                color: '#fffafa', // Default: "#5ECDEF"
-                container: document.querySelector('.util-overlay'),
-                maxOpacity: 0.95,
-                minSize: 10,
-                maxSize: 14,
-                rotation: false,
-                zIndex: 1
             });
             this.getBg();
         },
