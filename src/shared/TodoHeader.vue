@@ -16,7 +16,7 @@
         <!-- LIST NAME -->
         <h4 class="widget-heading ml-5 mv-0">{{ currentList ? titleCase(currentList.title): ''}}</h4>
         <!-- BUTTON SECTION -->
-        <div class="button-section flex">
+        <div class="button-section flex relative">
             <!-- DELETE -->
             <div class="tooltip" rel="Delete">
                 <svg
@@ -36,7 +36,7 @@
                 </svg>
             </div>
             <!-- PIN -->
-            <div class="tooltip tooltip-left " :rel="isPinned?'Unpin':'Pin'">
+            <div class="tooltip tooltip-left " :rel="isPinned?'Stay Closed':'Stay Open'">
                 <svg viewBox="0 0 19 19"
                      class="pointer svg-blue-stroke-hover widget-header-icon"
                      @click.stop="togglePin">

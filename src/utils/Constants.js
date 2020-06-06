@@ -83,7 +83,8 @@ const constants = {
         T_SYNC_TOKEN: 't_sync_token',
 
         BOOKMARKS: 'bookmarks',
-        TOP_BANNER: 'banner'
+        TOP_BANNER: 'banner',
+        NOTIFICATION: 'notification'
     },
     SYNC: [
         'shared-data',
@@ -112,7 +113,8 @@ const constants = {
         WUNDERLIST_KB_INTEGRATION: WUNDERLIST.URL.KB_INTEGRATION_SUBTLE,
         WUNDERLIST_INTEGRATION: WUNDERLIST.URL.INTEGRATION_SUBTLE,
         TODOIST_KB_INTEGRATION: TODOIST.URL.KB_INTEGRATION_SUBTLE,
-        TODOIST_INTEGRATION: TODOIST.URL.INTEGRATION_SUBTLE
+        TODOIST_INTEGRATION: TODOIST.URL.INTEGRATION_SUBTLE,
+        NOTIFICATIONS: BASE_API + 'notification'
     }
 }
 

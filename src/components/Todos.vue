@@ -351,6 +351,6 @@
 
 <style scoped>
     #todo {
-        background: rgba(255, 255, 255, 0.85)
+        background: rgba(255, 255, 255, 1);
     }
 </style>

@@ -71,7 +71,7 @@
   }
 
   #g-cal:before {
-    top: 100%;
+    top: 99%;
     right: 2rem;
     border: 0.7rem solid transparent;
     border-bottom-color: rgb(255, 255, 255);

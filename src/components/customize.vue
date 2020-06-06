@@ -52,7 +52,7 @@
                             <svg>
                                 <use xlink:href="#icon-clock"></use>
                             </svg>
-                            <span>Clock</span>
+                            <span>Time & Calendar</span>
                         </label>
                     </li>
                     <li>
@@ -291,27 +291,27 @@
                         <div>
                             <h4 class="font-medium text-black semi-bold">
                                 Integration: Google Calendar</h4>
-                            <small class="ph-10" v-if="!calendar.isAuthSaved">
+                            <small class="" v-if="!calendar.isAuthSaved">
                                 <strong>Authenticate Subtle tab to access your
                                     calendar data, <a class="semi-bold"
                                                       @click.stop="openIntegration('calendar')">click
                                         here</a> to start.</strong>
                             </small>
-                            <div class="ph-10 flex" v-on:keydown.stop="">
+                            <div class="flex" v-on:keydown.stop="">
                                 <input
                                     type="text"
                                     :readonly='calendar.isAuthSaved'
                                     v-model="calendar.authCode"
-                                    class="mar-0 font-xsmall"
+                                    class="mar-0 font-xsmall pad-0"
                                     placeholder="Paste authentication code obtained from above link here">
                                 <button
                                     class="save-button font-xsmall btn semi-bold"
                                     :disabled="!calendar.authCode"
                                     @click="calendarAuth">
-                                    {{calendar.isAuthSaved ? 'Revoke' : 'Save'}}
+                                    {{calendar.isAuthSaved ? 'Remove' : 'Save'}}
                                 </button>
                             </div>
-                            <div class="ph-10 font-xsmall"
+                            <div class="font-xsmall"
                                  v-html="calendar.saveMsg"/>
 
                             <h4 class="font-medium text-black semi-bold">
@@ -405,7 +405,7 @@
                                     <div class="right flex">
                                         <input placeholder="e.g. Mumbai" type="text"
                                                v-model="customLocation"
-                                               class="mar-0"
+                                               class="mar-0 pad-0"
                                                :disabled="settings.weather.location.type==='geo'"
                                                v-on:keydown.stop="">
                                         <button
@@ -472,26 +472,26 @@
                             :class="{'fade_in': todos.isAuthCodeBoxVisible}">
                             <h4 class="font-medium text-black semi-bold">Integrate
                                 {{todos.type === 'w'? 'Wunderlist': 'Todoist'}}</h4>
-                            <small class="ph-10" v-if="!todos.isAuthSaved">
+                            <small class="" v-if="!todos.isAuthSaved">
                                 <strong>Integrate {{todos.type === 'w'? 'Wunderlist': 'Todoist'}} in Subtle tab,
                                     <a class="semi-bold" @click.stop="openIntegration(todos.type)">click here</a>
                                     to start.
                                 </strong>
                             </small>
-                            <div class="ph-10 flex" v-on:keydown.stop="">
+                            <div class="flex" v-on:keydown.stop="">
                                 <input
                                     type="text"
                                     :readonly='todos.isAuthSaved'
                                     v-model="todos.authCode"
-                                    class="mar-0 font-xsmall"
+                                    class="mar-0 font-xsmall pad-0"
                                     placeholder="Paste authentication code obtained from above link here">
                                 <button
                                     class="save-button font-xsmall btn semi-bold"
                                     :disabled="!todos.authCode"
-                                    @click="saveAuthCode">{{todos.isAuthSaved ? 'Revoke' : 'Save'}}
+                                    @click="saveAuthCode">{{todos.isAuthSaved ? 'Remove' : 'Save'}}
                                 </button>
                             </div>
-                            <div class="ph-10 font-xsmall" v-html="todos.saveMsg"/>
+                            <div class="font-xsmall" v-html="todos.saveMsg"/>
                         </div>
                     </section>
                     <section v-if="activeTab === tabTypeEnum.WHATS_NEW" class="full-height">
@@ -906,7 +906,7 @@
         position: relative;
         width: 80%;
         overflow: hidden;
-        height: 22rem;
+        height: inherit;
     }
     .cmain-disabled {
         position: absolute;
@@ -922,6 +922,9 @@
         padding: 0 1rem;
         overflow: auto;
         width: 100%;
-        height: 22rem;
+        height: inherit;
+    }
+    input.pad-0 {
+        padding: 0 !important;
     }
 </style>

@@ -24,8 +24,6 @@
                 this.$ga.event('bgInfo', 'clicked');
             },
             updateInfo(info) {
-                // console.log("Bg Info", info);
-
                 if (info.isHidden) {
                     this.area = '';
                     this.url = '';
@@ -39,52 +37,6 @@
                     this.area = info.area;
                     this.user = info.user;
                 }
-
-                // const wallpaperId = event.id;
-                // const themeVal = event.themeValue;
-                // const backgroundDetails = Get(themeVal + "_details");
-                //
-                // console.log(event);
-                //
-                // if (event.isHidden) {
-                //     this.location = '';
-                //     this.url = '';
-                //     this.user = '';
-                //     return;
-                // }
-
-                // var obj = {
-                //     wallpaperId: event.wallpaperId,
-                //     themeValue: event.themeValue,
-                //     url: event.url,
-                // };
-
-                // If image is the default one
-                // if (event.currentUrl.indexOf('http') === -1) {
-                //     const backgroundDetail = backgroundData.storedDetails[wallpaperId];
-                //     if (backgroundDetail) {
-                //         this.location = backgroundDetail.location;
-                //         this.url = backgroundDetail.url;
-                //         this.user = backgroundDetail.user;
-                //     }
-                // }
-                // // if image is loaded from server
-                // else if (backgroundDetails && backgroundDetails[wallpaperId]) {
-                //
-                //     const backgroundDetail = backgroundDetails[wallpaperId];
-                //     this.location = decodeURIComponent(backgroundDetail.location);
-                //     this.url = "https://unsplash.com/photos/" + decodeURIComponent(backgroundDetail.id);
-                //     this.user = decodeURIComponent(backgroundDetail.user);
-                //
-                // }
-
-                // const info = bgUtil.getBackgroundInfo(event);
-                //
-                // this.location = info.location || '';
-                // this.url = info.url || '';
-                // this.user = info.user || '';
-                //
-                // console.log("BgInfo", info);
             }
         },
         mounted(){
@@ -108,6 +60,7 @@
         padding: 5px;
         border-radius: 5px;
         color: white;
+        text-align: center;
     }
 
     .photo-location {

@@ -51,7 +51,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="tooltip tooltip-left" :rel="isPinned?'Unpin':'Pin'">
+                        <div class="tooltip tooltip-left" :rel="isPinned?'Stay Closed':'Stay Open'">
                             <svg viewBox="0 0 19 19" class="pointer widget-header-icon" @click.stop="togglePin">
                                 <g transform="translate(1.000000, 0.000000)" stroke="#7d7d7d" fill-rule="nonzero"
                                    stroke-width="1" fill="none">

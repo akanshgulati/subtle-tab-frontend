@@ -15,10 +15,10 @@
         </div>
       </section>
       <template v-else>
-        <header class="flex widget-header flex-center">
+        <header class="flex widget-header flex-center relative">
           <h4 class="widget-heading mar-0">Google Calendar (G)</h4>
           <div class="button-section flex">
-            <div class="tooltip tooltip-left" :rel="settings.isPinned ?'Unpin':'Pin'">
+            <div class="tooltip tooltip-left" :rel="settings.isPinned ?'Stay Closed':'Stay Open'">
               <svg viewBox="0 0 19 19" width="1.2em" height="1.2em"
                    class="pointer" @click.stop="togglePin">
                 <g transform="translate(1.000000, 0.000000)" stroke="#7d7d7d"
@@ -64,56 +64,71 @@
           </section>
         </template>
         <template v-else>
-          <section id="g-cal-date-selection"
-                   class="semi-bold flex flex-justify-space-between ph-20 pv-10">
-            <span>{{currentDate.day}}, {{currentDate.month}} {{currentDate.date}}</span>
-            <div class="date-changer flex flex-center">
-              <div
-                class="flex flex-center flex-justify-center date-change-icon mr-10"
-                @click="prevDate()">
-                <svg width="5" height="11" viewBox="0 0 11 20" id="prev-arrow">
-                  <use xlink:href="#icon-next-arrow"></use>
-                </svg>
-              </div>
-              <div class="flex flex-center flex-justify-center date-change-icon"
-                   @click="nextDate()">
-                <svg width="5" height="11" viewBox="0 0 11 20" id="next-arrow">
-                  <use xlink:href="#icon-next-arrow"></use>
-                </svg>
-              </div>
-            </div>
+            <section id="g-cal-date-selection"
+                     class="semi-bold flex flex-justify-space-between ph-20 pv-10">
+                <div
+                    class="flex flex-center flex-justify-center date-change-icon mr-10 pointer relative"
+                    @click="prevDate()">
+                    <svg width="5" height="11" viewBox="0 0 11 20" id="prev-arrow">
+                        <use xlink:href="#icon-next-arrow"></use>
+                    </svg>
+                </div>
+                <span>
+                    {{displayDate}}
+                </span>
+                <div class="flex flex-center flex-justify-center date-change-icon pointer relative"
+                     @click="nextDate()">
+                    <svg width="5" height="11" viewBox="0 0 11 20" id="next-arrow">
+                        <use xlink:href="#icon-next-arrow"></use>
+                    </svg>
+                </div>
           </section>
           <section
             id="g-cal-events"
             class="font-small"
             :style="{ 'max-height': maxHeightValue}">
             <transition mode="out-in">
-              <div v-if="isLoading" class="font-center" style="height: 3.43rem">
+              <div v-if="isLoading" class="font-center" style="height: 3.6rem">
                 <img src="/images/loading.svg" alt="loading" width="25px">
                 <p class="mar-0 font-xsmall">Loading...</p>
               </div>
               <ul v-else-if="events && events.length > 0" class="calendar-events mar-0">
                 <li class="calendar-event pv-5" v-for="event in events"
-                    :link="event.link" :class="{'pointer': event.link}" @click.stop="openEvent">
-                  <template>
-                    <div v-if="event.from && event.from !== -1"
-                         class="event-duration font-xsmall semi-bold">
-                      {{ formatTime(event.from) }} - {{ formatTime(event.to) }}
+                    :link="event.link" 
+                    :class="{'pointer': event.link, 'current-event': event.isCurrentEvent}"
+                    @click.stop="openEvent">
+                    <div class="flex flex-justify-space-between flex-center">
+                        <div :style="{'max-width': event.isCurrentEvent && event.hangoutLink ? '70%' : '100%'}">
+                            <template>
+                                <div v-if="event.from && event.from !== -1"
+                                     class="event-duration font-xsmall semi-bold">
+                                    {{ formatTime(event.from) }} - {{ formatTime(event.to) }}
+                                </div>
+                                <!-- HANDLING FULL DAY EVENTS-->
+                                <div v-else class="event-duration font-xsmall semi-bold">
+                                    Full Day
+                                </div>
+                            </template>
+                            <!-- HANDLING PRIVATE EVENTS NOT ACCESSIBLE -->
+                            <div class="event-title" :title="event.summary">
+                                {{event.summary || 'Busy'}}
+                            </div>
+                        </div>
+                        <div v-if="event.isCurrentEvent && event.hangoutLink" class="meet flex-no-shrink">
+                            <Button
+                                text="Join Meet"
+                                type="primary"
+                                theme="blue"
+                                size="small"
+                                v-on:clicked="openHangout(event.hangoutLink)"
+                            />
+                        </div>
                     </div>
-                    <!-- HANDLING FULL DAY EVENTS-->
-                    <div v-else class="event-duration font-xsmall semi-bold">
-                      Full Day
-                    </div>
-                  </template>
-                  <!-- HANDLING PRIVATE EVENTS NOT ACCESSIBLE -->
-                  <div class="event-title">
-                    {{event.summary || 'Busy'}}
-                  </div>
                 </li>
               </ul>
               <div
                 v-else
-                class="flex flex-center ph-20">
+                class="flex flex-center ph-20" style="height: 3.6rem;">
                 <img src="/images/no_calendar_events.jpg" alt="no events" width="45px" height="45px">
                 <p class="ml-20 font-xsmall mar-0">
                   <strong>All Caught Up!</strong><br>
@@ -133,7 +148,8 @@
   import {Get, Set, Remove} from '../utils/storage'
   import {Http, DecryptAuth} from '../utils/common'
   import {EventBus} from '../utils/EventBus'
-  const EVENT_HEIGHT = 3.43
+  import Button from "../shared/Button.vue";
+  const EVENT_HEIGHT = 3.6;
   const MAX_EVENTS = 4;
 
   export default {
@@ -176,6 +192,7 @@
           if (!url) {
             return
           }
+          this.$ga.event('calendar', 'clicked', 'event');
           window.chrome.tabs.create({url: url, active: true})
         }
       },
@@ -329,13 +346,19 @@
             processedEventIds.indexOf(event.iCalUID) === -1 &&
             event.status === 'confirmed') {
             processedEventIds.push(event.iCalUID)
-
+            const start = new Date(event.start.dateTime);
+            const end = new Date(event.end.dateTime);
+            const now = new Date();
+            const isCurrentEvent = start <= now && now <= end;
+              
             processedEvents.push({
               id: event.id,
               from: event.start && (event.start.dateTime) || -1,
               to: event.end && (event.end.dateTime) || -1,
               summary: event.summary,
-              link: event.htmlLink
+              link: event.htmlLink,
+              hangoutLink: event.hangoutLink,
+              isCurrentEvent
             })
           }
         }
@@ -355,7 +378,7 @@
         return G_CAL.URL.BASE + 'calendars/' + encodeURIComponent(listId) +
           '/events?timeMax=' + getDate(this.nextDateTimeStamp)['iso'] +
           '&timeMin=' + this.currentDate.iso +
-          '&orderBy=startTime&singleEvents=true&fields=items(id,status,start,end,summary,iCalUID,htmlLink)'
+          '&orderBy=startTime&singleEvents=true&fields=items(id,status,start,end,summary,iCalUID,htmlLink,hangoutLink)'
       },
       nextDate() {
         this.isLoading = true
@@ -383,7 +406,11 @@
           url: G_CAL.URL.INTEGRATION_SUBTLE,
           active: true
         })
-      }
+      },
+        openHangout(url) {
+            this.$ga.event('calendar', 'clicked', 'meetlink');
+            window.chrome.tabs.create({url: url, active: true})
+        },
     },
     computed: {
       authCode() {
@@ -412,17 +439,34 @@
       },
       maxHeightValue() {
         return this.maxHeight + 'rem'
-      }
+      },
+        displayDate() {
+            const now = new Date();
+            if (this.now.getMonth() === now.getMonth() && this.now.getDate() === now.getDate()) {
+                return "Today";
+            }
+            return `${this.currentDate.day}, ${this.currentDate.month} ${this.currentDate.date}`
+
+        }
+    },
+    components: {
+      Button
     }
   }
 </script>
 <style>
   #next-arrow, #prev-arrow {
     fill: #333;
-    stroke: #333
+    stroke: #333;
+    width: 10px; 
+    height: 10px;
+    position: absolute;
   }
-
+  #next-arrow {
+      left: 6px;
+  }
   #prev-arrow {
+    left: 4px;
     transform: rotate(180deg);
   }
 
@@ -431,15 +475,21 @@
     width: 20px;
     height: 20px;
     transition: background 0.3s ease-in;
+    background: #EEEEEE;
   }
 
   .date-change-icon:hover {
-    background: #cccccc;
+    background: #e3e3e3;
   }
 
   .calendar-events {
     overflow-y: auto;
     transition: max-height 0.2s ease-out;
+  }
+
+  .current-event {
+      border-left: 5px solid var(--blue);
+      background-color: var(--blueBg);
   }
 
   .calendar-event {
@@ -476,5 +526,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  .meet button {
+      height: 1.75rem !important;
+      padding: 0 10px !important;
+      border-radius: 4px;
   }
 </style>
