@@ -118,16 +118,20 @@
 </template>
 <script>
     import Button from "../shared/Button.vue";
-
-
+    
     export default {
         beforeCreate() {
         },
         data() {
             const obj = {
                 resize: false,
+                action: null,
+                media: null,
+                video: null,
+                thumbnail: null,
+                text: null
             };
-            return Object.assign({}, this.data, obj);
+            return Object.assign({}, obj, this.data);
         },
         props: {
             data: {

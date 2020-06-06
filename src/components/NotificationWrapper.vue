@@ -1,5 +1,5 @@
 <template>
-    <div class="notification-wrapper" v-if="notificationObj">
+    <div class="notification-wrapper" v-if="notificationObj && notificationObj.data">
         <transition name="slide-up">
             <Notification :data="notificationObj.data" v-show="show" :primary-click="primaryClick" :secondary-click="secondaryClick"></Notification>
         </transition>
@@ -34,18 +34,8 @@
             }, 1000);
         },
         methods: {
-            loadNotification(url) {
-                chrome.runtime.sendMessage({
-                    query: "loadMedia",
-                    url: url
-                });
-            },
             showNotification() {
-                if (!this.notificationObj || this.notificationObj.seen >= MAX_SHOW) {
-                    return;
-                }
-                if (!this.notificationObj.loaded && this.notificationObj.data.media) {
-                    this.loadNotification(this.notificationObj.data.media.url);
+                if (!this.notificationObj || !this.notificationObj.data || this.notificationObj.seen >= MAX_SHOW) {
                     return;
                 }
                 this.notificationObj.seen++;
@@ -69,16 +59,13 @@
                         data: response
                     };
                     // same notification
-                    if (this.notificationObj && this.notificationObj.data.id === response.id) {
+                    if (this.notificationObj && this.notificationObj.data && this.notificationObj.data.id === response.id) {
                         return;
                     }
                     obj.lastChecked = +new Date();
                     obj.loaded = true;
                     obj.seen = 0;
                     Set(STORAGE.NOTIFICATION, obj);
-                    // if (response.media && response.media.url) {
-                    //     this.loadNotification(response.media.url);
-                    // }
                 });
             },
             markSeen(){
