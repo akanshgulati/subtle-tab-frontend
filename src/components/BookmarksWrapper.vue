@@ -62,7 +62,7 @@
             ];
             this.localBookmarks = Get(STORAGE.BOOKMARKS);
             this.finalBookmarks = this.localBookmarks && this.localBookmarks.length ? this.localBookmarks : this.defaultBookmarks;
-            console.log("Final Bookmarks", this.finalBookmarks);
+            // console.log("Final Bookmarks", this.finalBookmarks);
         },
         mounted() {
             EventBus.$on(MessageTypeEnum.BOOKMARK, (e) => {

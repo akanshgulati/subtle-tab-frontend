@@ -58,9 +58,9 @@
             checkNotification() {
                 const now = +new Date();
                 // checking only once in hour
-                // if (this.notificationObj && this.notificationObj.lastChecked && (now - this.notificationObj.lastChecked) < 3600000) {
-                //     return;
-                // }
+                if (this.notificationObj && this.notificationObj.lastChecked && (now - this.notificationObj.lastChecked) < 3600000) {
+                    return;
+                }
                 const URL = `${Constants.URL.NOTIFICATIONS}?platform=${CommonUtils.getBrowser()}`;
                 Http(URL, {
                     method: 'GET'
