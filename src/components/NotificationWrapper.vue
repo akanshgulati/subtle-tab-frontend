@@ -59,7 +59,7 @@
                         data: response
                     };
                     // same notification
-                    if (this.notificationObj && this.notificationObj.data && this.notificationObj.data.id === response.id) {
+                    if (this.notificationObj && this.notificationObj.data && response && this.notificationObj.data.id === response.id) {
                         return;
                     }
                     obj.lastChecked = +new Date();
