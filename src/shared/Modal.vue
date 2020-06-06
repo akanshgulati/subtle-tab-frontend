@@ -21,7 +21,7 @@
                         <small class="warning" v-if="URLWarning">{{URLWarning}}</small>
                     </transition>
                 </div>
-                <div class="form-item mt-10">
+                <div class="form-item mt-15">
                     <label for="name">NAME</label>
                     <input type="text" id="name" placeholder="Example title" v-model="title">
                     <div class="suggestion font-light-black">
@@ -36,10 +36,10 @@
                 </div>
             </section>
             <section class="modal-control">
-                <Button v-if="!isEditMode" text="Add another" class="semi-bold font-small"
+                <Button v-if="!isEditMode" text="Add another" class="semi-bold font-small" type="secondary"
                         size="medium" v-on:clicked="onSubmit(true)" :is-disabled="isAddButtonDisabled"></Button>
                 <Button v-if="isEditMode" text="Delete" class="semi-bold font-small"
-                        size="medium" v-on:clicked="onRemove()"></Button>
+                        size="medium" v-on:clicked="onRemove()" type="secondary"></Button>
                 <Button :text="isEditMode ? 'Update': 'Add'" class="modal-button semi-bold font-small" type="green"
                         :is-disabled="isAddButtonDisabled"
                         v-on:clicked="onSubmit"></Button>
@@ -290,6 +290,9 @@
         margin-bottom: 0;
         border-bottom: 1px solid rgba(158, 158, 158, 0.5);
         padding-left: 0 !important;
+        height: auto !important;
+        padding-bottom: 0.2rem !important;
+        padding-right: 0 !important;
     }
 
     .suggestion, .error {

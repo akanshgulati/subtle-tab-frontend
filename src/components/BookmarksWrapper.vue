@@ -45,14 +45,19 @@
                     url: 'https://www.youtube.com'
                 },
                 {
-                    title: 'DuckDuckGo',
-                    icon: 'http://proxy.duckduckgo.com/ip3/www.duckduckgo.com.ico',
-                    url: 'https://duckduckgo.com/',
+                    title: 'Netflix',
+                    icon: 'http://proxy.duckduckgo.com/ip3/www.netflix.com.ico',
+                    url: 'https://netflix.com/',
                 },
                 {
                     title: 'Pinterest',
                     icon: 'http://proxy.duckduckgo.com/ip3/pinterest.com/.ico',
                     url: 'https://www.pinterest.com/'
+                },
+                {
+                    title: 'Twitter',
+                    icon: 'http://proxy.duckduckgo.com/ip3/twitter.com/.ico',
+                    url: 'https://www.twitter.com/'
                 }
             ];
             this.localBookmarks = Get(STORAGE.BOOKMARKS);

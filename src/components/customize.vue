@@ -52,7 +52,7 @@
                             <svg>
                                 <use xlink:href="#icon-clock"></use>
                             </svg>
-                            <span>Clock</span>
+                            <span>Time & Calendar</span>
                         </label>
                     </li>
                     <li>
@@ -906,7 +906,7 @@
         position: relative;
         width: 80%;
         overflow: hidden;
-        height: 22rem;
+        height: inherit;
     }
     .cmain-disabled {
         position: absolute;
@@ -922,6 +922,6 @@
         padding: 0 1rem;
         overflow: auto;
         width: 100%;
-        height: 22rem;
+        height: inherit;
     }
 </style>

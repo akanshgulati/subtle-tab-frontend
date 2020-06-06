@@ -1,5 +1,14 @@
+:root {
+    --green: #7AB800;
+    --red: #cc0000;
+    --blue: #2196F3;
+    --primaryText: #333;
+    --secondaryText: #666;
+    --blueBg: rgba(33, 150, 243, 0.10);
+}
+
 .text-green {
-    color: #7AB800;
+    color: var(--green);
 }
 
 .text-black {
@@ -7,7 +16,7 @@
 }
 
 .text-blue {
-    color: #2196F3;
+    color: var(--blue);
     transition: color 0.23s ease-in;
 }
 

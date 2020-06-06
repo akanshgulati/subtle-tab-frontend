@@ -53,6 +53,7 @@
         font-size: 0.9rem;
         overflow-y: auto;
         flex: 1;
+        border-radius: 0 0 3px 3px;
     }
 
     #todos ::-webkit-input-placeholder {
@@ -104,9 +105,8 @@
     }
 
     div.todos ul li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #f1f0f0;
+        padding: 0.4rem 0;
+        border-bottom: 1px solid #f1f0f09e;
     }
-
-
+    
 </style>

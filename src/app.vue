@@ -161,6 +161,7 @@
             </transition>
             <ContextMenu></ContextMenu>
             <Modal></Modal>
+            <NotificationWrapper/>
         </div>
 
         <svg style="display: none;">
@@ -210,6 +211,7 @@
     import ContextMenu from './shared/ContextMenu.vue'
     import Modal from './shared/Modal.vue'
     import TopBanner from './components/topBanner.vue'
+    import NotificationWrapper from './components/NotificationWrapper.vue'
 
     let _sharedData, _isOnBoardingSeen, _showNotes, _showTodos;
     export default {
@@ -440,7 +442,8 @@
             BookmarksWrapper,
             ContextMenu,
             Modal,
-            TopBanner
+            TopBanner,
+            NotificationWrapper
         }
     }
 </script>

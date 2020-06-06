@@ -20,7 +20,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: 'Lato', sans-serif !important;
     font-size: 1.07rem;
     height: 100%;
     overflow: auto;
@@ -349,18 +349,19 @@ svg:hover #close_btn {
 
 #customize {
     position: fixed;
-    left: calc(50vw - 32.14rem);
+    left: calc(50vw - 30rem);
     top: calc(50vh - 14.27rem);
-    width: 64.29rem;
+    width: 60rem;
     background: #ffffff;
     color: #666;
     border-radius: 5px;
     z-index: 10;
     overflow: hidden;
+    line-height: 1.4;
 }
 
 #customize .main-window {
-    height: 22rem;
+    height: 23rem;
 }
 
 #customize .save-button {
@@ -434,7 +435,7 @@ svg:hover #close_btn {
 }
 
 #customize .container > section > div {
-    padding-bottom: 1rem;
+    padding-bottom: 0;
 }
 
 #customize .container .inline-list {
@@ -508,7 +509,7 @@ svg:hover #close_btn {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100px;
+    height: 90px;
     border-radius: 5px;
     overflow: hidden;
     opacity: 0.9;
@@ -1281,7 +1282,7 @@ input[type].no-focus:focus {
 }
 
 .tooltip-left:hover:after {
-    right: 0 !important;
+    right: 5px !important;
 }
 
 .tooltip-right {

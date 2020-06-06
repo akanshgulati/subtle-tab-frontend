@@ -52,8 +52,8 @@
                        @blur.stop="handleBlurOut"
                        @keyup.enter.stop="create"
                        @keyup.esc.stop="cancel">
-                <Button text="Add" type="primary" v-on:clicked="create" v-if="!isEditMode" class="text-blue-hover"/>
-                <Button text="Save" type="primary" v-on:clicked="create" v-if="isEditMode"/>
+                <Button text="Add" type="primary" theme="blue" v-on:clicked="create" v-if="!isEditMode" class="text-blue-hover"/>
+                <Button text="Save" type="primary" theme="blue" v-on:clicked="create" v-if="isEditMode"/>
                 <!--<Button text="x" type="primary" @click.stop="cancel"/>-->
             </div>
         </transition>

@@ -42,9 +42,11 @@
 .pad-10 {
     padding: 0.72rem !important;
 }
+
 .pad-5 {
     padding: 0.36rem !important;
 }
+
 .pv-0, .pb-0 {
     margin-bottom: 0 !important;
 }
@@ -113,6 +115,10 @@
     margin-right: 0.72rem;
 }
 
+.ml-15, .mh-15 {
+    margin-left: 1.08rem !important;
+}
+
 .mv-10, .mt-10 {
     margin-top: 0.72rem;
 }
@@ -179,6 +185,10 @@
 
 .flex-justify-space-around {
     justify-content: space-around;
+}
+
+.flex-justify-end {
+    justify-content: flex-end;
 }
 
 .flex-flow-column {

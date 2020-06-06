@@ -54,6 +54,8 @@ chrome.runtime.onMessage.addListener(
             loadCurrentCustomBackground(request.url, sendResponse);
         } else if (request.query === 'loadNextCustomBackground') {
             loadNextBackground(request.url)
+        } else if(request.query === 'loadMedia') {
+            loadMedia(request.url);
         }
         return true;
     });
@@ -329,6 +331,18 @@ function loadNewTab(){
     }
 }
 
+function loadMedia(url) {
+    const img = new Image();
+    const notificationObj = storage.get(constants.STORAGE.NOTIFICATION);
+    if (notificationObj.loaded) {
+        return;
+    }
+    img.src = url;
+    img.onload = () => {
+        notificationObj.loaded = true;
+        storage.setLocal(constants.STORAGE.NOTIFICATION, notificationObj);
+    };
+}
 function init() {
 
     chrome.runtime.setUninstallURL(`https://www.subtletab.com/#/uninstall?browser=${CommonUtils.getBrowser()}`);
